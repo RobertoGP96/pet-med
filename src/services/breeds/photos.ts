@@ -1,0 +1,132 @@
+/**
+ * Fotos de raza de https://dog.ceo/api (sin clave).
+ *
+ * Sirven de relleno cuando una mascota todavía no tiene foto propia. Nunca
+ * sustituyen a una foto real: quien llama comprueba primero si la hay.
+ *
+ * MÓDULO SÓLO DE SERVIDOR.
+ */
+
+import { cache } from "react";
+
+import type { DogCeoImagesResponse, DogCeoListResponse } from "./api-types";
+
+const BREEDS_LIST_URL = "https://dog.ceo/api/breeds/list/all";
+const REVALIDATE_SECONDS = 60 * 60 * 24 * 7;
+const CACHE_TAG = "dog-photos";
+
+/**
+ * Rutas que entiende dog.ceo, ya aplanadas.
+ *
+ * La API agrupa por raza y subraza (`{ retriever: ["golden", "labrador"] }`),
+ * pero en la URL el orden se invierte: `/breed/retriever/golden`. Aquí se
+ * guarda la ruta lista para usar junto con los tokens con los que comparar.
+ */
+interface DogCeoBreedEntry {
+  /** Segmento para la URL: `"retriever/golden"`. */
+  path: string;
+  /** Palabras sueltas para el emparejamiento: `["retriever", "golden"]`. */
+  tokens: string[];
+}
+
+const listDogCeoBreeds = cache(async function listDogCeoBreeds(): Promise<DogCeoBreedEntry[]> {
+  try {
+    const response = await fetch(BREEDS_LIST_URL, {
+      headers: { accept: "application/json" },
+      signal: AbortSignal.timeout(8000),
+      next: { revalidate: REVALIDATE_SECONDS, tags: [CACHE_TAG] },
+    });
+
+    if (!response.ok) throw new Error(`dog.ceo respondió ${response.status}`);
+
+    const payload = (await response.json()) as DogCeoListResponse;
+    const entries: DogCeoBreedEntry[] = [];
+
+    for (const [breed, subBreeds] of Object.entries(payload.message ?? {})) {
+      if (subBreeds.length === 0) {
+        entries.push({ path: breed, tokens: [breed] });
+        continue;
+      }
+      for (const sub of subBreeds) {
+        entries.push({ path: `${breed}/${sub}`, tokens: [breed, sub] });
+      }
+    }
+
+    return entries;
+  } catch (error) {
+    console.warn("[breeds] No se pudo leer el listado de dog.ceo.", error);
+    return [];
+  }
+});
+
+/** Minúsculas, sin acentos y partido en palabras de tres letras o más. */
+function tokenize(value: string): string[] {
+  return value
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .split(/[^a-z]+/)
+    .filter((token) => token.length >= 3);
+}
+
+/**
+ * Empareja un nombre de raza escrito a mano con una ruta de dog.ceo.
+ *
+ * Gana la entrada que comparte más palabras con el nombre; en caso de empate,
+ * la más específica (la que tiene subraza). Así «Golden Retriever» acaba en
+ * `retriever/golden` y no en `retriever` a secas.
+ */
+function matchBreedPath(entries: DogCeoBreedEntry[], breedName: string): string | null {
+  const wanted = new Set(tokenize(breedName));
+  if (wanted.size === 0) return null;
+
+  let best: { path: string; score: number; specificity: number } | null = null;
+
+  for (const entry of entries) {
+    const score = entry.tokens.filter((token) => wanted.has(token)).length;
+    if (score === 0) continue;
+
+    const specificity = entry.tokens.length;
+    if (!best || score > best.score || (score === best.score && specificity > best.specificity)) {
+      best = { path: entry.path, score, specificity };
+    }
+  }
+
+  return best?.path ?? null;
+}
+
+/**
+ * Foto de ejemplo de la raza indicada, o `null` si no hay forma de
+ * emparejarla. Sólo para perros: dog.ceo no cubre otras especies.
+ */
+export const getDogBreedPhoto = cache(async function getDogBreedPhoto(
+  breedName: string | null,
+): Promise<string | null> {
+  if (!breedName?.trim()) return null;
+
+  const entries = await listDogCeoBreeds();
+  if (entries.length === 0) return null;
+
+  const path = matchBreedPath(entries, breedName);
+  if (!path) return null;
+
+  try {
+    const response = await fetch(`https://dog.ceo/api/breed/${path}/images/random`, {
+      headers: { accept: "application/json" },
+      signal: AbortSignal.timeout(8000),
+      next: { revalidate: REVALIDATE_SECONDS, tags: [CACHE_TAG] },
+    });
+
+    if (!response.ok) throw new Error(`dog.ceo respondió ${response.status}`);
+
+    const payload = (await response.json()) as DogCeoImagesResponse;
+    const image = Array.isArray(payload.message) ? payload.message[0] : payload.message;
+
+    return typeof image === "string" && image.startsWith("https://") ? image : null;
+  } catch (error) {
+    console.warn(`[breeds] No se pudo obtener foto de dog.ceo para "${breedName}".`, error);
+    return null;
+  }
+});
+
+export { matchBreedPath as __matchBreedPathForTests };

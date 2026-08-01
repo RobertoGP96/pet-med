@@ -1,0 +1,301 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Semáforo de los indicadores de salud. Se usa como `text-health-alert`,
+     `bg-health-good/10`, `border-health-watch`… en toda la app. */
+  --color-health-good: var(--health-good);
+  --color-health-watch: var(--health-watch);
+  --color-health-alert: var(--health-alert);
+  --color-health-unknown: var(--health-unknown);
+
+  /* Acento de marca, separado del `primary` de shadcn para poder cambiar la
+     identidad visual sin tocar los componentes. */
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-muted: var(--brand-muted);
+}
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+
+  /* --- Tokens propios de Pet Med -----------------------------------------
+     Este es el sitio donde se cambia la identidad visual: los componentes
+     nunca llevan colores literales, siempre estas variables. */
+  --health-good: oklch(0.7 0.15 155);
+  --health-watch: oklch(0.79 0.15 78);
+  --health-alert: oklch(0.62 0.22 25);
+  --health-unknown: oklch(0.65 0.02 260);
+
+  --brand: oklch(0.68 0.16 45);
+  --brand-foreground: oklch(0.99 0.01 45);
+  --brand-muted: oklch(0.95 0.03 45);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+
+  /* Los indicadores suben algo de luminosidad en oscuro para mantener el
+     contraste AA sobre fondos oscuros. */
+  --health-good: oklch(0.76 0.16 155);
+  --health-watch: oklch(0.83 0.15 78);
+  --health-alert: oklch(0.7 0.19 25);
+  --health-unknown: oklch(0.6 0.02 260);
+
+  --brand: oklch(0.74 0.15 45);
+  --brand-foreground: oklch(0.18 0.02 45);
+  --brand-muted: oklch(0.28 0.04 45);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* ===========================================================================
+   View Transitions
+   ---------------------------------------------------------------------------
+   Las animaciones las dispara React <ViewTransition> (habilitado con
+   `experimental.viewTransition` en next.config.ts). Aquí sólo se define el
+   aspecto. Dos mecanismos distintos, no confundirlos:
+
+   - `::view-transition-*(.clase)`  -> con punto, selecciona un
+     `view-transition-class`, que es lo que emiten las props enter/exit/share.
+   - `::view-transition-*(nombre)`  -> sin punto, selecciona un
+     `view-transition-name` concreto (prop `name`).
+   =========================================================================== */
+
+:root {
+  --vt-duration-exit: 150ms;
+  --vt-duration-enter: 220ms;
+}
+
+/* --- Morph de elemento compartido -----------------------------------------
+   La foto de una mascota en el mural se transforma en la foto de su ficha.
+   Lo activa <ViewTransition name={`pet-photo-${id}`} share="morph">. */
+::view-transition-group(.morph) {
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::view-transition-image-pair(.morph) {
+  animation-name: vt-blur;
+}
+
+@keyframes vt-blur {
+  30% {
+    filter: blur(3px);
+  }
+}
+
+/* --- Navegación direccional ------------------------------------------------
+   Los <Link> pasan transitionTypes={["nav-forward"]} / ["nav-back"] y las
+   páginas mapean esos tipos a estas clases. */
+::view-transition-old(.nav-forward) {
+  --vt-slide: -60px;
+  animation:
+    var(--vt-duration-exit) ease-in both vt-fade reverse,
+    400ms ease-in-out both vt-slide reverse;
+}
+
+::view-transition-new(.nav-forward) {
+  --vt-slide: 60px;
+  animation:
+    var(--vt-duration-enter) ease-out var(--vt-duration-exit) both vt-fade,
+    400ms ease-in-out both vt-slide;
+}
+
+::view-transition-old(.nav-back) {
+  --vt-slide: 60px;
+  animation:
+    var(--vt-duration-exit) ease-in both vt-fade reverse,
+    400ms ease-in-out both vt-slide reverse;
+}
+
+::view-transition-new(.nav-back) {
+  --vt-slide: -60px;
+  animation:
+    var(--vt-duration-enter) ease-out var(--vt-duration-exit) both vt-fade,
+    400ms ease-in-out both vt-slide;
+}
+
+/* --- Aparición de contenido tras Suspense --------------------------------- */
+::view-transition-old(.slide-down) {
+  animation:
+    var(--vt-duration-exit) ease-out both vt-fade reverse,
+    var(--vt-duration-exit) ease-out both vt-rise reverse;
+}
+
+::view-transition-new(.slide-up) {
+  animation:
+    var(--vt-duration-enter) ease-in var(--vt-duration-exit) both vt-fade,
+    400ms ease-in both vt-rise;
+}
+
+@keyframes vt-fade {
+  from {
+    opacity: 0;
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes vt-slide {
+  from {
+    translate: var(--vt-slide);
+  }
+  to {
+    translate: 0;
+  }
+}
+
+@keyframes vt-rise {
+  from {
+    transform: translateY(10px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* --- Elementos anclados ----------------------------------------------------
+   La cabecera y la barra lateral no deben viajar entre páginas: se quedan
+   quietas mientras el contenido se anima por debajo. */
+::view-transition-group(app-shell) {
+  animation: none;
+  z-index: 100;
+}
+
+::view-transition-old(app-shell) {
+  display: none;
+}
+
+::view-transition-new(app-shell) {
+  animation: none;
+}
+
+/* --- Accesibilidad ---------------------------------------------------------
+   Quien pide menos movimiento no recibe ninguna animación de transición. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
