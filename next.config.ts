@@ -5,6 +5,15 @@ const nextConfig: NextConfig = {
     // Habilita la integración de React <ViewTransition> con las navegaciones
     // del App Router. Ver src/app/globals.css para las animaciones.
     viewTransition: true,
+    serverActions: {
+      // El cuerpo de una Server Action está limitado a 1 MB por defecto, y las
+      // fotos suben por ahí (`uploadPhotoAction`). Con el valor de fábrica, una
+      // foto de móvil de 2-4 MB se rechazaba antes de llegar a la acción, así
+      // que ni siquiera se veía el mensaje del esquema. Va por encima de
+      // `MAX_PHOTO_BYTES` (5 MB) para dejar sitio a las cabeceras del
+      // multipart y al resto de campos del formulario.
+      bodySizeLimit: "6mb",
+    },
   },
   images: {
     // Fotos servidas desde las APIs de razas y desde Supabase Storage.
