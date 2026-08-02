@@ -14,37 +14,21 @@ const eslintConfig = defineConfig([
     "supabase/**",
   ]),
 
-  {
-    /**
-     * `src/components/ui/` es código *vendorizado*: se copia tal cual desde el
-     * registro de Aceternity UI con `npx shadcn add @aceternity/<nombre>` y se
-     * vuelve a sobrescribir en cada actualización. Aplicarle nuestras reglas
-     * sólo produciría ruido que se pierde al siguiente `add`, así que aquí se
-     * relajan las que dispara su estilo (props extendidas sin usar, `any` en
-     * los tipos de motion, refs leídas en render).
-     *
-     * Esto NO afecta al código propio: `src/components/{layout,pets,health,…}`
-     * y todo `src/app`, `src/domain`, `src/server` y `src/lib` siguen con las
-     * reglas completas.
-     */
-    files: ["src/components/ui/**/*.{ts,tsx}", "src/hooks/**/*.{ts,tsx}"],
-    rules: {
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": "off",
-      "@typescript-eslint/no-unused-expressions": "off",
-      "@typescript-eslint/no-empty-object-type": "off",
-      "prefer-const": "off",
-      "react-hooks/exhaustive-deps": "off",
-      "react-hooks/refs": "off",
-      "react-hooks/set-state-in-effect": "off",
-      "react-hooks/purity": "off",
-      "react-hooks/immutability": "off",
-      "react-hooks/preserve-manual-memoization": "off",
-      "react-hooks/static-components": "off",
-      "@next/next/no-img-element": "off",
-      "jsx-a11y/alt-text": "off",
-    },
-  },
+  /*
+   * Aquí había una excepción que relajaba una quincena de reglas sobre
+   * `src/components/ui/` y `src/hooks/`, porque eran código vendorizado del
+   * registro de Aceternity y aplicarles nuestras reglas sólo producía ruido que
+   * se perdía en la siguiente actualización.
+   *
+   * Ya no hay código vendorizado: de los 28 componentes copiados sólo se usaban
+   * tres, y al retirar los otros 25 la carpeta quedó con código propio. Mantener
+   * la excepción habría sido peor que inútil — habría apagado esas reglas
+   * justo sobre los componentes que más se usan en toda la interfaz.
+   *
+   * Si en el futuro se vuelve a traer algo del registro, esta excepción se
+   * restaura acotada a los archivos concretos que se hayan copiado, no a la
+   * carpeta entera.
+   */
 ]);
 
 export default eslintConfig;

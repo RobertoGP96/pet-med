@@ -35,7 +35,7 @@ src/domain/    Lógica pura. NO puede importar React, Next ni Supabase.
 src/server/    queries.ts (lecturas) · actions.ts ("use server", escrituras) · mappers.ts
 src/services/  APIs externas
 src/lib/       env, clientes de supabase, storage, formato
-src/components/ui/   VENDORIZADO (Aceternity). Se sobrescribe al actualizar.
+src/components/ui/   Piezas transversales propias: Section, Field, Action…
 src/components/…     Componentes propios, por dominio.
 ```
 

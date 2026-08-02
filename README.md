@@ -11,7 +11,7 @@ descripciones de las mascotas, **recordatorios** de medicación y vacunas, e
 | --- | --- | --- |
 | Framework | Next.js 16 (App Router, Turbopack) | Server Components y Server Actions: los formularios funcionan sin API intermedia |
 | UI | React 19 + Tailwind CSS 4 | |
-| Componentes | [Aceternity UI](https://ui.aceternity.com) sobre shadcn CLI + Motion | Copy-paste, no dependencia: el código vive en `src/components/ui/` y se edita libremente |
+| Componentes | Propios, en `src/components/` + Motion | Sin librería de UI: el registro de [Aceternity](https://ui.aceternity.com) sigue configurado por si hace falta traer algo suelto |
 | Iconos | lucide-react | |
 | Transiciones | View Transitions de React (`experimental.viewTransition`) | La foto del mural se transforma en la foto de la ficha |
 | Base de datos | Supabase (Postgres) | |
@@ -123,7 +123,7 @@ src/
 ├─ services/breeds/        APIs de raza, curiosidades y fotos
 ├─ lib/                    env, supabase, storage, formato
 └─ components/
-   ├─ ui/                  VENDORIZADO (Aceternity) — se sobrescribe al actualizar
+   ├─ ui/                  Piezas transversales: Section, Field, Action, feedback
    └─ …                    Componentes propios por dominio
 ```
 
@@ -134,9 +134,12 @@ src/
 - **Las lecturas van en `queries.ts`, las escrituras en `actions.ts`.** Sólo el
   segundo lleva `"use server"`: poner esa directiva en las lecturas publicaría
   cada consulta como endpoint accesible desde el navegador.
-- **`src/components/ui/` es código de terceros.** Se regenera con
-  `npx shadcn@latest add @aceternity/<nombre>`. El `eslint.config.mjs` le
-  relaja las reglas por eso; el código propio no las relaja.
+- **`src/components/ui/` ya no es código de terceros.** El proyecto arrancó con
+  28 componentes copiados del registro de Aceternity; sólo se usaban tres, así
+  que los otros 25 se retiraron. Lo que queda son piezas propias y las reglas
+  de ESLint se les aplican enteras, como a todo lo demás. Si vuelves a traer
+  algo del registro, acota la excepción a esos archivos concretos y no a la
+  carpeta.
 - **Toda entrada se valida con zod antes de tocar la base de datos.**
 
 ## Indicadores de salud
@@ -225,6 +228,11 @@ La base está pensada para recibir un diseño sin tocar la lógica:
    archivo (`.nav-forward`, `.nav-back`, `.morph`).
 3. **Contenedores** → `src/components/ui/section.tsx` (`Section`,
    `PageHeader`, `EmptyState`).
-4. **Más componentes de Aceternity** →
-   `npx shadcn@latest add @aceternity/<nombre>`; el registro ya está
-   configurado en `components.json`.
+4. **La trama de huellas y la retícula** → las utilidades `paws` y `blueprint`
+   de `globals.css`. `paws` superpone dos capas de lados primos entre sí
+   (260 px y 170 px) para que el patrón no se repita a la vista.
+5. **Traer componentes de Aceternity** →
+   `npx shadcn@latest add @aceternity/<nombre>`; el registro sigue configurado
+   en `components.json`. Aterrizan en `src/components/ui/` y llegan con colores
+   literales de la paleta de Tailwind: hay que pasarlos a los tokens antes de
+   darlos por buenos.
