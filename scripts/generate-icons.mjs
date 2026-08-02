@@ -15,14 +15,15 @@
  *   · Android instala la aplicación con los iconos del manifiesto, en PNG.
  *   · Los navegadores antiguos y algunos lectores de RSS piden un PNG normal.
  *
- * El dibujo es el mismo en todos: la huella `PawPrint` de lucide en rojo.
+ * El dibujo es el mismo en todos y el mismo que `src/app/icon.svg`: cuadrado
+ * rojo de esquinas redondeadas con la huella `PawPrint` de lucide calada en
+ * papel.
  *
- * Sobre el fondo. La marca no lleva ninguno —así está en la interfaz y en
- * `src/app/icon.svg`, que es transparente—, pero un icono de pantalla de inicio
- * no puede serlo: iOS rellena de negro cualquier `apple-icon` con
- * transparencia, y a Android le pasa lo propio con los «maskable». Por eso
- * estos PNG llevan el papel de la marca (#f3f2f2) detrás: es el color que ya
- * tendría debajo dentro de la aplicación, no un fondo nuevo.
+ * Sobre el fondo. Un icono de pantalla de inicio no puede ser transparente:
+ * iOS rellena de negro cualquier `apple-icon` con transparencia, y a Android
+ * le pasa lo propio con los «maskable». El cuadrado rojo resuelve eso y de
+ * paso se reconoce igual sobre un fondo claro que sobre uno oscuro, que es
+ * justo lo que no conseguía la huella suelta.
  */
 
 import { mkdir, writeFile } from "node:fs/promises";
@@ -45,33 +46,51 @@ const PAW = `
 `;
 
 /**
+ * Grosor del trazo, en unidades del lienzo de 24 de lucide.
+ *
+ * Muy por encima del 2 de la librería: aquí la huella va calada sobre el rojo
+ * y a tamaño de icono el trazo fino se deshace. A este grosor los dedos salen
+ * casi macizos, que es como se leen a 32 px.
+ */
+const STROKE = 4;
+
+/**
+ * Caja que ocupa la huella —con el trazo de `STROKE` incluido— dentro del
+ * lienzo de 24. El dibujo de lucide no está centrado en su propio lienzo, así
+ * que encuadrar por el lienzo dejaba la huella descolgada hacia la esquina.
+ * Las mismas constantes están en `src/app/icon.svg`; si cambia `STROKE` hay
+ * que recalcularla, porque el trazo sobresale media anchura por cada lado.
+ */
+const PAW_BOX = { x: 1.55, y: 0, size: 22.6 };
+
+/**
  * Construye el SVG de un icono cuadrado.
  *
  * @param size    lado en píxeles
  * @param padding proporción del lado que queda como margen alrededor de la
- *                huella. En los iconos «maskable» de Android sube al 20 %:
+ *                huella. En los iconos «maskable» de Android sube bastante:
  *                el sistema recorta el icono con la forma que quiera —círculo,
  *                cuadrado redondeado, gota— y sin ese margen se comería los
  *                dedos de la huella.
- * @param radius  radio de las esquinas, 0 para pleno. iOS aplica su propia
- *                máscara redondeada, así que `apple-icon` va a sangre.
+ * @param radius  radio de las esquinas en proporción al lado, 0 para pleno.
+ *                iOS y los lanzadores de Android aplican su propia máscara, así
+ *                que `apple-icon` y el «maskable» van a sangre.
  */
-function iconSvg({ size, padding = 0.18, radius = 0, background = PAPER }) {
+function iconSvg({ size, padding = 0.17, radius = 0.22, background = BRAND }) {
   const inner = size * (1 - padding * 2);
-  const scale = inner / 24;
-  const offset = size * padding;
-  // El trazo de lucide es 2 sobre 24; al ampliar hay que dividirlo por la
-  // escala o se convertiría en un borrón.
-  const stroke = 2.4 / scale;
+  const scale = inner / PAW_BOX.size;
+  // Encuadre: llevar la esquina de `PAW_BOX` al margen, no la del lienzo.
+  const x = size * padding - PAW_BOX.x * scale;
+  const y = size * padding - PAW_BOX.y * scale;
 
   const backdrop = background
-    ? `<rect width="${size}" height="${size}"${radius ? ` rx="${radius}"` : ""} fill="${background}"/>`
+    ? `<rect width="${size}" height="${size}"${radius ? ` rx="${size * radius}"` : ""} fill="${background}"/>`
     : "";
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
   ${backdrop}
-  <g transform="translate(${offset} ${offset}) scale(${scale})"
-     fill="none" stroke="${BRAND}" stroke-width="${stroke}"
+  <g transform="translate(${x} ${y}) scale(${scale})"
+     fill="none" stroke="${PAPER}" stroke-width="${STROKE}"
      stroke-linecap="round" stroke-linejoin="round">${PAW}</g>
 </svg>`;
 }
@@ -82,13 +101,13 @@ const TARGETS = [
   // sola, sin tocar el layout.
   //
   // `icon.png` es el respaldo de `icon.svg` para los navegadores que no
-  // admiten favicon vectorial, así que va sin fondo como el original.
-  { path: "src/app/icon.png", size: 192, background: null },
-  { path: "src/app/apple-icon.png", size: 180, padding: 0.22 },
+  // admiten favicon vectorial: mismo cuadrado redondeado.
+  { path: "src/app/icon.png", size: 192 },
+  { path: "src/app/apple-icon.png", size: 180, padding: 0.2, radius: 0 },
   // Referenciados desde src/app/manifest.ts.
-  { path: "public/icons/icon-192.png", size: 192, radius: 30 },
-  { path: "public/icons/icon-512.png", size: 512, radius: 80 },
-  { path: "public/icons/maskable-512.png", size: 512, padding: 0.28 },
+  { path: "public/icons/icon-192.png", size: 192 },
+  { path: "public/icons/icon-512.png", size: 512 },
+  { path: "public/icons/maskable-512.png", size: 512, padding: 0.28, radius: 0 },
 ];
 
 for (const { path, size, padding, radius, background } of TARGETS) {

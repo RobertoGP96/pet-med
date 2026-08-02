@@ -1,19 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
   <!--
-    Favicon: el mismo símbolo que src/components/layout/logo.tsx — la huella
-    `PawPrint` de lucide (ISC) en rojo y sin fondo.
+    Favicon: cuadrado rojo de esquinas redondeadas con la huella `PawPrint` de
+    lucide (ISC) calada en blanco. El mismo bloque que ya identifica a la marca
+    en la imagen de vista previa (src/app/opengraph-image.tsx).
 
     Va como archivo estático y no generado con ImageResponse porque no depende
-    de nada: así no cuesta una función en cada petición. El rojo va literal
-    (#ec3013, el valor de --brand) porque un favicon se pinta fuera de la
-    página, donde no existen las variables CSS del tema. Al no llevar fondo, se
-    ve igual sobre una pestaña clara que sobre una oscura.
+    de nada: así no cuesta una función en cada petición. Los colores van
+    literales (#ec3013 el rojo de la marca, #f3f2f2 el papel) porque un favicon
+    se pinta fuera de la página, donde no existen las variables CSS del tema.
+    Ojo con el texto de este comentario: un SVG se analiza como XML y un
+    comentario XML no admite un doble guion, ni siquiera dentro de un nombre de
+    variable CSS. Escribirlo tumbaba el archivo entero sin previo aviso.
+    Al llevar fondo propio se ve igual sobre una pestaña clara que sobre una
+    oscura, que era el problema de la huella suelta.
 
-    El icono de lucide viene en un lienzo de 24 y aquí el cuadrado es de 32, así
-    que el grupo se escala y se centra. El grosor sube de 2 a 2.6 porque a 16 px
-    —el tamaño real de una pestaña— el trazo original desaparece.
+    Sobre el encuadre: la huella de lucide no está centrada en su lienzo de 24
+    —ocupa, trazo incluido, la caja 1.55 0 22.6 22.6—, así que el grupo se
+    desplaza además de escalarse. Las mismas constantes están en
+    scripts/generate-icons.mjs.
+
+    El grosor sube de 2 a 4 porque a 16 px —el tamaño real de una pestaña— el
+    trazo original desaparece. A 4 los dedos quedan macizos, que es justo lo
+    que se busca: con un grosor intermedio queda dentro de cada uno un punto
+    rojo de un píxel que a tamaño grande parece un defecto.
   -->
-  <g transform="translate(1.6 1.6) scale(1.2)" fill="none" stroke="#ec3013" stroke-width="2.6"
+  <rect width="32" height="32" rx="7" fill="#ec3013"/>
+  <g transform="translate(3.9 5.44) scale(0.9912)" fill="none" stroke="#f3f2f2" stroke-width="4"
      stroke-linecap="round" stroke-linejoin="round">
     <circle cx="11" cy="4" r="2"/>
     <circle cx="18" cy="8" r="2"/>
