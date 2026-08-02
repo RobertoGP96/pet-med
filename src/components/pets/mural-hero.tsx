@@ -1,7 +1,5 @@
 import { Eyebrow } from "@/components/ui/section";
 import { ActionLink } from "@/components/ui/action";
-import { getNextBirthday } from "@/domain/health/age";
-import type { MuralPet } from "@/domain/types";
 
 const HEADLINE = "Cada mascota tiene su historial.";
 /** Palabra que se lleva el rojo. Es la que da nombre a lo que hace la app. */
@@ -77,49 +75,5 @@ export function MuralHero({ signedIn }: { signedIn: boolean }) {
         </div>
       </div>
     </section>
-  );
-}
-
-/**
- * Los cuatro contadores bajo la portada.
- *
- * Salen de las mascotas que ya se han leído para pintar la cinta, así que no
- * cuestan ninguna consulta extra.
- *
- * Antes contaban padecimientos y tratamientos activos. Ya no: el mural lo ve
- * cualquiera, y cuántas dolencias tiene la mascota de otra persona no es dato
- * de portada. Estos cuatro se calculan sólo con lo que el mural ya enseña.
- */
-export function MuralStats({ pets }: { pets: MuralPet[] }) {
-  const now = new Date();
-  const withPhoto = pets.filter((pet) => pet.coverPhotoUrl ?? pet.avatarUrl).length;
-  const species = new Set(pets.map((pet) => pet.species)).size;
-  const birthdaysThisMonth = pets.filter((pet) => {
-    if (!pet.birthDate) return false;
-    return getNextBirthday(pet.birthDate, now).daysUntil <= 30;
-  }).length;
-
-  const stats = [
-    { value: pets.length, label: "En el mural" },
-    { value: withPhoto, label: "Con foto propia" },
-    { value: species, label: "Especies distintas" },
-    { value: birthdaysThisMonth, label: "Cumplen este mes" },
-  ];
-
-  return (
-    // La rejilla es un bloque con fondo de borde y celdas separadas por 1px:
-    // el filete entre cifras es del diseño, no un borde por celda.
-    <dl className="bg-border border-border grid grid-cols-2 gap-px overflow-hidden rounded-lg border sm:grid-cols-4">
-      {stats.map((stat) => (
-        <div key={stat.label} className="bg-card flex flex-col gap-1.5 px-4 py-4">
-          <dd className="text-3xl leading-none font-extrabold tracking-[-0.02em] tabular-nums">
-            {stat.value}
-          </dd>
-          <dt>
-            <Eyebrow>{stat.label}</Eyebrow>
-          </dt>
-        </div>
-      ))}
-    </dl>
   );
 }

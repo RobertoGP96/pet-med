@@ -268,28 +268,6 @@
   mask-image: radial-gradient(ellipse 70% 80% at 30% 40%, #000 20%, transparent 100%);
 }
 
-/* Cinta infinita del mural. La pista se duplica en el marcado, de modo que
-   recorrer el 50 % deja la segunda copia exactamente donde estaba la primera y
-   el bucle no salta. */
-@utility ticker-track {
-  width: max-content;
-  animation: mancha-marquee 48s linear infinite;
-
-  &:hover,
-  &:focus-within {
-    animation-play-state: paused;
-  }
-}
-
-@keyframes mancha-marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
 /* Entrada de los titulares, palabra a palabra. */
 @keyframes mancha-word-in {
   from {
@@ -309,7 +287,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ticker-track,
   .word-in {
     animation: none;
   }

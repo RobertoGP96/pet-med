@@ -12,8 +12,22 @@ import { cache } from "react";
 import type { DogCeoImagesResponse, DogCeoListResponse } from "./api-types";
 
 const BREEDS_LIST_URL = "https://dog.ceo/api/breeds/list/all";
+const RANDOM_IMAGES_URL = "https://dog.ceo/api/breeds/image/random";
 const REVALIDATE_SECONDS = 60 * 60 * 24 * 7;
 const CACHE_TAG = "dog-photos";
+
+/** Tope que acepta dog.ceo en `/breeds/image/random/{n}`. */
+const MAX_RANDOM_IMAGES = 50;
+
+/**
+ * Corte de la petición, más holgado que los 8 s del resto del servicio.
+ *
+ * Aquí hace falta una petición por raza —dog.ceo no tiene endpoint que
+ * devuelva varias— y un render puede lanzar unas cuantas seguidas. Quien las
+ * pida en tanda debe limitar la concurrencia (ver <BreedShowcase>); este margen
+ * es sólo para que un pico de latencia no tire una foto por los pelos.
+ */
+const REQUEST_TIMEOUT_MS = 12_000;
 
 /**
  * Rutas que entiende dog.ceo, ya aplanadas.
@@ -33,7 +47,7 @@ const listDogCeoBreeds = cache(async function listDogCeoBreeds(): Promise<DogCeo
   try {
     const response = await fetch(BREEDS_LIST_URL, {
       headers: { accept: "application/json" },
-      signal: AbortSignal.timeout(8000),
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       next: { revalidate: REVALIDATE_SECONDS, tags: [CACHE_TAG] },
     });
 
@@ -113,7 +127,7 @@ export const getDogBreedPhoto = cache(async function getDogBreedPhoto(
   try {
     const response = await fetch(`https://dog.ceo/api/breed/${path}/images/random`, {
       headers: { accept: "application/json" },
-      signal: AbortSignal.timeout(8000),
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       next: { revalidate: REVALIDATE_SECONDS, tags: [CACHE_TAG] },
     });
 
@@ -126,6 +140,43 @@ export const getDogBreedPhoto = cache(async function getDogBreedPhoto(
   } catch (error) {
     console.warn(`[breeds] No se pudo obtener foto de dog.ceo para "${breedName}".`, error);
     return null;
+  }
+});
+
+/**
+ * Fotos de perro al azar, sin raza concreta.
+ *
+ * Alimenta la galería del mural. «Al azar» lo decide dog.ceo en el momento de
+ * la petición, pero la respuesta se cachea una semana igual que el resto: la
+ * galería cambia de vez en cuando, no en cada visita, que es justo lo que
+ * queremos para que el mural no baile entre recargas.
+ */
+export const listRandomDogPhotos = cache(async function listRandomDogPhotos(
+  count: number,
+): Promise<string[]> {
+  const requested = Math.max(1, Math.min(Math.trunc(count), MAX_RANDOM_IMAGES));
+
+  try {
+    const response = await fetch(`${RANDOM_IMAGES_URL}/${requested}`, {
+      headers: { accept: "application/json" },
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      next: { revalidate: REVALIDATE_SECONDS, tags: [CACHE_TAG] },
+    });
+
+    if (!response.ok) throw new Error(`dog.ceo respondió ${response.status}`);
+
+    const payload = (await response.json()) as DogCeoImagesResponse;
+    const images = Array.isArray(payload.message) ? payload.message : [];
+
+    // `next/image` sólo tiene permitido `images.dog.ceo` (ver next.config.ts):
+    // cualquier otra cosa que devolviera la API rompería el render.
+    return images.filter(
+      (url): url is string =>
+        typeof url === "string" && url.startsWith("https://images.dog.ceo/"),
+    );
+  } catch (error) {
+    console.warn("[breeds] No se pudieron obtener fotos al azar de dog.ceo.", error);
+    return [];
   }
 });
 
