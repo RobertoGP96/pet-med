@@ -1,12 +1,13 @@
 import { Suspense, ViewTransition } from "react";
 import { PawPrint, Plus } from "lucide-react";
 
+import { BreedShowcase } from "@/components/breeds/breed-showcase";
 import { DogFact } from "@/components/pets/dog-fact";
-import { MuralHero, MuralStats } from "@/components/pets/mural-hero";
-import { PetIndex, PetTicker } from "@/components/pets/pet-ticker";
+import { MuralHero } from "@/components/pets/mural-hero";
+import { PetMuralGrid } from "@/components/pets/pet-mural-grid";
 import { SetupNotice } from "@/components/setup-notice";
 import { ActionLink } from "@/components/ui/action";
-import { EmptyState, Eyebrow } from "@/components/ui/section";
+import { EmptyState } from "@/components/ui/section";
 import { getSessionUser } from "@/lib/auth";
 import { isSupabaseConfigured } from "@/lib/env";
 import { listMuralPets } from "@/server/queries";
@@ -34,7 +35,7 @@ export default async function MuralPage() {
   const user = await getSessionUser();
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-14">
       <MuralHero signedIn={Boolean(user)} />
 
       {/* Suspense propio: una curiosidad no debe retrasar el mural. */}
@@ -42,7 +43,7 @@ export default async function MuralPage() {
         <DogFact />
       </Suspense>
 
-      {/* El esqueleto sale por `exit` y la cinta entra por `enter`, así el
+      {/* El esqueleto sale por `exit` y la rejilla entra por `enter`, así el
           contenido no aparece de golpe cuando termina la consulta. */}
       <Suspense
         fallback={
@@ -54,6 +55,13 @@ export default async function MuralPage() {
         <ViewTransition enter="slide-up" default="none">
           <MuralBoard signedIn={Boolean(user)} />
         </ViewTransition>
+      </Suspense>
+
+      {/* La guía de razas depende de dos APIs externas, así que va en su propio
+          Suspense: si tardan, el mural ya está pintado. Y si fallan,
+          <BreedShowcase> no devuelve nada y aquí no queda hueco. */}
+      <Suspense fallback={null}>
+        <BreedShowcase />
       </Suspense>
     </div>
   );
@@ -97,52 +105,43 @@ async function MuralBoard({ signedIn }: { signedIn: boolean }) {
   }
 
   return (
-    <div className="flex flex-col gap-10">
-      <MuralStats pets={pets} />
+    <section className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1">
+        <h2 className="text-xl font-extrabold tracking-[-0.02em]">En la casa</h2>
+        <p className="text-muted-foreground text-xs">
+          Toca cualquier mascota para abrir su ficha pública.
+        </p>
+      </div>
 
-      <section className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1">
-          <h2 className="text-xl font-extrabold tracking-[-0.02em]">En la casa</h2>
-          <p className="text-muted-foreground text-xs">
-            Pasa el cursor sobre la cinta para detenerla.
-          </p>
-        </div>
-
-        {/* La cinta se sale de la caja de contenido: cancela el margen del
-            armazón para llegar a los bordes y leerse como una tira continua. */}
-        <div className="-mx-4 sm:-mx-6 lg:-mx-8">
-          <PetTicker pets={pets} breedPhotos={breedPhotos} />
-        </div>
-      </section>
-
-      <section className="flex flex-col gap-3">
-        <Eyebrow>Índice · {pets.length} fichas</Eyebrow>
-        <PetIndex pets={pets} />
-      </section>
-    </div>
+      <PetMuralGrid pets={pets} breedPhotos={breedPhotos} />
+    </section>
   );
 }
 
+/** Mismo ritmo de celdas que <PetMuralGrid>, para que el relevo no dé un salto. */
+const SKELETON_SPANS = [
+  "lg:col-span-4",
+  "lg:col-span-2",
+  "lg:col-span-2",
+  "lg:col-span-4",
+];
+
 function MuralSkeleton() {
   return (
-    <div className="flex flex-col gap-10" aria-hidden="true">
-      <div className="bg-border border-border grid grid-cols-2 gap-px overflow-hidden rounded-lg border sm:grid-cols-4">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <div key={index} className="bg-card flex flex-col gap-2 px-4 py-4">
-            <div className="bg-muted h-8 w-12 animate-pulse rounded" />
-            <div className="bg-muted h-3 w-24 animate-pulse rounded" />
-          </div>
-        ))}
+    <div className="flex flex-col gap-4" aria-hidden="true">
+      <div className="flex flex-col gap-2">
+        <div className="bg-muted h-6 w-32 animate-pulse rounded" />
+        <div className="bg-muted h-3 w-56 animate-pulse rounded" />
       </div>
 
-      <div className="-mx-4 flex overflow-hidden sm:-mx-6 lg:-mx-8">
-        {Array.from({ length: 6 }).map((_, index) => (
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
+        {SKELETON_SPANS.map((span, index) => (
           <div
             key={index}
-            className="border-border bg-card mr-4 w-[300px] shrink-0 overflow-hidden rounded-lg border"
+            className={`border-border bg-card flex flex-col overflow-hidden rounded-lg border ${span}`}
           >
-            <div className="bg-muted aspect-[4/3] animate-pulse" />
-            <div className="flex flex-col gap-2 p-4">
+            <div className="bg-muted h-56 animate-pulse sm:h-64 lg:h-80" />
+            <div className="flex flex-col gap-2 p-5 sm:p-6">
               <div className="bg-muted h-5 w-1/2 animate-pulse rounded" />
               <div className="bg-muted h-3 w-3/4 animate-pulse rounded" />
             </div>

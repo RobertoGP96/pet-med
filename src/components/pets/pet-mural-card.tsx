@@ -6,14 +6,24 @@ import { Cake, PawPrint, Star } from "lucide-react";
 import { SPECIES_LABELS } from "@/domain/enums";
 import { getAge, getNextBirthday } from "@/domain/health/age";
 import type { MuralPet } from "@/domain/types";
+import { cn } from "@/lib/utils";
 
 /**
- * Tarjeta del mural, la pieza que viaja en la cinta.
+ * Celda del mural.
  *
- * Ancho fijo: es un vagón de una cinta horizontal, no una celda de una rejilla
- * que deba estirarse. La foto va en blanco y negro y recupera el color al pasar
- * el cursor — el diseño usa la escala de grises para que la fila se lea como un
- * archivo y sea la mascota mirada la que se enciende.
+ * Ocupa todo el ancho de la celda que le toque en la rejilla (ver
+ * pet-mural-grid.tsx) y reparte el alto como el bento del que viene: la foto a
+ * una altura fija arriba y el texto debajo, en su bloque con aire. Así las
+ * celdas anchas y las estrechas de una misma fila acaban a la misma altura sin
+ * estirar la foto.
+ *
+ * El texto va debajo y no encima de la imagen a propósito: escribirlo encima
+ * obligaría a un velo oscuro y a texto claro fijo, y eso se rompe en cuanto la
+ * interfaz cambia a modo oscuro.
+ *
+ * La foto va en blanco y negro y recupera el color al pasar el cursor: el
+ * diseño usa la escala de grises para que el mural se lea como un archivo y
+ * sea la mascota mirada la que se enciende.
  *
  * La foto va envuelta en <ViewTransition> con un `name` único por mascota. En
  * la ficha pública (src/app/mural/[petId]/page.tsx) hay otra con el mismo
@@ -26,17 +36,20 @@ export function PetMuralCard({
   priority,
   breedPhotoUrl,
   /**
-   * La cinta duplica la lista para que el bucle no salte. La copia es puro
-   * adorno: se oculta a los lectores de pantalla y no repite el `name` de la
-   * transición, que debe ser único en la página.
+   * Celda grande: hay sitio para la descripción y el nombre va a mayor cuerpo.
+   * Lo decide la rejilla, que es quien sabe qué tamaño le ha dado.
    */
-  duplicate = false,
+  prominent = false,
+  className,
+  sizes = "(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw",
 }: {
   pet: MuralPet;
   priority?: boolean;
   /** Foto genérica de la raza, sólo si la mascota no tiene ninguna propia. */
   breedPhotoUrl?: string | null;
-  duplicate?: boolean;
+  prominent?: boolean;
+  className?: string;
+  sizes?: string;
 }) {
   const ownPhoto = pet.coverPhotoUrl ?? pet.avatarUrl;
   const photo = ownPhoto ?? breedPhotoUrl ?? null;
@@ -53,11 +66,13 @@ export function PetMuralCard({
       alt={pet.name}
       fill
       priority={priority}
-      sizes="300px"
+      sizes={sizes}
       className="object-cover grayscale transition duration-500 group-hover:scale-105 group-hover:grayscale-0"
     />
   ) : (
-    <div className="text-muted-foreground/40 grid h-full place-items-center">
+    // Sin foto la celda no se queda en blanco: la trama de huellas del diseño
+    // la rellena y la huella grande marca que falta la imagen.
+    <div className="paws text-muted-foreground/40 grid h-full place-items-center">
       <PawPrint className="size-12" aria-hidden="true" />
     </div>
   );
@@ -66,18 +81,17 @@ export function PetMuralCard({
     <Link
       href={`/mural/${pet.id}`}
       transitionTypes={["nav-forward"]}
-      tabIndex={duplicate ? -1 : undefined}
-      aria-hidden={duplicate || undefined}
-      className="group border-border bg-card hover:border-brand focus-visible:ring-brand relative flex w-[300px] shrink-0 flex-col overflow-hidden rounded-lg border transition focus-visible:ring-2 focus-visible:outline-none"
+      className={cn(
+        "group border-border bg-card hover:border-brand focus-visible:ring-brand flex w-full flex-col overflow-hidden rounded-lg border transition focus-visible:ring-2 focus-visible:outline-none",
+        className,
+      )}
     >
-      <div className="bg-muted relative aspect-[4/3] overflow-hidden">
-        {duplicate ? (
-          cover
-        ) : (
-          <ViewTransition name={`pet-photo-${pet.id}`} share="morph">
-            {cover}
-          </ViewTransition>
-        )}
+      {/* Altura fija, como en el bento de referencia: es lo que alinea las
+          tarjetas de una fila aunque sus textos midan distinto. */}
+      <div className="bg-muted relative h-56 shrink-0 overflow-hidden sm:h-64 lg:h-80">
+        <ViewTransition name={`pet-photo-${pet.id}`} share="morph">
+          {cover}
+        </ViewTransition>
 
         {isBreedPhoto && (
           <span className="eyebrow bg-primary/70 text-primary-foreground absolute right-2 bottom-2 rounded px-2 py-1 backdrop-blur">
@@ -102,9 +116,16 @@ export function PetMuralCard({
         )}
       </div>
 
-      <div className="flex flex-1 flex-col gap-2 p-4">
+      <div className="flex flex-1 flex-col gap-1 p-5 sm:p-6">
         <div className="flex items-baseline gap-2">
-          <h3 className="truncate text-xl font-extrabold tracking-[-0.02em]">{pet.name}</h3>
+          <h3
+            className={cn(
+              "truncate font-extrabold tracking-[-0.02em]",
+              prominent ? "text-2xl" : "text-lg",
+            )}
+          >
+            {pet.name}
+          </h3>
           {age && (
             <span className="text-muted-foreground shrink-0 text-xs">
               {age.years > 0
@@ -121,9 +142,10 @@ export function PetMuralCard({
 
         {/* La descripción que escribió su dueño. Es lo único que el mural
             cuenta de cada mascota además de su foto: peso, padecimientos y
-            medicación se quedan en la ficha privada. */}
-        {pet.bio && (
-          <p className="text-muted-foreground mt-auto line-clamp-2 pt-1 text-xs text-pretty">
+            medicación se quedan en la ficha privada. Sólo cabe en las celdas
+            grandes; en las pequeñas le robaría el sitio a la foto. */}
+        {prominent && pet.bio && (
+          <p className="text-muted-foreground mt-1 line-clamp-2 max-w-[60ch] text-xs text-pretty">
             {pet.bio}
           </p>
         )}
