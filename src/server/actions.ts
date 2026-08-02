@@ -49,7 +49,7 @@ import {
   successState,
   type ActionState,
 } from "@/lib/action-result";
-import { requireUser } from "@/lib/auth";
+import { requireAdmin, requireUser } from "@/lib/auth";
 import { getStorage } from "@/lib/storage";
 import type { Db } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
@@ -214,6 +214,136 @@ export async function signOutAction(): Promise<void> {
 
   revalidatePath("/", "layout");
   redirect("/");
+}
+
+// ===========================================================================
+// Administración
+// ===========================================================================
+//
+// `requireAdmin()` da un 404 a quien no lo sea, pero no es la única barrera:
+// las políticas de RLS de pets y profiles exigen `public.is_admin()` para tocar
+// filas ajenas. Si alguien llamara a estas acciones a pelo —son endpoints POST
+// como cualquier otra— la base de datos afectaría a cero filas y
+// `denyIfUntouched()` lo convertiría en un error.
+
+/** Refresca lo que ve todo el mundo y el propio panel. */
+function revalidateMural(): void {
+  revalidatePath("/");
+  revalidatePath("/admin");
+}
+
+/**
+ * Destaca una mascota en el mural, o le quita el destacado.
+ *
+ * `featured_at` es lo que ordena entre las destacadas, y por eso se vuelve a
+ * sellar cada vez que se destaca: volver a destacar una mascota ya destacada la
+ * sube al principio. Eso es el «reordenar» del panel, sin necesidad de un campo
+ * de posición que habría que recalcular en cadena cada vez.
+ */
+export async function setPetFeaturedAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  await requireAdmin();
+
+  const petId = String(formData.get("petId") ?? "");
+  if (!petId) return errorState("Falta la mascota.");
+
+  const featured = formData.get("featured") === "true";
+  const db = await createClient();
+
+  const denied = denyIfUntouched(
+    await db
+      .from("pets")
+      .update({
+        featured,
+        featured_at: featured ? new Date().toISOString() : null,
+      })
+      .eq("id", petId)
+      .select("id"),
+    "esa mascota",
+  );
+  if (denied) return denied;
+
+  revalidateMural();
+  return successState(featured ? "Destacada en el mural." : "Ya no está destacada.");
+}
+
+/**
+ * Retira una mascota del mural, o la devuelve.
+ *
+ * Es independiente de `is_public`, que es del dueño: basta con que una de las
+ * dos diga que no para que la mascota no aparezca. Un administrador no puede
+ * publicar lo que su dueño quiso privado.
+ */
+export async function setPetHiddenAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  await requireAdmin();
+
+  const petId = String(formData.get("petId") ?? "");
+  if (!petId) return errorState("Falta la mascota.");
+
+  const hidden = formData.get("hidden") === "true";
+  const db = await createClient();
+
+  const denied = denyIfUntouched(
+    await db
+      .from("pets")
+      // Al ocultar se retira también el destacado: una mascota escondida y
+      // «destacada» a la vez es un estado que no significa nada y que volvería
+      // a aparecer arriba del todo el día que se restaure.
+      .update(hidden ? { hidden_by_admin: true, featured: false, featured_at: null } : { hidden_by_admin: false })
+      .eq("id", petId)
+      .select("id"),
+    "esa mascota",
+  );
+  if (denied) return denied;
+
+  revalidateMural();
+  return successState(hidden ? "Retirada del mural." : "Devuelta al mural.");
+}
+
+/**
+ * Cambia el rol de una cuenta.
+ *
+ * La comprobación de que quien lo pide es administrador está por triplicado:
+ * aquí, en la política de UPDATE de profiles y en el disparador
+ * `guard_profile_role`. No sobra ninguna — el disparador es el único que
+ * protege la columna, porque la RLS razona por filas y dejaría a cualquiera
+ * ascenderse editando su propio perfil.
+ */
+export async function setUserRoleAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const admin = await requireAdmin();
+
+  const userId = String(formData.get("userId") ?? "");
+  const role = String(formData.get("role") ?? "");
+
+  if (!userId) return errorState("Falta la cuenta.");
+  if (role !== "user" && role !== "admin") return errorState("Ese rol no existe.");
+
+  // Quitarse a uno mismo el rol es la forma más rápida de quedarse fuera del
+  // panel sin poder volver a entrar: haría falta el SQL Editor para arreglarlo.
+  if (userId === admin.id && role !== "admin") {
+    return errorState("No puedes quitarte a ti mismo el rol de administrador.");
+  }
+
+  const db = await createClient();
+
+  const denied = denyIfUntouched(
+    await db.from("profiles").update({ role }).eq("id", userId).select("id"),
+    "esa cuenta",
+  );
+  if (denied) return denied;
+
+  revalidatePath("/admin/usuarios");
+  return successState(
+    role === "admin" ? "Ahora es administrador." : "Ahora es una cuenta normal.",
+  );
 }
 
 // ===========================================================================

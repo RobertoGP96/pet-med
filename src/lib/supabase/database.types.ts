@@ -111,6 +111,7 @@ export interface Database {
         Row: {
           id: string;
           display_name: string | null;
+          email: string | null;
           avatar_url: string | null;
           role: Database["public"]["Enums"]["user_role"];
           created_at: string;
@@ -119,6 +120,7 @@ export interface Database {
         Insert: {
           id: string;
           display_name?: string | null;
+          email?: string | null;
           avatar_url?: string | null;
           role?: Database["public"]["Enums"]["user_role"];
           created_at?: string;
@@ -127,6 +129,7 @@ export interface Database {
         Update: {
           id?: string;
           display_name?: string | null;
+          email?: string | null;
           avatar_url?: string | null;
           role?: Database["public"]["Enums"]["user_role"];
           created_at?: string;
