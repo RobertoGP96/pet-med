@@ -103,6 +103,11 @@ describe("peso", () => {
     expect(assessBodyCondition(1).level).toBe("alert");
   });
 
+  it("da una etiqueta distinta a cada punto de la escala BCS", () => {
+    const labels = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((score) => assessBodyCondition(score).label);
+    expect(new Set(labels).size).toBe(9);
+  });
+
   it("estima el peso ideal descontando el exceso por punto de BCS", () => {
     // BCS 7 => 20 % por encima del ideal => 24 / 1,2 = 20
     expect(estimateIdealWeight(24, 7)).toBe(20);
