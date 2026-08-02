@@ -11,6 +11,7 @@
 import { useFormStatus } from "react-dom";
 import { CheckCircle2, Loader2, TriangleAlert } from "lucide-react";
 
+import { actionStyles } from "@/components/ui/action";
 import { cn } from "@/lib/utils";
 import type { ActionState } from "@/lib/action-result";
 
@@ -29,12 +30,10 @@ export function SubmitButton({
     <button
       type="submit"
       disabled={pending}
-      className={cn(
-        "bg-brand text-brand-foreground inline-flex h-10 items-center justify-center gap-2 rounded-md px-4 text-sm font-medium transition",
-        "hover:opacity-90 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:outline-none",
-        "disabled:cursor-not-allowed disabled:opacity-60",
-        className,
-      )}
+      // Mismo aspecto que `ActionButton`, pero sin poder usarlo: aquí hace
+      // falta `useFormStatus`, así que se comparte la receta de estilos y no
+      // el componente.
+      className={cn(actionStyles({ variant: "brand" }), className)}
     >
       {pending && <Loader2 className="size-4 animate-spin" aria-hidden="true" />}
       {pending ? pendingLabel : children}
@@ -88,10 +87,7 @@ export function DangerButton({
         // Una acción irreversible no se ejecuta sin confirmación explícita.
         if (!window.confirm(confirmMessage)) event.preventDefault();
       }}
-      className={cn(
-        "text-health-alert hover:bg-health-alert/10 inline-flex h-9 items-center gap-2 rounded-md px-3 text-sm font-medium transition disabled:opacity-60",
-        className,
-      )}
+      className={cn(actionStyles({ variant: "danger", size: "sm" }), className)}
     >
       {pending ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : children}
     </button>

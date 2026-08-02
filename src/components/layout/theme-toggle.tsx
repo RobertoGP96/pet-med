@@ -63,7 +63,20 @@ const OPTIONS: { value: Theme; label: string; icon: typeof Sun }[] = [
   { value: "system", label: "Sistema", icon: Monitor },
 ];
 
-export function ThemeToggle({ collapsed }: { collapsed?: boolean }) {
+export function ThemeToggle({
+  collapsed,
+  /**
+   * Un único botón que rota claro → oscuro → sistema en vez del grupo de tres.
+   * Es lo que se usa en la barra superior del móvil, donde no hay sitio para
+   * tres controles junto al avatar y la salida.
+   */
+  compact,
+  className,
+}: {
+  collapsed?: boolean;
+  compact?: boolean;
+  className?: string;
+}) {
   const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   // Efecto legítimo: sincroniza un sistema externo (la clase del <html>) con
@@ -90,9 +103,36 @@ export function ThemeToggle({ collapsed }: { collapsed?: boolean }) {
     emitChange();
   }
 
+  if (compact) {
+    const current = OPTIONS.find((option) => option.value === theme) ?? OPTIONS[2];
+    const next = OPTIONS[(OPTIONS.indexOf(current) + 1) % OPTIONS.length];
+    const Icon = current.icon;
+
+    return (
+      <button
+        type="button"
+        onClick={() => selectTheme(next.value)}
+        // El rótulo dice qué pasará al pulsar, no en qué estado está: es un
+        // botón de acción, no un interruptor con dos posiciones.
+        aria-label={`Tema: ${current.label}. Cambiar a ${next.label.toLowerCase()}`}
+        title={`Tema: ${current.label}`}
+        className={cn(
+          "text-muted-foreground hover:bg-accent hover:text-foreground grid size-8 place-items-center rounded-md transition",
+          className,
+        )}
+      >
+        <Icon className="size-4" />
+      </button>
+    );
+  }
+
   return (
     <div
-      className={cn("border-border flex gap-1 rounded-lg border p-1", collapsed && "flex-col")}
+      className={cn(
+        "border-border flex gap-1 rounded-lg border p-1",
+        collapsed && "flex-col",
+        className,
+      )}
       role="group"
       aria-label="Tema de la interfaz"
     >
@@ -107,7 +147,7 @@ export function ThemeToggle({ collapsed }: { collapsed?: boolean }) {
           className={cn(
             "grid size-7 place-items-center rounded-md transition",
             theme === option.value
-              ? "bg-brand/15 text-brand"
+              ? "bg-brand text-brand-foreground"
               : "text-muted-foreground hover:bg-muted",
           )}
         >

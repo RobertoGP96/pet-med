@@ -5,6 +5,7 @@ import { ViewTransition } from "react";
 import { ArrowLeft, PawPrint, Pencil } from "lucide-react";
 
 import { PetTabs } from "@/components/pets/pet-tabs";
+import { ActionLink } from "@/components/ui/action";
 import { SPECIES_LABELS, SEX_LABELS } from "@/domain/enums";
 import { getAge, getLifeStage } from "@/domain/health/age";
 import { LIFE_STAGE_LABELS } from "@/domain/enums";
@@ -16,10 +17,7 @@ import { getPet } from "@/server/queries";
  * Al vivir en el layout, la cabecera no se vuelve a montar al cambiar de
  * pestaña — sólo se sustituye el contenido de debajo.
  */
-export default async function PetLayout({
-  children,
-  params,
-}: LayoutProps<"/mascotas/[petId]">) {
+export default async function PetLayout({ children, params }: LayoutProps<"/mascotas/[petId]">) {
   // En Next 16 los `params` son una promesa: el acceso síncrono se eliminó.
   const { petId } = await params;
   const pet = await getPet(petId);
@@ -45,7 +43,7 @@ export default async function PetLayout({
         {/* Mismo `name` que en la tarjeta del mural: React empareja las dos
             fotos y anima una hasta la otra durante la navegación. */}
         <ViewTransition name={`pet-photo-${pet.id}`} share="morph">
-          <div className="bg-brand-muted relative size-24 shrink-0 overflow-hidden rounded-2xl">
+          <div className="bg-brand-muted relative size-24 shrink-0 overflow-hidden rounded-lg">
             {photo ? (
               <Image src={photo} alt={pet.name} fill sizes="96px" className="object-cover" />
             ) : (
@@ -57,7 +55,7 @@ export default async function PetLayout({
         </ViewTransition>
 
         <div className="flex min-w-0 flex-1 flex-col gap-1">
-          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{pet.name}</h1>
+          <h1 className="text-2xl font-extrabold tracking-[-0.03em] sm:text-3xl">{pet.name}</h1>
           <p className="text-muted-foreground text-sm">
             {[
               SPECIES_LABELS[pet.species],
@@ -71,13 +69,14 @@ export default async function PetLayout({
           {pet.bio && <p className="text-muted-foreground mt-1 text-sm">{pet.bio}</p>}
         </div>
 
-        <Link
+        <ActionLink
           href={`/mascotas/${pet.id}/editar`}
-          className="border-border hover:bg-muted inline-flex h-9 shrink-0 items-center gap-2 self-start rounded-md border px-3 text-sm transition"
+          variant="outline"
+          className="shrink-0 self-start"
         >
           <Pencil className="size-4" />
           Editar
-        </Link>
+        </ActionLink>
       </header>
 
       <PetTabs petId={pet.id} />

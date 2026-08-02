@@ -37,12 +37,8 @@ function TraitScale({ value, demanding }: { value: number; demanding?: boolean }
         <span
           key={step}
           className={cn(
-            "h-1.5 w-5 rounded-full transition",
-            step <= value
-              ? demanding && value >= 4
-                ? "bg-health-watch"
-                : "bg-brand"
-              : "bg-muted",
+            "h-1.5 w-5 transition",
+            step <= value ? (demanding && value >= 4 ? "bg-health-watch" : "bg-brand") : "bg-muted",
           )}
         />
       ))}
@@ -88,10 +84,7 @@ export function BreedBadges({ breed }: { breed: BreedProfile }) {
   return (
     <ul className="flex flex-wrap gap-2">
       {badges.map((badge) => (
-        <li
-          key={badge}
-          className="bg-muted text-muted-foreground rounded-full px-3 py-1 text-xs font-medium"
-        >
+        <li key={badge} className="bg-muted text-muted-foreground eyebrow rounded px-2.5 py-1.5">
           {badge}
         </li>
       ))}

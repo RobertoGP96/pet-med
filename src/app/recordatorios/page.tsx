@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Plus } from "lucide-react";
 
 import {
@@ -7,6 +6,7 @@ import {
 } from "@/components/reminders/reminder-composer";
 import { ReminderList } from "@/components/reminders/reminder-list";
 import { SetupNotice } from "@/components/setup-notice";
+import { ActionLink } from "@/components/ui/action";
 import { EmptyState, PageHeader, Section } from "@/components/ui/section";
 import { isSupabaseConfigured } from "@/lib/env";
 import { getPetDossier, listPendingReminders, listPets } from "@/server/queries";
@@ -49,13 +49,10 @@ export default async function RemindersPage() {
           title="Primero crea una ficha"
           description="Los recordatorios se asocian siempre a una mascota."
           action={
-            <Link
-              href="/mascotas/nueva"
-              className="bg-brand text-brand-foreground inline-flex h-10 items-center gap-2 rounded-md px-4 text-sm font-medium transition hover:opacity-90"
-            >
+            <ActionLink href="/mascotas/nueva">
               <Plus className="size-4" />
               Añadir mascota
-            </Link>
+            </ActionLink>
           }
         />
       ) : (

@@ -1,10 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Archivo, Geist_Mono } from "next/font/google";
 
 import { AppShell } from "@/components/layout/app-shell";
+import { displayNameOf, getSessionUser } from "@/lib/auth";
 import "./globals.css";
 
-const geistSans = Geist({
+/**
+ * Archivo es la tipografía del diseño. Se carga la variable completa porque la
+ * interfaz salta de 400 a 800 sin escalones intermedios y el peso alto es el
+ * que sostiene la identidad.
+ */
+const archivo = Archivo({
   variable: "--font-sans",
   subsets: ["latin"],
 });
@@ -25,8 +31,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+    { media: "(prefers-color-scheme: light)", color: "#f3f2f2" },
+    { media: "(prefers-color-scheme: dark)", color: "#1a1918" },
   ],
 };
 
@@ -50,22 +56,34 @@ const themeScript = `
 })();
 `;
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // La sesión se lee aquí, en el servidor, y baja al armazón como datos planos.
+  // `AppShell` es de cliente: no puede leer cookies por su cuenta, y tampoco
+  // debería — el rol tiene que venir de un sitio en el que el navegador no
+  // pueda escribir.
+  const user = await getSessionUser();
+
   return (
     <html
       lang="es"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${archivo.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="flex min-h-full flex-col">
-        <AppShell>{children}</AppShell>
+        <AppShell
+          account={
+            user ? { name: displayNameOf(user), email: user.email, role: user.role } : null
+          }
+        >
+          {children}
+        </AppShell>
       </body>
     </html>
   );

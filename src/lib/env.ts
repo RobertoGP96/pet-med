@@ -34,7 +34,6 @@ const serverEnvSchema = z.object({
   supabaseUrl: z.url("NEXT_PUBLIC_SUPABASE_URL debe ser una URL válida"),
   supabasePublishableKey: z.string().min(1, "Falta NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"),
   supabaseSecretKey: z.string().min(1, "Falta SUPABASE_SECRET_KEY"),
-  defaultOwnerId: z.uuid("APP_DEFAULT_OWNER_ID debe ser un UUID"),
   storageDriver: z.enum(["local", "supabase"]).default("local"),
   storageBucket: z.string().min(1).default("pet-photos"),
   catApiKey: z.string().optional(),
@@ -55,7 +54,6 @@ export function getServerEnv(): ServerEnv {
     supabaseUrl: publicEnv.supabaseUrl,
     supabasePublishableKey: publicEnv.supabasePublishableKey,
     supabaseSecretKey: process.env.SUPABASE_SECRET_KEY,
-    defaultOwnerId: process.env.APP_DEFAULT_OWNER_ID,
     storageDriver: process.env.STORAGE_DRIVER || undefined,
     storageBucket: process.env.STORAGE_BUCKET || undefined,
     catApiKey: process.env.CAT_API_KEY || undefined,
@@ -73,11 +71,6 @@ export function getServerEnv(): ServerEnv {
   return cached;
 }
 
-/**
- * Identidad del dueño mientras no exista autenticación.
- * Cuando se añada login, esta función pasa a leer la sesión de Supabase y
- * es el único punto que hay que tocar.
- */
-export function getCurrentOwnerId(): string {
-  return getServerEnv().defaultOwnerId;
-}
+// La identidad de quien hace la petición ya no vive aquí: salía de
+// `APP_DEFAULT_OWNER_ID` cuando no había login. Ahora la da la sesión, en
+// `lib/auth.ts` (`getSessionUser` / `requireUser`).

@@ -6,7 +6,8 @@
  * Componente de servidor: los botones viven en `reminder-row-actions.tsx`.
  */
 
-import { isBefore, isToday } from "date-fns";
+import { format, isBefore, isToday, parseISO } from "date-fns";
+import { es } from "date-fns/locale";
 import {
   Bell,
   BellRing,
@@ -21,9 +22,9 @@ import {
 
 import { HEALTH_LEVEL_STYLES } from "@/components/health/health-ui";
 import { ReminderRowActions } from "@/components/reminders/reminder-row-actions";
-import { EmptyState } from "@/components/ui/section";
+import { EmptyState, Eyebrow } from "@/components/ui/section";
 import { RECURRENCE_LABELS, REMINDER_TYPE_LABELS, type ReminderType } from "@/domain/enums";
-import { formatDateTime, formatRelative } from "@/lib/format";
+import { formatRelative, formatTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { ReminderWithPet } from "@/server/queries";
 
@@ -84,7 +85,7 @@ function ReminderGroup({
     <section className="flex flex-col gap-2">
       <h3
         className={cn(
-          "text-xs font-semibold tracking-wide uppercase",
+          "eyebrow",
           overdue ? HEALTH_LEVEL_STYLES.alert.text : "text-muted-foreground",
         )}
       >
@@ -103,46 +104,50 @@ function ReminderGroup({
 function ReminderRow({ item, overdue }: { item: ReminderWithPet; overdue: boolean }) {
   const { reminder, petName } = item;
   const Icon = REMINDER_ICONS[reminder.type];
+  const dueAt = parseISO(reminder.dueAt);
 
   return (
     <li
       className={cn(
-        "flex flex-wrap items-start justify-between gap-3 rounded-xl border p-4",
+        "flex flex-wrap items-start justify-between gap-3 rounded-lg border p-4",
         overdue
           ? cn(HEALTH_LEVEL_STYLES.alert.bg, HEALTH_LEVEL_STYLES.alert.border)
           : "border-border bg-card",
       )}
     >
-      <div className="flex min-w-0 flex-1 gap-3">
-        <span
-          className={cn(
-            "mt-0.5 shrink-0",
-            overdue ? HEALTH_LEVEL_STYLES.alert.text : "text-muted-foreground",
-          )}
-          aria-hidden="true"
-        >
-          <Icon className="size-5" />
-        </span>
+      <div className="flex min-w-0 flex-1 gap-4">
+        {/* Bloque de fecha: manda el día, el mes va debajo en versalitas. El
+            filete vertical es lo que lo separa del contenido, sin caja. */}
+        <div className="border-border flex shrink-0 flex-col items-center border-r pr-4">
+          <span
+            className={cn(
+              "text-2xl leading-none font-extrabold tracking-[-0.02em]",
+              overdue && HEALTH_LEVEL_STYLES.alert.text,
+            )}
+          >
+            {format(dueAt, "d", { locale: es })}
+          </span>
+          <Eyebrow className="mt-1">{format(dueAt, "MMM", { locale: es })}</Eyebrow>
+        </div>
 
         <div className="min-w-0">
-          <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+          <Eyebrow className="inline-flex items-center gap-1.5">
+            <Icon className="size-3.5" aria-hidden="true" />
             {REMINDER_TYPE_LABELS[reminder.type]}
-          </p>
-          <h4 className="font-semibold">{reminder.title}</h4>
+          </Eyebrow>
+          <h4 className="font-extrabold tracking-[-0.02em]">{reminder.title}</h4>
 
           <p className="text-muted-foreground mt-0.5 flex flex-wrap items-center gap-x-2 text-sm">
             <span className="text-foreground font-medium">{petName}</span>
             <span aria-hidden="true">·</span>
-            <span>{formatDateTime(reminder.dueAt)}</span>
-            <span
-              className={cn(overdue && cn(HEALTH_LEVEL_STYLES.alert.text, "font-medium"))}
-            >
+            <span>{formatTime(reminder.dueAt)}</span>
+            <span className={cn(overdue && cn(HEALTH_LEVEL_STYLES.alert.text, "font-medium"))}>
               ({formatRelative(reminder.dueAt)})
             </span>
           </p>
 
           {reminder.recurrence !== "none" && (
-            <span className="bg-muted text-muted-foreground mt-2 inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium">
+            <span className="bg-muted text-muted-foreground eyebrow mt-2 inline-flex items-center gap-1.5 rounded px-2 py-1">
               <Repeat className="size-3" aria-hidden="true" />
               {RECURRENCE_LABELS[reminder.recurrence]}
             </span>
@@ -156,11 +161,7 @@ function ReminderRow({ item, overdue }: { item: ReminderWithPet; overdue: boolea
         </div>
       </div>
 
-      <ReminderRowActions
-        id={reminder.id}
-        petId={reminder.petId}
-        title={reminder.title}
-      />
+      <ReminderRowActions id={reminder.id} petId={reminder.petId} title={reminder.title} />
     </li>
   );
 }

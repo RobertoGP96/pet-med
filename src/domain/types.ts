@@ -50,8 +50,13 @@ export interface Pet {
   /** Texto que acompaña a la mascota en el mural. */
   bio: string | null;
   avatarUrl: string | null;
-  /** Si es visible en el mural público. */
+  /** Si su dueño quiere que sea visible en el mural público. */
   isPublic: boolean;
+  /** Destacada por un administrador: sale primero en el mural. */
+  featured: boolean;
+  featuredAt: DateTime | null;
+  /** Retirada del mural por moderación, decida lo que decida el dueño. */
+  hiddenByAdmin: boolean;
   createdAt: DateTime;
   updatedAt: DateTime;
 }
@@ -158,12 +163,36 @@ export interface Reminder {
 
 // --- Vistas compuestas -----------------------------------------------------
 
-/** Mascota con lo mínimo para pintar una tarjeta del mural sin más consultas. */
+/** Mascota con lo mínimo para pintar una tarjeta de *tu* listado. */
 export interface PetSummary extends Pet {
   coverPhotoUrl: string | null;
   latestWeightKg: number | null;
   activeConditionsCount: number;
   activeMedicationsCount: number;
+}
+
+/**
+ * Mascota tal como se enseña en el mural.
+ *
+ * Es un tipo aparte de `PetSummary` y no una versión recortada suya, y la
+ * diferencia es deliberada: el mural lo ve cualquiera, así que aquí no cabe
+ * nada del historial médico. Peso, padecimientos y tratamientos son de la
+ * persona que los registró.
+ *
+ * No es sólo una convención: desde que la aplicación entra en la base de datos
+ * con la sesión de cada cual, la RLS devolvería cero filas al pedir esas
+ * tablas de una mascota ajena. El tipo dice lo mismo que la base de datos.
+ */
+export interface MuralPet {
+  id: string;
+  name: string;
+  species: Species;
+  breed: string | null;
+  birthDate: DateOnly | null;
+  bio: string | null;
+  avatarUrl: string | null;
+  coverPhotoUrl: string | null;
+  featured: boolean;
 }
 
 /** Todo lo que necesita la ficha de una mascota. */

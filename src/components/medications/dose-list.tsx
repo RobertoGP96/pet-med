@@ -14,7 +14,8 @@ import { Check, CircleCheck, Clock, SkipForward, type LucideIcon } from "lucide-
 import { isToday } from "date-fns";
 
 import { HEALTH_LEVEL_STYLES } from "@/components/health/health-ui";
-import { EmptyState } from "@/components/ui/section";
+import { ActionButton } from "@/components/ui/action";
+import { EmptyState, Eyebrow } from "@/components/ui/section";
 import { DOSE_STATUS_LABELS, type DoseStatus, type HealthLevel } from "@/domain/enums";
 import { getOverdueDoses } from "@/domain/health/medication";
 import type { Medication, MedicationDose } from "@/domain/types";
@@ -67,17 +68,12 @@ export function DoseList({
       {overdue.length > 0 && (
         <section
           className={cn(
-            "flex flex-col gap-2 rounded-xl border p-4",
+            "flex flex-col gap-2 rounded-lg border p-4",
             HEALTH_LEVEL_STYLES.alert.bg,
             HEALTH_LEVEL_STYLES.alert.border,
           )}
         >
-          <h3
-            className={cn(
-              "flex items-center gap-2 text-xs font-semibold tracking-wide uppercase",
-              HEALTH_LEVEL_STYLES.alert.text,
-            )}
-          >
+          <h3 className={cn("eyebrow flex items-center gap-2", HEALTH_LEVEL_STYLES.alert.text)}>
             <Clock className="size-4" aria-hidden="true" />
             Fuera de hora ({overdue.length})
           </h3>
@@ -96,9 +92,7 @@ export function DoseList({
 
       {upcomingToday.length > 0 && (
         <section className="flex flex-col gap-2">
-          <h3 className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
-            Hoy ({upcomingToday.length})
-          </h3>
+          <h3 className="eyebrow text-muted-foreground">Hoy ({upcomingToday.length})</h3>
           <ul className="divide-border divide-y">
             {upcomingToday.map((dose) => (
               <DoseRow
@@ -114,7 +108,7 @@ export function DoseList({
 
       {resolvedToday.length > 0 && (
         <section className="flex flex-col gap-2">
-          <h3 className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+          <h3 className="eyebrow text-muted-foreground">
             Ya registradas hoy ({resolvedToday.length})
           </h3>
           <ul className="divide-border divide-y">
@@ -156,7 +150,7 @@ function DoseRow({
   return (
     <li className="flex flex-wrap items-center justify-between gap-3 py-3">
       <div className="min-w-0">
-        <p className="text-sm font-medium">
+        <p className="text-sm font-extrabold tracking-[-0.02em]">
           {medication?.name ?? "Tratamiento eliminado"}
           {medication && (
             <span className="text-muted-foreground font-normal">
@@ -181,15 +175,9 @@ function DoseRow({
           <DoseStatusButton status="skipped" label="Omitir" icon={SkipForward} />
         </form>
       ) : (
-        <span
-          className={cn(
-            "shrink-0 rounded-full px-2 py-0.5 text-xs font-medium",
-            statusStyles.bg,
-            statusStyles.text,
-          )}
-        >
+        <Eyebrow className={cn("shrink-0 rounded px-2 py-1", statusStyles.bg, statusStyles.text)}>
           {DOSE_STATUS_LABELS[dose.status]}
-        </span>
+        </Eyebrow>
       )}
     </li>
   );
@@ -213,22 +201,17 @@ function DoseStatusButton({
   const { pending } = useFormStatus();
 
   return (
-    <button
+    <ActionButton
       type="submit"
       name="status"
       value={status}
       disabled={pending}
-      className={cn(
-        "inline-flex h-9 items-center gap-1.5 rounded-md px-3 text-sm font-medium transition",
-        "focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:outline-none",
-        "disabled:cursor-not-allowed disabled:opacity-60",
-        primary
-          ? "bg-brand text-brand-foreground hover:opacity-90"
-          : "border-border text-muted-foreground hover:bg-muted border",
-      )}
+      variant={primary ? "brand" : "outline"}
+      // Algo más bajo que la acción de página: aquí van dos por fila.
+      className="h-9 px-3"
     >
       <Icon className="size-4" aria-hidden="true" />
       {label}
-    </button>
+    </ActionButton>
   );
 }

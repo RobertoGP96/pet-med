@@ -7,22 +7,15 @@
 
 import { useActionState } from "react";
 
-import { Field, Select, Textarea } from "@/components/ui/field";
+import { Field, Select, Textarea, TextInput } from "@/components/ui/field";
 import { FormFeedback, SubmitButton } from "@/components/ui/form-feedback";
-import { Input } from "@/components/ui/input";
 import { CLINICAL_EVENT_TYPES, CLINICAL_EVENT_TYPE_LABELS } from "@/domain/enums";
 import type { ClinicalEvent } from "@/domain/types";
 import { idleState } from "@/lib/action-result";
 import { toDateInputValue } from "@/lib/format";
 import { saveClinicalEventAction } from "@/server/actions";
 
-export function ClinicalEventForm({
-  petId,
-  event,
-}: {
-  petId: string;
-  event?: ClinicalEvent;
-}) {
+export function ClinicalEventForm({ petId, event }: { petId: string; event?: ClinicalEvent }) {
   const [state, formAction] = useActionState(saveClinicalEventAction, idleState);
 
   const today = new Date().toISOString().slice(0, 10);
@@ -44,12 +37,12 @@ export function ClinicalEventForm({
         </Field>
 
         <Field name="occurredAt" label="Fecha" required errors={state.fieldErrors}>
-          <Input type="date" defaultValue={toDateInputValue(event?.occurredAt ?? today)} />
+          <TextInput type="date" defaultValue={toDateInputValue(event?.occurredAt ?? today)} />
         </Field>
       </div>
 
       <Field name="title" label="Título" required errors={state.fieldErrors}>
-        <Input
+        <TextInput
           type="text"
           defaultValue={event?.title ?? ""}
           placeholder="Vacuna polivalente anual"
@@ -58,11 +51,15 @@ export function ClinicalEventForm({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field name="vetName" label="Veterinario/a" errors={state.fieldErrors}>
-          <Input type="text" defaultValue={event?.vetName ?? ""} placeholder="Dra. Pérez" />
+          <TextInput type="text" defaultValue={event?.vetName ?? ""} placeholder="Dra. Pérez" />
         </Field>
 
         <Field name="clinic" label="Clínica" errors={state.fieldErrors}>
-          <Input type="text" defaultValue={event?.clinic ?? ""} placeholder="Centro Veterinario" />
+          <TextInput
+            type="text"
+            defaultValue={event?.clinic ?? ""}
+            placeholder="Centro Veterinario"
+          />
         </Field>
       </div>
 
@@ -81,7 +78,7 @@ export function ClinicalEventForm({
         errors={state.fieldErrors}
         hint="Para vacunas y desparasitaciones: cuándo toca el refuerzo"
       >
-        <Input type="date" defaultValue={toDateInputValue(event?.nextDueAt ?? null)} />
+        <TextInput type="date" defaultValue={toDateInputValue(event?.nextDueAt ?? null)} />
       </Field>
 
       <FormFeedback state={state} />

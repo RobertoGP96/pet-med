@@ -45,11 +45,7 @@ export function ReminderComposer({ pets }: { pets: ReminderComposerPet[] }) {
         </div>
       )}
 
-      <ReminderForm
-        key={selected.id}
-        petId={selected.id}
-        medications={selected.medications}
-      />
+      <ReminderForm key={selected.id} petId={selected.id} medications={selected.medications} />
     </div>
   );
 }

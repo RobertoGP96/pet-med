@@ -1,5 +1,10 @@
 /**
- * Historia clínica como línea de tiempo vertical, agrupada por año.
+ * Historia clínica como listado editorial, agrupado por año.
+ *
+ * Cada entrada es una rejilla de dos columnas separada por un filete superior:
+ * a la izquierda el cuándo, el tipo y quién lo firmó; a la derecha el motivo y
+ * el detalle. Sin tarjetas ni línea de tiempo dibujada: lo que ordena la
+ * lectura es el filete, como en una ficha impresa.
  *
  * Los eventos llegan ya ordenados del más reciente al más antiguo.
  * Componente de servidor: sólo el botón de borrar es de cliente.
@@ -21,7 +26,7 @@ import {
 
 import { ClinicalEventDeleteButton } from "@/components/events/clinical-event-delete-button";
 import { HEALTH_LEVEL_STYLES } from "@/components/health/health-ui";
-import { EmptyState } from "@/components/ui/section";
+import { EmptyState, Eyebrow } from "@/components/ui/section";
 import {
   CLINICAL_EVENT_TYPE_LABELS,
   type ClinicalEventType,
@@ -43,13 +48,7 @@ const EVENT_ICONS: Record<ClinicalEventType, LucideIcon> = {
   note: StickyNote,
 };
 
-export function ClinicalTimeline({
-  events,
-  petId,
-}: {
-  events: ClinicalEvent[];
-  petId: string;
-}) {
+export function ClinicalTimeline({ events, petId }: { events: ClinicalEvent[]; petId: string }) {
   if (events.length === 0) {
     return (
       <EmptyState
@@ -73,14 +72,12 @@ export function ClinicalTimeline({
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       {years.map((group) => (
-        <section key={group.year} className="flex flex-col gap-3">
-          <h3 className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
-            {group.year}
-          </h3>
+        <section key={group.year} className="flex flex-col gap-4">
+          <h3 className="eyebrow text-muted-foreground">{group.year}</h3>
 
-          <ol className="border-border ml-3 flex flex-col border-l pl-6">
+          <ol className="flex flex-col gap-4">
             {group.events.map((event) => (
               <TimelineEntry key={event.id} event={event} petId={petId} now={now} />
             ))}
@@ -91,50 +88,35 @@ export function ClinicalTimeline({
   );
 }
 
-function TimelineEntry({
-  event,
-  petId,
-  now,
-}: {
-  event: ClinicalEvent;
-  petId: string;
-  now: Date;
-}) {
+function TimelineEntry({ event, petId, now }: { event: ClinicalEvent; petId: string; now: Date }) {
   const Icon = EVENT_ICONS[event.type];
+  const signedBy = [event.vetName, event.clinic].filter(Boolean).join(" · ");
 
   return (
-    <li className="relative pb-6 last:pb-0">
-      {/* El punto se saca fuera del borde para que quede centrado sobre la línea. */}
-      <span
-        className="border-border bg-card text-muted-foreground absolute top-0.5 -left-[2.375rem] flex size-7 items-center justify-center rounded-full border"
-        aria-hidden="true"
-      >
-        <Icon className="size-4" />
-      </span>
+    <li className="border-border grid gap-x-8 gap-y-3 border-t pt-4 sm:grid-cols-[11rem_1fr]">
+      {/* Columna izquierda: cuándo, de qué y quién lo firmó. */}
+      <div className="flex flex-col gap-1.5">
+        <p className="font-extrabold tracking-[-0.02em]">{formatDate(event.occurredAt)}</p>
 
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-            {CLINICAL_EVENT_TYPE_LABELS[event.type]}
-          </p>
-          <h4 className="font-semibold">{event.title}</h4>
-          <p className="text-muted-foreground text-sm">{formatDate(event.occurredAt)}</p>
-        </div>
+        <Eyebrow tone="brand" className="inline-flex items-center gap-1.5">
+          <Icon className="size-3.5" aria-hidden="true" />
+          {CLINICAL_EVENT_TYPE_LABELS[event.type]}
+        </Eyebrow>
 
-        <ClinicalEventDeleteButton id={event.id} petId={petId} title={event.title} />
+        {signedBy && <p className="text-muted-foreground text-sm">{signedBy}</p>}
       </div>
 
-      {(event.vetName || event.clinic) && (
-        <p className="text-muted-foreground mt-1 text-sm">
-          {[event.vetName, event.clinic].filter(Boolean).join(" · ")}
-        </p>
-      )}
+      {/* Columna derecha: el motivo como título y el detalle debajo. */}
+      <div className="flex flex-col gap-2">
+        <div className="flex items-start justify-between gap-3">
+          <h4 className="min-w-0 flex-1 font-extrabold tracking-[-0.02em]">{event.title}</h4>
+          <ClinicalEventDeleteButton id={event.id} petId={petId} title={event.title} />
+        </div>
 
-      {event.description && (
-        <p className="mt-2 text-sm whitespace-pre-line">{event.description}</p>
-      )}
+        {event.description && <p className="text-sm whitespace-pre-line">{event.description}</p>}
 
-      {event.nextDueAt && <NextDueChip nextDueAt={event.nextDueAt} now={now} />}
+        {event.nextDueAt && <NextDueChip nextDueAt={event.nextDueAt} now={now} />}
+      </div>
     </li>
   );
 }
@@ -149,7 +131,7 @@ function NextDueChip({ nextDueAt, now }: { nextDueAt: string; now: Date }) {
   return (
     <span
       className={cn(
-        "mt-2 inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium",
+        "eyebrow inline-flex w-fit items-center rounded px-2 py-1",
         styles.bg,
         styles.text,
       )}

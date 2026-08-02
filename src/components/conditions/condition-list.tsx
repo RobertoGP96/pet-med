@@ -9,7 +9,7 @@ import { HeartPulse } from "lucide-react";
 
 import { ConditionDeleteButton } from "@/components/conditions/condition-delete-button";
 import { HEALTH_LEVEL_STYLES } from "@/components/health/health-ui";
-import { EmptyState } from "@/components/ui/section";
+import { EmptyState, Eyebrow } from "@/components/ui/section";
 import {
   CONDITION_CATEGORY_LABELS,
   CONDITION_STATUS_LABELS,
@@ -28,13 +28,7 @@ const SEVERITY_LEVELS: Record<Severity, HealthLevel> = {
   severe: "alert",
 };
 
-export function ConditionList({
-  conditions,
-  petId,
-}: {
-  conditions: Condition[];
-  petId: string;
-}) {
+export function ConditionList({ conditions, petId }: { conditions: Condition[]; petId: string }) {
   if (conditions.length === 0) {
     return (
       <EmptyState
@@ -56,9 +50,7 @@ export function ConditionList({
     <div className="flex flex-col gap-6">
       {open.length > 0 && (
         <section className="flex flex-col gap-3">
-          <h3 className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
-            Abiertos ({open.length})
-          </h3>
+          <h3 className="eyebrow text-muted-foreground">Abiertos ({open.length})</h3>
           <div className="grid gap-3 sm:grid-cols-2">
             {open.map((condition) => (
               <ConditionCard key={condition.id} condition={condition} petId={petId} />
@@ -69,7 +61,7 @@ export function ConditionList({
 
       {closed.length > 0 && (
         <section className="flex flex-col gap-3">
-          <h3 className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
+          <h3 className="eyebrow text-muted-foreground">
             Controlados y resueltos ({closed.length})
           </h3>
           <div className="grid gap-3 sm:grid-cols-2">
@@ -97,29 +89,25 @@ function ConditionCard({
   return (
     <article
       className={cn(
-        "border-border bg-card flex flex-col gap-3 rounded-xl border p-4",
+        "border-border bg-card flex flex-col gap-3 rounded-lg border p-4",
         dimmed && "opacity-70",
       )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 flex-col gap-2">
-          <h4 className="leading-tight font-semibold">{condition.name}</h4>
+          <h4 className="leading-tight font-extrabold tracking-[-0.02em]">{condition.name}</h4>
+          {/* Categoría, gravedad y estado van como rectángulos en versalitas, no
+              como píldoras: en el lenguaje «Mancha» son rótulos, no etiquetas. */}
           <div className="flex flex-wrap items-center gap-2">
-            <span className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs font-medium">
+            <Eyebrow className="bg-muted rounded px-2 py-1">
               {CONDITION_CATEGORY_LABELS[condition.category]}
-            </span>
-            <span
-              className={cn(
-                "rounded-full px-2 py-0.5 text-xs font-medium",
-                severityStyles.bg,
-                severityStyles.text,
-              )}
-            >
+            </Eyebrow>
+            <Eyebrow className={cn("rounded px-2 py-1", severityStyles.bg, severityStyles.text)}>
               {SEVERITY_LABELS[condition.severity]}
-            </span>
-            <span className="border-border text-muted-foreground rounded-full border px-2 py-0.5 text-xs font-medium">
+            </Eyebrow>
+            <Eyebrow className="border-border rounded border px-2 py-1">
               {CONDITION_STATUS_LABELS[condition.status]}
-            </span>
+            </Eyebrow>
           </div>
         </div>
 

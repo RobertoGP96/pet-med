@@ -23,7 +23,7 @@ export function DeletePetSection({ petId, petName }: { petId: string; petName: s
         <FormFeedback state={state} />
         <DangerButton
           confirmMessage={`¿Seguro que quieres borrar la ficha de ${petName} y todo su historial? Esta acción no se puede deshacer.`}
-          className="border-health-alert/40 self-start border"
+          className="border-health-alert/40 self-start border font-extrabold"
         >
           <Trash2 className="size-4" aria-hidden="true" />
           Borrar la ficha de {petName}

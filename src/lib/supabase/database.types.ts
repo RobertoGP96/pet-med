@@ -1,9 +1,9 @@
 /**
  * Tipos de la base de datos para @supabase/supabase-js v2.
  *
- * ESTE FICHERO SE MANTIENE A MANO. Todavía no existe un proyecto de Supabase
- * del que generarlo, así que se escribió reflejando columna a columna la
- * migración supabase/migrations/20260801120000_init.sql.
+ * ESTE FICHERO SE MANTIENE A MANO: refleja columna a columna las migraciones de
+ * supabase/migrations/ — 20260801120000_init.sql (esquema base) y
+ * 20260802120000_auth_profiles_roles.sql (perfiles, roles y moderación).
  *
  * En cuanto exista el proyecto, se puede regenerar con:
  *
@@ -52,6 +52,9 @@ export interface Database {
           bio: string | null;
           avatar_url: string | null;
           is_public: boolean;
+          featured: boolean;
+          featured_at: string | null;
+          hidden_by_admin: boolean;
           created_at: string;
           updated_at: string;
         };
@@ -72,6 +75,9 @@ export interface Database {
           bio?: string | null;
           avatar_url?: string | null;
           is_public?: boolean;
+          featured?: boolean;
+          featured_at?: string | null;
+          hidden_by_admin?: boolean;
           created_at?: string;
           updated_at?: string;
         };
@@ -92,6 +98,37 @@ export interface Database {
           bio?: string | null;
           avatar_url?: string | null;
           is_public?: boolean;
+          featured?: boolean;
+          featured_at?: string | null;
+          hidden_by_admin?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+
+      profiles: {
+        Row: {
+          id: string;
+          display_name: string | null;
+          avatar_url: string | null;
+          role: Database["public"]["Enums"]["user_role"];
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          display_name?: string | null;
+          avatar_url?: string | null;
+          role?: Database["public"]["Enums"]["user_role"];
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          display_name?: string | null;
+          avatar_url?: string | null;
+          role?: Database["public"]["Enums"]["user_role"];
           created_at?: string;
           updated_at?: string;
         };
@@ -376,8 +413,14 @@ export interface Database {
       };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      is_admin: {
+        Args: Record<string, never>;
+        Returns: boolean;
+      };
+    };
     Enums: {
+      user_role: "user" | "admin";
       species: "dog" | "cat" | "rabbit" | "bird" | "rodent" | "reptile" | "other";
       sex: "male" | "female" | "unknown";
       pet_size: "small" | "medium" | "large" | "giant";

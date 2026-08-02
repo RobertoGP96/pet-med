@@ -14,9 +14,8 @@
 
 import { useActionState, useState } from "react";
 
-import { Field, Select, Textarea } from "@/components/ui/field";
+import { Field, Select, Textarea, TextInput } from "@/components/ui/field";
 import { FormFeedback, SubmitButton } from "@/components/ui/form-feedback";
-import { Input } from "@/components/ui/input";
 import {
   RECURRENCES,
   RECURRENCE_LABELS,
@@ -58,7 +57,7 @@ export function ReminderForm({
       </Field>
 
       <Field name="title" label="Título" required errors={state.fieldErrors}>
-        <Input
+        <TextInput
           type="text"
           defaultValue={reminder?.title ?? ""}
           placeholder="Refuerzo de la vacuna de la rabia"
@@ -76,7 +75,7 @@ export function ReminderForm({
           // Los errores llegan bajo la clave `dueAt`, que es la del esquema.
           errors={{ dueAtLocal: state.fieldErrors.dueAt ?? [] }}
         >
-          <Input
+          <TextInput
             type="datetime-local"
             defaultValue={toDateTimeInputValue(reminder?.dueAt ?? null)}
             onChange={(event) => {

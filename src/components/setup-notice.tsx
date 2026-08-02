@@ -8,6 +8,8 @@
 
 import { Database, FileCode2, KeyRound, Terminal } from "lucide-react";
 
+import { PageHeader } from "@/components/ui/section";
+
 const STEPS = [
   {
     icon: Database,
@@ -34,24 +36,19 @@ const STEPS = [
 export function SetupNotice() {
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-8 py-10">
-      <div className="flex flex-col gap-3">
-        <h1 className="text-2xl font-semibold tracking-tight">Falta conectar la base de datos</h1>
-        <p className="text-muted-foreground">
-          Pet Med guarda el historial en Supabase. Son cuatro pasos y se hace una sola vez.
-        </p>
-      </div>
+      <PageHeader
+        title="Falta conectar la base de datos"
+        description="Pet Med guarda el historial en Supabase. Son cuatro pasos y se hace una sola vez."
+      />
 
       <ol className="flex flex-col gap-4">
         {STEPS.map((step, index) => (
-          <li
-            key={step.title}
-            className="border-border bg-card flex gap-4 rounded-xl border p-4"
-          >
-            <span className="bg-brand/10 text-brand grid size-9 shrink-0 place-items-center rounded-lg">
+          <li key={step.title} className="border-border bg-card flex gap-4 rounded-lg border p-4">
+            <span className="bg-brand/10 text-brand grid size-9 shrink-0 place-items-center rounded">
               <step.icon className="size-4" />
             </span>
             <div className="flex flex-col gap-1">
-              <p className="font-medium">
+              <p className="font-extrabold tracking-[-0.02em]">
                 {index + 1}. {step.title}
               </p>
               <p className="text-muted-foreground text-sm">{step.body}</p>

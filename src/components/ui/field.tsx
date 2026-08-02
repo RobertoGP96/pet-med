@@ -26,15 +26,7 @@ interface FieldProps {
   className?: string;
 }
 
-export function Field({
-  name,
-  label,
-  children,
-  hint,
-  required,
-  errors,
-  className,
-}: FieldProps) {
+export function Field({ name, label, children, hint, required, errors, className }: FieldProps) {
   const fieldErrors = errors?.[name] ?? [];
   const hasError = fieldErrors.length > 0;
 
@@ -44,7 +36,10 @@ export function Field({
 
   return (
     <div className={cn("flex flex-col gap-2", className)}>
-      <Label htmlFor={name}>
+      {/* El `Label` vendorizado trae `text-black dark:text-white` a fuego; se
+          neutraliza aquí con los tokens para que la etiqueta sea secundaria
+          respecto al valor, como en el diseño. */}
+      <Label htmlFor={name} className="text-muted-foreground dark:text-muted-foreground text-xs">
         {label}
         {required && (
           <span className="text-health-alert ml-0.5" aria-hidden="true">
@@ -80,18 +75,33 @@ export function Field({
   );
 }
 
-/** `<select>` con el mismo aspecto que el Input de Aceternity. */
+/**
+ * Aspecto común de todos los controles.
+ *
+ * El `Input` de Aceternity que había antes traía su propio azul (`#3b82f6`) y
+ * sus grises literales (`bg-gray-50`, `dark:bg-zinc-800`), que no responden a
+ * los tokens y dejaban los formularios fuera de la identidad. Éste es el
+ * control del diseño: fondo hundido, filete de 1px, cursor rojo y el aro de
+ * foco de marca. Vive aquí, en una pieza propia, y no en `ui/input.tsx`, que
+ * es código vendorizado y se sobrescribe al actualizar.
+ */
+const controlStyles =
+  "border-input bg-muted text-foreground caret-brand placeholder:text-muted-foreground/70 focus-visible:ring-brand flex w-full rounded-md border px-3 py-2 text-sm transition focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50";
+
+/** Campo de texto de una línea. */
+export const TextInput = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
+  function TextInput({ className, type = "text", ...props }, ref) {
+    return (
+      <input ref={ref} type={type} className={cn(controlStyles, "h-10", className)} {...props} />
+    );
+  },
+);
+
+/** `<select>` a juego con el resto de controles. */
 export const Select = React.forwardRef<HTMLSelectElement, React.ComponentProps<"select">>(
   function Select({ className, children, ...props }, ref) {
     return (
-      <select
-        ref={ref}
-        className={cn(
-          "shadow-input dark:placeholder-text-neutral-600 flex h-10 w-full rounded-md border-none bg-gray-50 px-3 py-2 text-sm text-black transition duration-400 group-hover/input:shadow-none file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-400 focus-visible:ring-[2px] focus-visible:ring-neutral-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-800 dark:text-white dark:shadow-[0px_0px_1px_1px_#404040] dark:focus-visible:ring-neutral-600",
-          className,
-        )}
-        {...props}
-      >
+      <select ref={ref} className={cn(controlStyles, "h-10", className)} {...props}>
         {children}
       </select>
     );
@@ -101,16 +111,7 @@ export const Select = React.forwardRef<HTMLSelectElement, React.ComponentProps<"
 /** `<textarea>` a juego con el resto de controles. */
 export const Textarea = React.forwardRef<HTMLTextAreaElement, React.ComponentProps<"textarea">>(
   function Textarea({ className, ...props }, ref) {
-    return (
-      <textarea
-        ref={ref}
-        className={cn(
-          "shadow-input dark:placeholder-text-neutral-600 flex w-full rounded-md border-none bg-gray-50 px-3 py-2 text-sm text-black transition duration-400 group-hover/input:shadow-none placeholder:text-neutral-400 focus-visible:ring-[2px] focus-visible:ring-neutral-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-800 dark:text-white dark:shadow-[0px_0px_1px_1px_#404040] dark:focus-visible:ring-neutral-600",
-          className,
-        )}
-        {...props}
-      />
-    );
+    return <textarea ref={ref} className={cn(controlStyles, className)} {...props} />;
   },
 );
 
