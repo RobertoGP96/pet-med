@@ -93,8 +93,18 @@ function denyIfUntouched(
  * de datos —subir una foto al almacenamiento, hoy el único caso—. En el resto
  * de acciones la propia escritura ya es la comprobación.
  */
-async function ownsPet(db: Db, petId: string): Promise<boolean> {
-  const { data } = await db.from("pets").select("id").eq("id", petId).maybeSingle();
+async function ownsPet(db: Db, petId: string, ownerId: string): Promise<boolean> {
+  // El filtro por `owner_id` NO es adorno aquí: la RLS de `pets` tiene además
+  // la política `pets_public_select`, y las políticas del mismo comando se
+  // suman (OR). Sin este filtro, un simple `select id` daba por buena
+  // cualquier mascota del mural público —aunque fuese de otra persona—, que es
+  // justo lo contrario de lo que esta función tiene que responder.
+  const { data } = await db
+    .from("pets")
+    .select("id")
+    .eq("id", petId)
+    .eq("owner_id", ownerId)
+    .maybeSingle();
   return Boolean(data);
 }
 
@@ -803,7 +813,7 @@ export async function uploadPhotoAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  await requireUser();
+  const user = await requireUser();
 
   const parsed = parseFormData(photoUploadSchema, formData);
   if (!parsed.success) {
@@ -817,7 +827,7 @@ export async function uploadPhotoAction(
   // ocurre fuera de la base de datos, y si se hiciera primero, cualquiera
   // podría dejar archivos en la carpeta de una mascota ajena aunque la fila
   // acabara rechazada por la RLS.
-  if (!(await ownsPet(db, input.petId))) {
+  if (!(await ownsPet(db, input.petId, user.id))) {
     return errorState("No se encontró esa mascota, o no es tuya.");
   }
 
