@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense, ViewTransition } from "react";
 import { CalendarClock, Info } from "lucide-react";
@@ -6,7 +5,8 @@ import { CalendarClock, Info } from "lucide-react";
 import { BreedBadges, BreedTraitsList } from "@/components/health/breed-traits";
 import { HealthIndicatorGrid } from "@/components/health/health-indicator-card";
 import { WeightChart } from "@/components/health/weight-chart";
-import { Section } from "@/components/ui/section";
+import { ActionLink } from "@/components/ui/action";
+import { Eyebrow, Section } from "@/components/ui/section";
 import { hasTraits } from "@/domain/breed";
 import { buildHealthIndicators } from "@/domain/health/indicators";
 import { getUpcomingDoses, getOverdueDoses } from "@/domain/health/medication";
@@ -54,10 +54,9 @@ async function Overview({ params }: { params: PageProps<"/mascotas/[petId]">["pa
   return (
     <div className="flex flex-col gap-8">
       <section className="flex flex-col gap-4">
-        <h2 className="text-lg font-semibold tracking-tight">Indicadores de salud</h2>
+        <h2 className="text-lg font-extrabold tracking-[-0.02em]">Indicadores de salud</h2>
         <p className="text-muted-foreground -mt-2 text-sm">
-          Calculados a partir de lo que has registrado. No sustituyen a un diagnóstico
-          veterinario.
+          Calculados a partir de lo que has registrado. No sustituyen a un diagnóstico veterinario.
         </p>
         <HealthIndicatorGrid indicators={indicators} />
       </section>
@@ -67,12 +66,9 @@ async function Overview({ params }: { params: PageProps<"/mascotas/[petId]">["pa
           title="Medicación"
           description="Tomas vencidas y las próximas 24 horas."
           action={
-            <Link
-              href={`/mascotas/${pet.id}/medicamentos`}
-              className="text-brand text-sm font-medium hover:underline"
-            >
+            <ActionLink href={`/mascotas/${pet.id}/medicamentos`} variant="outline">
               Ver tratamientos
-            </Link>
+            </ActionLink>
           }
         >
           <ul className="flex flex-col gap-2">
@@ -100,12 +96,9 @@ async function Overview({ params }: { params: PageProps<"/mascotas/[petId]">["pa
       <Section
         title="Evolución del peso"
         action={
-          <Link
-            href={`/mascotas/${pet.id}/peso`}
-            className="text-brand text-sm font-medium hover:underline"
-          >
+          <ActionLink href={`/mascotas/${pet.id}/peso`} variant="outline">
             Registrar peso
-          </Link>
+          </ActionLink>
         }
       >
         <WeightChart entries={weights} breedRange={breed?.weightRange ?? null} />
@@ -116,13 +109,18 @@ async function Overview({ params }: { params: PageProps<"/mascotas/[petId]">["pa
           <div className="flex flex-col gap-4 text-sm">
             <BreedBadges breed={breed} />
 
-            {breed.description && (
-              <p className="text-muted-foreground">{breed.description}</p>
-            )}
-            <dl className="grid gap-3 sm:grid-cols-2">
+            {breed.description && <p className="text-muted-foreground">{breed.description}</p>}
+            {/* Cada dato es una ficha con su rótulo en versalitas encima y un
+                filete que lo separa del anterior. El filete va por celda y no
+                como rejilla de `gap-px` porque el número de datos depende de lo
+                que publique la API: una fila a medias dejaría un hueco de color
+                de borde. */}
+            <dl className="grid gap-x-6 gap-y-3 sm:grid-cols-2">
               {breed.lifeSpan && (
-                <div>
-                  <dt className="text-muted-foreground text-xs">Esperanza de vida</dt>
+                <div className="border-border flex flex-col gap-1 border-t pt-2">
+                  <dt>
+                    <Eyebrow>Esperanza de vida</Eyebrow>
+                  </dt>
                   <dd>
                     {breed.lifeSpan.minYears} – {breed.lifeSpan.maxYears} años
                   </dd>
@@ -130,14 +128,18 @@ async function Overview({ params }: { params: PageProps<"/mascotas/[petId]">["pa
               )}
               {breed.weightBySex ? (
                 <>
-                  <div>
-                    <dt className="text-muted-foreground text-xs">Peso típico (macho)</dt>
+                  <div className="border-border flex flex-col gap-1 border-t pt-2">
+                    <dt>
+                      <Eyebrow>Peso típico (macho)</Eyebrow>
+                    </dt>
                     <dd>
                       {breed.weightBySex.male.minKg} – {breed.weightBySex.male.maxKg} kg
                     </dd>
                   </div>
-                  <div>
-                    <dt className="text-muted-foreground text-xs">Peso típico (hembra)</dt>
+                  <div className="border-border flex flex-col gap-1 border-t pt-2">
+                    <dt>
+                      <Eyebrow>Peso típico (hembra)</Eyebrow>
+                    </dt>
                     <dd>
                       {breed.weightBySex.female.minKg} – {breed.weightBySex.female.maxKg} kg
                     </dd>
@@ -145,8 +147,10 @@ async function Overview({ params }: { params: PageProps<"/mascotas/[petId]">["pa
                 </>
               ) : (
                 breed.weightRange && (
-                  <div>
-                    <dt className="text-muted-foreground text-xs">Peso típico del adulto</dt>
+                  <div className="border-border flex flex-col gap-1 border-t pt-2">
+                    <dt>
+                      <Eyebrow>Peso típico del adulto</Eyebrow>
+                    </dt>
                     <dd>
                       {breed.weightRange.minKg} – {breed.weightRange.maxKg} kg
                     </dd>
@@ -154,21 +158,25 @@ async function Overview({ params }: { params: PageProps<"/mascotas/[petId]">["pa
                 )
               )}
               {breed.temperament && (
-                <div>
-                  <dt className="text-muted-foreground text-xs">Temperamento</dt>
+                <div className="border-border flex flex-col gap-1 border-t pt-2">
+                  <dt>
+                    <Eyebrow>Temperamento</Eyebrow>
+                  </dt>
                   <dd>{breed.temperament}</dd>
                 </div>
               )}
               {breed.bredFor && (
-                <div>
-                  <dt className="text-muted-foreground text-xs">Criado para</dt>
+                <div className="border-border flex flex-col gap-1 border-t pt-2">
+                  <dt>
+                    <Eyebrow>Criado para</Eyebrow>
+                  </dt>
                   <dd>{breed.bredFor}</dd>
                 </div>
               )}
               {breed.breedGroup && (
-                <div>
-                  <dt className="text-muted-foreground text-xs">
-                    {pet.species === "cat" ? "Origen" : "Grupo"}
+                <div className="border-border flex flex-col gap-1 border-t pt-2">
+                  <dt>
+                    <Eyebrow>{pet.species === "cat" ? "Origen" : "Grupo"}</Eyebrow>
                   </dt>
                   <dd>{breed.breedGroup}</dd>
                 </div>
@@ -176,10 +184,8 @@ async function Overview({ params }: { params: PageProps<"/mascotas/[petId]">["pa
             </dl>
 
             {hasTraits(breed) && (
-              <div className="flex flex-col gap-3 border-t pt-4">
-                <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                  Rasgos de la raza
-                </p>
+              <div className="border-border flex flex-col gap-3 border-t pt-4">
+                <Eyebrow>Rasgos de la raza</Eyebrow>
                 <BreedTraitsList breed={breed} />
               </div>
             )}
@@ -198,9 +204,18 @@ async function Overview({ params }: { params: PageProps<"/mascotas/[petId]">["pa
 
 function OverviewSkeleton() {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-hidden="true">
+    // Mismo dibujo que la rejilla de indicadores para que no salte al llegar
+    // los datos: filete de 1px entre celdas y nada de bordes por tarjeta.
+    <div
+      className="bg-border border-border grid gap-px overflow-hidden rounded-lg border sm:grid-cols-2 lg:grid-cols-3"
+      aria-hidden="true"
+    >
       {Array.from({ length: 6 }).map((_, index) => (
-        <div key={index} className="border-border bg-card h-32 animate-pulse rounded-xl border" />
+        <div key={index} className="bg-card flex h-32 flex-col gap-3 p-4">
+          <div className="bg-muted size-8 animate-pulse rounded" />
+          <div className="bg-muted h-3 w-24 animate-pulse rounded" />
+          <div className="bg-muted h-5 w-16 animate-pulse rounded" />
+        </div>
       ))}
     </div>
   );

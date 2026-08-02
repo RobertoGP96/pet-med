@@ -11,10 +11,10 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { Check, Loader2, Trash2 } from "lucide-react";
 
+import { ActionButton } from "@/components/ui/action";
 import { DangerButton } from "@/components/ui/form-feedback";
 import { idleState } from "@/lib/action-result";
 import { completeReminderAction, deleteReminderAction } from "@/server/actions";
-import { cn } from "@/lib/utils";
 
 export function ReminderRowActions({
   id,
@@ -52,15 +52,7 @@ function CompleteButton({ title }: { title: string }) {
   const { pending } = useFormStatus();
 
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className={cn(
-        "border-border inline-flex h-9 items-center gap-1.5 rounded-md border px-3 text-sm font-medium transition",
-        "hover:bg-muted focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:outline-none",
-        "disabled:cursor-not-allowed disabled:opacity-60",
-      )}
-    >
+    <ActionButton type="submit" variant="outline" disabled={pending} className="h-9 px-3">
       {pending ? (
         <Loader2 className="size-4 animate-spin" aria-hidden="true" />
       ) : (
@@ -68,6 +60,6 @@ function CompleteButton({ title }: { title: string }) {
       )}
       Hecho
       <span className="sr-only">: {title}</span>
-    </button>
+    </ActionButton>
   );
 }

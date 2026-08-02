@@ -81,9 +81,24 @@ API falla, la página se pinta igual sin ellos. Tiempo máximo con
 
 ## Autenticación
 
-No hay. Todo se atribuye a `APP_DEFAULT_OWNER_ID` y se accede con la clave
-`service_role`. Los sitios que habrá que tocar están marcados con `TODO(auth)`.
-El RLS del esquema ya tiene las políticas por `auth.uid()` escritas.
+Supabase Auth con correo y contraseña. Reglas que sostienen el modelo:
+
+1. **`queries.ts` y `actions.ts` entran con `lib/supabase/server.ts`**, el
+   cliente de la sesión. La RLS es la barrera de verdad; los filtros por
+   `owner_id` del código son claridad, no seguridad. `lib/supabase/admin.ts`
+   (service_role, salta RLS) queda sólo para el almacenamiento de fotos.
+2. **La identidad la da `lib/auth.ts`**: `getSessionUser()` (null si no hay
+   sesión), `requireUser()` (desvía a `/acceso`) y `requireAdmin()` (404 si no
+   es admin). Nunca se lee el dueño de un campo del formulario.
+3. **El rol sale de `profiles.role`, jamás de `user_metadata`**: lo segundo lo
+   escribe el propio cliente. Un disparador impide la autopromoción a admin.
+4. **Un UPDATE o DELETE que la RLS no permite no falla: afecta a cero filas.**
+   Por eso toda escritura sobre una fila existente lleva `.select("id")` y pasa
+   por `denyIfUntouched()`. Sin eso la app diría «guardado» sin guardar nada.
+5. **`proxy.ts` refresca la cookie y desvía lo evidente. No autoriza.** Una
+   Server Action llamada a pelo no pasa por él.
+6. El mural es público: `MuralPet` (no `PetSummary`) es lo que sale de
+   `listMuralPets()`, y a propósito no lleva nada del historial médico.
 
 ## Antes de dar algo por terminado
 

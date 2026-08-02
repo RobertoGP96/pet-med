@@ -60,96 +60,121 @@
   --color-brand-muted: var(--brand-muted);
 }
 
+/* ===========================================================================
+   Paleta «Mancha»
+   ---------------------------------------------------------------------------
+   Tres colores y poco más: papel (#f3f2f2), tinta (#201e1d) y un rojo de
+   señal (#ec3013). Todo lo demás son mezclas de esos tres. Los valores van en
+   oklch porque es lo que permite subir la luminosidad en modo oscuro sin que
+   el tono se desplace.
+
+   El rojo hace doble trabajo: es el acento de marca y es el nivel `alert` del
+   semáforo de salud. No es un descuido, es lo que dice el diseño: en esta
+   interfaz el rojo significa «mírame».
+   =========================================================================== */
+
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --background: oklch(0.962 0.001 60);
+  --foreground: oklch(0.237 0.004 49);
+  /* Las tarjetas se levantan un pelo del papel. En el diseño original iban al
+     mismo tono y se separaban sólo por la rejilla de 1px; con los radios
+     suavizados hace falta algo más de contraste para que se lean como pieza. */
+  --card: oklch(0.985 0.001 60);
+  --card-foreground: oklch(0.237 0.004 49);
+  --popover: oklch(0.985 0.001 60);
+  --popover-foreground: oklch(0.237 0.004 49);
+  --primary: oklch(0.237 0.004 49);
+  --primary-foreground: oklch(0.962 0.001 60);
+  --secondary: oklch(0.935 0.001 60);
+  --secondary-foreground: oklch(0.237 0.004 49);
+  --muted: oklch(0.935 0.001 60);
+  --muted-foreground: oklch(0.481 0.004 40);
+  --accent: oklch(0.935 0.001 60);
+  --accent-foreground: oklch(0.237 0.004 49);
+  /* Un rojo más profundo que el de marca: borrar no puede parecerse a
+     «destacado». */
+  --destructive: oklch(0.481 0.185 31);
+  --border: oklch(0.8 0.004 45);
+  --input: oklch(0.8 0.004 45);
+  --ring: oklch(0.611 0.225 31.5);
+  /* Escala de la curva de peso: del rojo de marca a la tinta. */
+  --chart-1: oklch(0.611 0.225 31.5);
+  --chart-2: oklch(0.481 0.185 31);
+  --chart-3: oklch(0.481 0.004 40);
+  --chart-4: oklch(0.378 0.004 40);
+  --chart-5: oklch(0.237 0.004 49);
+  /* Brutalismo suavizado: la esquina se nota, pero no redondea la pieza. */
+  --radius: 0.375rem;
+  --sidebar: oklch(0.935 0.001 60);
+  --sidebar-foreground: oklch(0.237 0.004 49);
+  --sidebar-primary: oklch(0.237 0.004 49);
+  --sidebar-primary-foreground: oklch(0.962 0.001 60);
+  --sidebar-accent: oklch(0.898 0.002 55);
+  --sidebar-accent-foreground: oklch(0.237 0.004 49);
+  --sidebar-border: oklch(0.8 0.004 45);
+  --sidebar-ring: oklch(0.611 0.225 31.5);
 
   /* --- Tokens propios de Pet Med -----------------------------------------
      Este es el sitio donde se cambia la identidad visual: los componentes
      nunca llevan colores literales, siempre estas variables. */
-  --health-good: oklch(0.7 0.15 155);
-  --health-watch: oklch(0.79 0.15 78);
-  --health-alert: oklch(0.62 0.22 25);
-  --health-unknown: oklch(0.65 0.02 260);
+  --health-good: oklch(0.52 0.09 155);
+  --health-watch: oklch(0.58 0.13 62);
+  --health-alert: oklch(0.611 0.225 31.5);
+  --health-unknown: oklch(0.481 0.004 40);
 
-  --brand: oklch(0.68 0.16 45);
-  --brand-foreground: oklch(0.99 0.01 45);
-  --brand-muted: oklch(0.95 0.03 45);
+  --brand: oklch(0.611 0.225 31.5);
+  --brand-foreground: oklch(0.962 0.001 60);
+  --brand-muted: oklch(0.971 0.015 33);
 }
 
+/* El diseño no trae modo oscuro. Éste es la vuelta del calcetín: el papel se
+   convierte en tinta y la tinta en papel, conservando el mismo tono cálido y
+   el mismo rojo. Sobre fondo oscuro el rojo puro se apaga, así que sube de
+   luminosidad hacia el salmón (#ff9783) que el propio diseño usa en sus
+   secciones oscuras. */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: oklch(0.185 0.004 49);
+  --foreground: oklch(0.962 0.001 60);
+  --card: oklch(0.237 0.004 49);
+  --card-foreground: oklch(0.962 0.001 60);
+  --popover: oklch(0.237 0.004 49);
+  --popover-foreground: oklch(0.962 0.001 60);
+  --primary: oklch(0.962 0.001 60);
+  --primary-foreground: oklch(0.237 0.004 49);
+  --secondary: oklch(0.285 0.004 49);
+  --secondary-foreground: oklch(0.962 0.001 60);
+  --muted: oklch(0.285 0.004 49);
+  --muted-foreground: oklch(0.71 0.006 45);
+  --accent: oklch(0.32 0.005 49);
+  --accent-foreground: oklch(0.962 0.001 60);
+  --destructive: oklch(0.68 0.2 31);
+  --border: oklch(0.962 0.001 60 / 16%);
+  --input: oklch(0.962 0.001 60 / 22%);
+  --ring: oklch(0.68 0.21 31.5);
+  --chart-1: oklch(0.68 0.21 31.5);
+  --chart-2: oklch(0.78 0.129 32);
+  --chart-3: oklch(0.71 0.006 45);
+  --chart-4: oklch(0.56 0.005 45);
+  --chart-5: oklch(0.962 0.001 60);
+  --sidebar: oklch(0.237 0.004 49);
+  --sidebar-foreground: oklch(0.962 0.001 60);
+  --sidebar-primary: oklch(0.962 0.001 60);
+  --sidebar-primary-foreground: oklch(0.237 0.004 49);
+  --sidebar-accent: oklch(0.32 0.005 49);
+  --sidebar-accent-foreground: oklch(0.962 0.001 60);
+  --sidebar-border: oklch(0.962 0.001 60 / 16%);
+  --sidebar-ring: oklch(0.68 0.21 31.5);
 
-  /* Los indicadores suben algo de luminosidad en oscuro para mantener el
-     contraste AA sobre fondos oscuros. */
-  --health-good: oklch(0.76 0.16 155);
-  --health-watch: oklch(0.83 0.15 78);
-  --health-alert: oklch(0.7 0.19 25);
-  --health-unknown: oklch(0.6 0.02 260);
+  /* Los indicadores suben luminosidad en oscuro para mantener el contraste AA
+     sobre fondos oscuros. */
+  --health-good: oklch(0.75 0.13 155);
+  --health-watch: oklch(0.79 0.14 68);
+  --health-alert: oklch(0.7 0.19 31.5);
+  --health-unknown: oklch(0.65 0.006 45);
 
-  --brand: oklch(0.74 0.15 45);
-  --brand-foreground: oklch(0.18 0.02 45);
-  --brand-muted: oklch(0.28 0.04 45);
+  --brand: oklch(0.68 0.21 31.5);
+  --brand-foreground: oklch(0.185 0.004 49);
+  --brand-muted: oklch(0.3 0.06 32);
 }
 
 @layer base {
@@ -161,6 +186,132 @@
   }
   html {
     @apply font-sans;
+  }
+
+  /* Los títulos van en el peso más alto de Archivo y con el tracking cerrado.
+     Es lo que le da al conjunto el aire de rótulo impreso. */
+  h1,
+  h2,
+  h3 {
+    @apply font-extrabold tracking-[-0.03em];
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--brand) 30%, transparent);
+  }
+
+  :focus-visible {
+    @apply outline-brand outline-2 outline-offset-2;
+  }
+}
+
+/* ===========================================================================
+   Motivos de la identidad «Mancha»
+   ---------------------------------------------------------------------------
+   Cuatro recursos que se repiten por toda la interfaz. Van aquí y no en cada
+   componente porque son marca, no maquetación.
+   =========================================================================== */
+
+/* Micro-etiqueta en versalitas. El diseño la usa encima de cada dato: «RAZA»,
+   «EN RESGUARDO», «ÚLTIMA CONSULTA»… */
+@utility eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Trama de huellas.
+   ---------------------------------------------------------------------------
+   Se pinta con `mask-image` y no como imagen de fondo para que herede el color
+   del texto: así sirve igual sobre papel, sobre el rojo y en modo oscuro, con
+   un único recurso. Necesita `position: relative` en el contenedor.
+
+   Dos detalles que son la diferencia entre una trama y un mosaico:
+
+   1. Son huellas de verdad —almohadilla y cuatro dedos, cada una con su giro y
+      su tamaño—, no elipses sueltas. La versión anterior repartía nueve puntos
+      por el lienzo y el ojo los leía como topos.
+
+   2. Se superponen DOS capas con lados primos entre sí (260 px y 170 px). Una
+      sola capa repite su retícula cada 260 px y en una pantalla ancha se ve el
+      patrón; al sumarlas, la combinación no vuelve a coincidir hasta los
+      4420 px, que es más que cualquier pantalla. `mask-composite` no hace
+      falta: su valor inicial ya es `add`. */
+@utility paws {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.07;
+    background-color: currentColor;
+    mask-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cg fill='%23000'%3E%3Cg transform='translate(54 56) rotate(-14) scale(1.15)'%3E%3Cellipse cy='9' rx='14' ry='11'/%3E%3Cellipse cx='-13' cy='-8' rx='5' ry='6.5'/%3E%3Cellipse cx='-4.5' cy='-15' rx='5' ry='6.5'/%3E%3Cellipse cx='5.5' cy='-14' rx='5' ry='6.5'/%3E%3Cellipse cx='13.5' cy='-6' rx='4.5' ry='6'/%3E%3C/g%3E%3Cg transform='translate(176 128) rotate(24) scale(0.92)'%3E%3Cellipse cy='9' rx='14' ry='11'/%3E%3Cellipse cx='-13' cy='-8' rx='5' ry='6.5'/%3E%3Cellipse cx='-4.5' cy='-15' rx='5' ry='6.5'/%3E%3Cellipse cx='5.5' cy='-14' rx='5' ry='6.5'/%3E%3Cellipse cx='13.5' cy='-6' rx='4.5' ry='6'/%3E%3C/g%3E%3Cg transform='translate(92 202) rotate(-6) scale(1.02)'%3E%3Cellipse cy='9' rx='14' ry='11'/%3E%3Cellipse cx='-13' cy='-8' rx='5' ry='6.5'/%3E%3Cellipse cx='-4.5' cy='-15' rx='5' ry='6.5'/%3E%3Cellipse cx='5.5' cy='-14' rx='5' ry='6.5'/%3E%3Cellipse cx='13.5' cy='-6' rx='4.5' ry='6'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='170'%3E%3Cg fill='%23000'%3E%3Cg transform='translate(38 118) rotate(38) scale(0.68)'%3E%3Cellipse cy='9' rx='14' ry='11'/%3E%3Cellipse cx='-13' cy='-8' rx='5' ry='6.5'/%3E%3Cellipse cx='-4.5' cy='-15' rx='5' ry='6.5'/%3E%3Cellipse cx='5.5' cy='-14' rx='5' ry='6.5'/%3E%3Cellipse cx='13.5' cy='-6' rx='4.5' ry='6'/%3E%3C/g%3E%3Cg transform='translate(126 40) rotate(-42) scale(0.56)'%3E%3Cellipse cy='9' rx='14' ry='11'/%3E%3Cellipse cx='-13' cy='-8' rx='5' ry='6.5'/%3E%3Cellipse cx='-4.5' cy='-15' rx='5' ry='6.5'/%3E%3Cellipse cx='5.5' cy='-14' rx='5' ry='6.5'/%3E%3Cellipse cx='13.5' cy='-6' rx='4.5' ry='6'/%3E%3C/g%3E%3Cellipse cx='150' cy='142' rx='6' ry='5'/%3E%3Cellipse cx='78' cy='80' rx='4' ry='3.4'/%3E%3Cellipse cx='16' cy='28' rx='5' ry='4.2'/%3E%3C/g%3E%3C/svg%3E");
+    mask-size:
+      260px 260px,
+      170px 170px;
+  }
+}
+
+/* Retícula técnica del encabezado, desvanecida hacia los bordes. */
+@utility blueprint {
+  background-image:
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 70% 80% at 30% 40%, #000 20%, transparent 100%);
+}
+
+/* Cinta infinita del mural. La pista se duplica en el marcado, de modo que
+   recorrer el 50 % deja la segunda copia exactamente donde estaba la primera y
+   el bucle no salta. */
+@utility ticker-track {
+  width: max-content;
+  animation: mancha-marquee 48s linear infinite;
+
+  &:hover,
+  &:focus-within {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes mancha-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Entrada de los titulares, palabra a palabra. */
+@keyframes mancha-word-in {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}
+
+@utility word-in {
+  animation: mancha-word-in 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track,
+  .word-in {
+    animation: none;
   }
 }
 

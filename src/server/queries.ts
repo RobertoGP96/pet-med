@@ -10,14 +10,22 @@
  * generados, se lanzan varias consultas planas en paralelo y se ensamblan en
  * JavaScript. A la escala de esta app (las mascotas de una casa) sale igual de
  * rápido y el código se lee sin esfuerzo.
+ *
+ * SEGURIDAD. Todas estas funciones entran con el cliente de sesión
+ * (`lib/supabase/server.ts`), no con la clave de servicio. Eso significa que la
+ * RLS del esquema se aplica de verdad: pedir la mascota de otra persona no
+ * devuelve un error, devuelve cero filas. Los filtros por dueño que se ven aquí
+ * abajo son por claridad y para acotar el índice, no la barrera de seguridad —
+ * la barrera está en la base de datos, que es donde no se puede olvidar.
  */
 
 import { cache } from "react";
 
-import type { MedicationDose, PetDossier, PetSummary, Reminder } from "@/domain/types";
-import { getCurrentOwnerId } from "@/lib/env";
+import type { MedicationDose, MuralPet, PetDossier, PetSummary, Reminder } from "@/domain/types";
+import { requireUser } from "@/lib/auth";
 import { formatDose } from "@/lib/format";
-import { getDb } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
+import type { Db } from "@/lib/supabase/admin";
 import type { Tables } from "@/lib/supabase/database.types";
 import {
   toClinicalEvent,
@@ -51,11 +59,14 @@ function unwrap<T>(result: { data: T | null; error: { message: string } | null }
 /**
  * Completa las mascotas con los datos que necesita una tarjeta: foto de
  * portada, último peso y cuántos tratamientos y padecimientos tiene abiertos.
+ *
+ * Sólo vale para mascotas propias. Sobre mascotas ajenas la RLS deja las
+ * consultas de peso, padecimientos y medicación en cero filas, que es
+ * justamente lo que debe pasar; para el mural existe `listMuralPets`.
  */
-async function decorate(pets: Tables<"pets">[]): Promise<PetSummary[]> {
+async function decorate(db: Db, pets: Tables<"pets">[]): Promise<PetSummary[]> {
   if (pets.length === 0) return [];
 
-  const db = getDb();
   const ids = pets.map((pet) => pet.id);
 
   const [photos, weights, conditions, medications] = await Promise.all([
@@ -101,41 +112,119 @@ async function decorate(pets: Tables<"pets">[]): Promise<PetSummary[]> {
   }));
 }
 
-/** Todas las mascotas del dueño actual. */
+/** Todas las mascotas de quien ha iniciado sesión. */
 export const listPets = cache(async function listPets(): Promise<PetSummary[]> {
+  const user = await requireUser();
+  const db = await createClient();
+
   const rows = unwrap(
-    await getDb()
+    await db
       .from("pets")
       .select("*")
-      .eq("owner_id", getCurrentOwnerId())
+      .eq("owner_id", user.id)
       .order("created_at", { ascending: true }),
     "las mascotas",
   );
 
-  return decorate(rows);
+  return decorate(db, rows);
 });
 
 /**
- * Mascotas visibles en el mural.
+ * Mascotas visibles en el mural, de todas las cuentas.
  *
- * El mural es público, así que filtra por `is_public` y no por dueño: en
- * cuanto haya varias cuentas, mostrará las mascotas de todas.
+ * Devuelve `MuralPet` y no `PetSummary`: aquí no viaja nada del historial
+ * médico. Ver la nota del tipo en src/domain/types.ts.
+ *
+ * El orden lo marca la moderación: primero las destacadas por un
+ * administrador, de la más reciente a la más antigua, y detrás el resto por
+ * fecha de alta. Es el mismo orden del índice `pets_mural_idx`.
  */
-export const listMuralPets = cache(async function listMuralPets(): Promise<PetSummary[]> {
+export const listMuralPets = cache(async function listMuralPets(): Promise<MuralPet[]> {
+  const db = await createClient();
+
+  // Sin `.eq("is_public", true)`: la política `pets_public_select` ya limita la
+  // lectura a las mascotas públicas y no ocultadas, tanto para visitantes como
+  // para quien haya iniciado sesión. Repetir el filtro aquí sería duplicar la
+  // regla en dos sitios que pueden desincronizarse.
   const rows = unwrap(
-    await getDb()
+    await db
       .from("pets")
-      .select("*")
-      .eq("is_public", true)
+      .select("id, name, species, breed, birth_date, bio, avatar_url, featured, featured_at, created_at")
+      .order("featured", { ascending: false })
+      .order("featured_at", { ascending: false, nullsFirst: false })
       .order("created_at", { ascending: false }),
     "el mural",
   );
 
-  return decorate(rows);
+  if (rows.length === 0) return [];
+
+  const covers = unwrap(
+    await db
+      .from("photos")
+      .select("pet_id, url")
+      .in(
+        "pet_id",
+        rows.map((row) => row.id),
+      )
+      .eq("is_cover", true),
+    "las fotos del mural",
+  );
+
+  const coverByPet = new Map(covers.map((photo) => [photo.pet_id, photo.url]));
+
+  return rows.map((row) => ({
+    id: row.id,
+    name: row.name,
+    species: row.species,
+    breed: row.breed,
+    birthDate: row.birth_date,
+    bio: row.bio,
+    avatarUrl: row.avatar_url,
+    coverPhotoUrl: coverByPet.get(row.id) ?? null,
+    featured: row.featured,
+  }));
 });
 
+/**
+ * Una mascota del mural, con sus fotos públicas.
+ *
+ * Es lo que alimenta /mural/[petId], la ficha que ve cualquiera. La ficha
+ * completa —peso, padecimientos, medicación, historia clínica— vive en
+ * /mascotas/[petId] y sólo la abre su dueño.
+ */
+export const getMuralPet = cache(async function getMuralPet(petId: string) {
+  const db = await createClient();
+
+  const { data, error } = await db
+    .from("pets")
+    .select("id, name, species, breed, size, sex, birth_date, color, bio, avatar_url, featured")
+    .eq("id", petId)
+    .maybeSingle();
+
+  if (error) throw new Error(`No se pudo leer la mascota: ${error.message}`);
+  if (!data) return null;
+
+  const photos = unwrap(
+    await db
+      .from("photos")
+      .select("*")
+      .eq("pet_id", petId)
+      .order("is_cover", { ascending: false })
+      .order("created_at", { ascending: false }),
+    "las fotos",
+  );
+
+  return { pet: data, photos: photos.map(toPhoto) };
+});
+
+/**
+ * Una mascota propia. Devuelve null si no existe **o si no es tuya**: para la
+ * RLS las dos situaciones son la misma, y así la UI no distingue entre «no
+ * existe» y «no es tuya», que es lo correcto.
+ */
 export const getPet = cache(async function getPet(petId: string) {
-  const { data, error } = await getDb().from("pets").select("*").eq("id", petId).maybeSingle();
+  const db = await createClient();
+  const { data, error } = await db.from("pets").select("*").eq("id", petId).maybeSingle();
 
   if (error) throw new Error(`No se pudo leer la mascota: ${error.message}`);
   return data ? toPet(data) : null;
@@ -148,7 +237,7 @@ export const getPet = cache(async function getPet(petId: string) {
 export const getPetDossier = cache(async function getPetDossier(
   petId: string,
 ): Promise<PetDossier | null> {
-  const db = getDb();
+  const db = await createClient();
 
   const petResult = await db.from("pets").select("*").eq("id", petId).maybeSingle();
   if (petResult.error) {
@@ -185,17 +274,17 @@ export interface ReminderWithPet {
 }
 
 /**
- * Recordatorios pendientes de todas las mascotas, del más urgente al menos.
+ * Recordatorios pendientes de todas tus mascotas, del más urgente al menos.
  * Incluye los ya vencidos: son justamente los que hay que ver primero.
  */
 export const listPendingReminders = cache(async function listPendingReminders(
   limit = 20,
 ): Promise<ReminderWithPet[]> {
-  const db = getDb();
-  const ownerId = getCurrentOwnerId();
+  const user = await requireUser();
+  const db = await createClient();
 
   const pets = unwrap(
-    await db.from("pets").select("id, name, avatar_url").eq("owner_id", ownerId),
+    await db.from("pets").select("id, name, avatar_url").eq("owner_id", user.id),
     "las mascotas",
   );
 
@@ -239,10 +328,10 @@ export interface DoseWithContext {
 export const listDosesForToday = cache(async function listDosesForToday(
   now: Date,
 ): Promise<DoseWithContext[]> {
-  const db = getDb();
-  const ownerId = getCurrentOwnerId();
+  const user = await requireUser();
+  const db = await createClient();
 
-  const pets = unwrap(await db.from("pets").select("id, name").eq("owner_id", ownerId), "las mascotas");
+  const pets = unwrap(await db.from("pets").select("id, name").eq("owner_id", user.id), "las mascotas");
   if (pets.length === 0) return [];
 
   const petById = new Map(pets.map((pet) => [pet.id, pet.name]));

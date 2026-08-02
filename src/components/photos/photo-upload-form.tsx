@@ -3,9 +3,8 @@
 import { useActionState } from "react";
 import { ImagePlus } from "lucide-react";
 
-import { Checkbox, Field, Textarea } from "@/components/ui/field";
+import { Checkbox, Field, TextInput, Textarea } from "@/components/ui/field";
 import { FormFeedback, SubmitButton } from "@/components/ui/form-feedback";
-import { Input } from "@/components/ui/input";
 import { ACCEPTED_IMAGE_TYPES } from "@/domain/schemas";
 import { idleState } from "@/lib/action-result";
 import { uploadPhotoAction } from "@/server/actions";
@@ -32,10 +31,13 @@ export function PhotoUploadForm({ petId }: { petId: string }) {
         errors={state.fieldErrors}
         hint="JPEG, PNG, WebP o AVIF. Máximo 5 MB."
       >
+        {/* El propio input es la zona de soltar: al ocupar todo el rectángulo
+            de filete discontinuo, el navegador acepta el arrastre sin que
+            haya que manejar los eventos a mano. */}
         <input
           type="file"
           accept={ACCEPTED_IMAGE_TYPES.join(",")}
-          className="file:bg-brand file:text-brand-foreground text-muted-foreground w-full cursor-pointer text-sm file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:px-3 file:py-2 file:text-sm file:font-medium hover:file:opacity-90"
+          className="border-border bg-muted text-muted-foreground hover:border-brand file:bg-brand file:text-brand-foreground w-full cursor-pointer rounded-lg border border-dashed p-4 text-sm transition file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:px-3 file:py-2 file:text-sm file:font-extrabold hover:file:brightness-95"
         />
       </Field>
 
@@ -45,7 +47,7 @@ export function PhotoUploadForm({ petId }: { petId: string }) {
         </Field>
 
         <Field name="takenAt" label="Fecha de la foto" errors={state.fieldErrors}>
-          <Input type="date" />
+          <TextInput type="date" />
         </Field>
       </div>
 

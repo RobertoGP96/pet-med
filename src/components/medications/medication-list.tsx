@@ -9,13 +9,9 @@ import { CalendarClock, Pill } from "lucide-react";
 
 import { HEALTH_LEVEL_STYLES } from "@/components/health/health-ui";
 import { MedicationDeleteButton } from "@/components/medications/medication-delete-button";
-import { EmptyState } from "@/components/ui/section";
+import { EmptyState, Eyebrow } from "@/components/ui/section";
 import { MEDICATION_ROUTE_LABELS } from "@/domain/enums";
-import {
-  getAdherence,
-  getNextDose,
-  isMedicationCurrent,
-} from "@/domain/health/medication";
+import { getAdherence, getNextDose, isMedicationCurrent } from "@/domain/health/medication";
 import type { Condition, Medication, MedicationDose } from "@/domain/types";
 import { formatDate, formatDateTime, formatDose, formatInterval } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -51,9 +47,7 @@ export function MedicationList({
     <div className="flex flex-col gap-6">
       {current.length > 0 && (
         <section className="flex flex-col gap-3">
-          <h3 className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
-            En curso ({current.length})
-          </h3>
+          <h3 className="eyebrow text-muted-foreground">En curso ({current.length})</h3>
           <div className="flex flex-col gap-3">
             {current.map((medication) => (
               <MedicationCard
@@ -76,9 +70,7 @@ export function MedicationList({
 
       {past.length > 0 && (
         <section className="flex flex-col gap-3">
-          <h3 className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
-            Finalizados e inactivos ({past.length})
-          </h3>
+          <h3 className="eyebrow text-muted-foreground">Finalizados e inactivos ({past.length})</h3>
           <div className="flex flex-col gap-3">
             {past.map((medication) => (
               <MedicationCard
@@ -124,29 +116,29 @@ function MedicationCard({
   return (
     <article
       className={cn(
-        "border-border bg-card flex flex-col gap-3 rounded-xl border p-4",
+        "border-border bg-card flex flex-col gap-3 rounded-lg border p-4",
         dimmed && "opacity-70",
       )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 flex-col gap-1">
           <div className="flex flex-wrap items-center gap-2">
-            <h4 className="leading-tight font-semibold">{medication.name}</h4>
-            <span
+            <h4 className="leading-tight font-extrabold tracking-[-0.02em]">{medication.name}</h4>
+            {/* Rectángulo en versalitas, no píldora: es el rótulo de estado. */}
+            <Eyebrow
               className={cn(
-                "rounded-full px-2 py-0.5 text-xs font-medium",
+                "rounded px-2 py-1",
                 medication.isActive
                   ? cn(HEALTH_LEVEL_STYLES.good.bg, HEALTH_LEVEL_STYLES.good.text)
-                  : "bg-muted text-muted-foreground",
+                  : "bg-muted",
               )}
             >
               {medication.isActive ? "Activo" : "Inactivo"}
-            </span>
+            </Eyebrow>
           </div>
           <p className="text-muted-foreground text-sm">
             {formatDose(medication.dose, medication.doseUnit)} ·{" "}
-            {MEDICATION_ROUTE_LABELS[medication.route]} ·{" "}
-            {formatInterval(medication.intervalHours)}
+            {MEDICATION_ROUTE_LABELS[medication.route]} · {formatInterval(medication.intervalHours)}
           </p>
         </div>
 
@@ -160,9 +152,7 @@ function MedicationCard({
           {medication.endDate ? formatDate(medication.endDate) : "sin fecha de fin"}
         </span>
         {conditionName && (
-          <span className="bg-muted rounded-full px-2 py-0.5 text-xs font-medium">
-            Trata: {conditionName}
-          </span>
+          <Eyebrow className="bg-muted rounded px-2 py-1">Trata: {conditionName}</Eyebrow>
         )}
       </div>
 
@@ -172,9 +162,7 @@ function MedicationCard({
         </p>
       )}
 
-      {showAdherence && (
-        <AdherenceBar doses={doses} now={now} />
-      )}
+      {showAdherence && <AdherenceBar doses={doses} now={now} />}
 
       {nextDose && (
         <p className="text-muted-foreground text-xs">
@@ -192,19 +180,23 @@ function AdherenceBar({ doses, now }: { doses: MedicationDose[]; now: Date }) {
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-baseline justify-between gap-3 text-xs">
-        <span className="text-muted-foreground">Adherencia (30 días)</span>
-        <span className={cn("font-semibold", styles.text)}>
+        <Eyebrow>Adherencia (30 días)</Eyebrow>
+        <span className={cn("font-extrabold", styles.text)}>
           {adherence.due > 0 ? `${adherence.percent} %` : "—"}
         </span>
       </div>
 
+      {/* Barra rectangular y fina, como el resto de medidores del diseño. El
+          relleno no va en el rojo de marca sino en el color del nivel: la
+          adherencia es estado de dominio y se pinta con el mismo semáforo que
+          los demás indicadores. */}
       <div
-        className="bg-muted h-2 w-full overflow-hidden rounded-full"
+        className="bg-muted h-1.5 w-full overflow-hidden"
         role="img"
         aria-label={`Adherencia del ${adherence.percent} %: ${adherence.taken} de ${adherence.due} tomas registradas`}
       >
         <div
-          className={cn("h-full rounded-full", styles.dot)}
+          className={cn("h-1.5", styles.dot)}
           style={{ width: `${adherence.due > 0 ? adherence.percent : 0}%` }}
         />
       </div>

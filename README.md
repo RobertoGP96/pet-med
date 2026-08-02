@@ -41,8 +41,33 @@ En el **SQL Editor** del panel, ejecutar en este orden:
 
 1. `supabase/migrations/20260801120000_init.sql` — tablas, tipos, índices,
    triggers y políticas RLS.
-2. `supabase/seed.sql` — *opcional*, tres mascotas de ejemplo con historial
+2. `supabase/migrations/20260802120000_auth_profiles_roles.sql` — perfiles,
+   roles y moderación del mural.
+3. `supabase/seed.sql` — *opcional*, tres mascotas de ejemplo con historial
    completo para ver la app con datos.
+
+> **Sobre el seed y la clave foránea.** `seed.sql` siembra con un dueño
+> inventado (`00000000-…-0001`) que no existe en `auth.users`. La migración de
+> autenticación añade la clave foránea como `not valid`, así que las mascotas
+> que ya estuvieran sembradas sobreviven y siguen saliendo en el mural — pero
+> **no son de nadie**, y por tanto nadie las verá en «Mis mascotas». Si quieres
+> adoptarlas con tu cuenta, después de registrarte:
+>
+> ```sql
+> update pets set owner_id = (select id from auth.users where email = 'tu@correo.com')
+> where owner_id = '00000000-0000-0000-0000-000000000001';
+> ```
+>
+> Ejecutar `seed.sql` *después* de la migración fallará por la clave foránea:
+> siémbralo antes, o cambia el `owner_id` por el de una cuenta real.
+
+Después de la segunda migración, regístrate en la app con el correo que vaya a
+administrar y asciende esa cuenta desde el SQL Editor:
+
+```sql
+update profiles set role = 'admin'
+where id = (select id from auth.users where email = 'tu@correo.com');
+```
 
 Con la CLI de Supabase, alternativamente:
 
@@ -60,7 +85,6 @@ De **Project Settings → API**:
 | `NEXT_PUBLIC_SUPABASE_URL` | URL del proyecto |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Clave pública (anon) |
 | `SUPABASE_SECRET_KEY` | Clave secreta (service_role). **Nunca** se expone al cliente |
-| `APP_DEFAULT_OWNER_ID` | UUID del dueño mientras no haya login |
 | `STORAGE_DRIVER` | `local` (por defecto) o `supabase` |
 | `CAT_API_KEY` | Opcional; sin ella The Cat API responde con menos cuota. Las APIs de perro no usan clave |
 
@@ -156,12 +180,16 @@ calendarios de vacunación, alimentos tóxicos y dosis de medicamentos.
 
 ## Decisiones que conviene conocer
 
-- **Sin autenticación, de momento.** Todo se atribuye a `APP_DEFAULT_OWNER_ID`
-  y el acceso va con la clave `service_role` desde el servidor. El esquema ya
-  tiene RLS con políticas por `auth.uid()` listas: cuando se añada login, hay
-  que cambiar `getCurrentOwnerId()` y pasar las consultas de
-  `lib/supabase/admin.ts` a `lib/supabase/server.ts`. Los puntos a revisar
-  están marcados con `TODO(auth)`.
+- **Autenticación con Supabase Auth** (correo y contraseña). Cada persona ve
+  sólo sus mascotas; el mural es público. La barrera es la RLS del esquema, no
+  el código: las consultas entran con la sesión de cada cual
+  (`lib/supabase/server.ts`), así que pedir la ficha de otra persona no
+  devuelve un error, devuelve cero filas. `lib/supabase/admin.ts`
+  (`service_role`, salta RLS) queda reservado al almacenamiento de fotos.
+- **Dos roles, `user` y `admin`**, en `profiles.role`. El administrador modera
+  qué se ve en el mural —destacar y ocultar— pero **no** ve el historial
+  clínico de mascotas ajenas: las políticas de las seis tablas médicas no lo
+  contemplan, y es deliberado.
 - **Las fotos se guardan en `public/uploads/` por defecto.** Eso **no funciona
   en Vercel** ni en ningún entorno con sistema de archivos de sólo lectura:
   ahí hay que poner `STORAGE_DRIVER="supabase"` y crear el bucket. El

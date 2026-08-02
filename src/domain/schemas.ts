@@ -78,6 +78,54 @@ const checkbox = z
 
 const uuid = z.uuid("Identificador no válido");
 
+// --- Cuenta ----------------------------------------------------------------
+
+/**
+ * Longitud mínima de contraseña.
+ *
+ * Supabase rechaza por su cuenta cualquier cosa por debajo de 6, pero el error
+ * llegaría en inglés y después de dar el viaje al servidor de autenticación.
+ * Ocho es además lo que recomienda el NIST, y validarlo aquí permite decirlo en
+ * español y junto al campo.
+ */
+const MIN_PASSWORD_LENGTH = 8;
+
+const email = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .min(1, "Escribe tu correo")
+  .pipe(z.email("Ese correo no parece válido"));
+
+const password = z
+  .string()
+  .min(MIN_PASSWORD_LENGTH, `La contraseña necesita al menos ${MIN_PASSWORD_LENGTH} caracteres`)
+  .max(72, "La contraseña no puede pasar de 72 caracteres");
+
+export const signInSchema = z.object({
+  email,
+  // Al entrar no se valida la longitud: la contraseña ya existe, y exigirle
+  // una forma sólo serviría para delatar cuál es la regla. Si no coincide, lo
+  // dirá Supabase.
+  password: z.string().min(1, "Escribe tu contraseña"),
+});
+
+export type SignInInput = z.infer<typeof signInSchema>;
+
+export const signUpSchema = z
+  .object({
+    displayName: requiredText(60, "¿Cómo quieres que te llamemos?"),
+    email,
+    password,
+    passwordConfirm: z.string(),
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    message: "Las dos contraseñas no coinciden",
+    path: ["passwordConfirm"],
+  });
+
+export type SignUpInput = z.infer<typeof signUpSchema>;
+
 // --- Mascota ---------------------------------------------------------------
 
 export const petInputSchema = z.object({

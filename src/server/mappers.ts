@@ -48,6 +48,9 @@ export function toPet(row: Tables<"pets">): Pet {
     bio: row.bio,
     avatarUrl: row.avatar_url,
     isPublic: row.is_public,
+    featured: row.featured,
+    featuredAt: row.featured_at,
+    hiddenByAdmin: row.hidden_by_admin,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };

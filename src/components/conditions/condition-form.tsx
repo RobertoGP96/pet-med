@@ -9,9 +9,8 @@
 
 import { useActionState } from "react";
 
-import { Field, Select, Textarea } from "@/components/ui/field";
+import { Field, Select, TextInput, Textarea } from "@/components/ui/field";
 import { FormFeedback, SubmitButton } from "@/components/ui/form-feedback";
-import { Input } from "@/components/ui/input";
 import {
   CONDITION_CATEGORIES,
   CONDITION_CATEGORY_LABELS,
@@ -25,13 +24,7 @@ import { idleState } from "@/lib/action-result";
 import { toDateInputValue } from "@/lib/format";
 import { saveConditionAction } from "@/server/actions";
 
-export function ConditionForm({
-  petId,
-  condition,
-}: {
-  petId: string;
-  condition?: Condition;
-}) {
+export function ConditionForm({ petId, condition }: { petId: string; condition?: Condition }) {
   const [state, formAction] = useActionState(saveConditionAction, idleState);
 
   const today = new Date().toISOString().slice(0, 10);
@@ -42,11 +35,7 @@ export function ConditionForm({
       {condition && <input type="hidden" name="id" value={condition.id} />}
 
       <Field name="name" label="Padecimiento" required errors={state.fieldErrors}>
-        <Input
-          type="text"
-          defaultValue={condition?.name ?? ""}
-          placeholder="Dermatitis atópica"
-        />
+        <TextInput defaultValue={condition?.name ?? ""} placeholder="Dermatitis atópica" />
       </Field>
 
       <div className="grid gap-4 sm:grid-cols-3">
@@ -83,7 +72,7 @@ export function ConditionForm({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field name="diagnosedAt" label="Fecha de diagnóstico" required errors={state.fieldErrors}>
-          <Input type="date" defaultValue={toDateInputValue(condition?.diagnosedAt ?? today)} />
+          <TextInput type="date" defaultValue={toDateInputValue(condition?.diagnosedAt ?? today)} />
         </Field>
 
         <Field
@@ -92,7 +81,7 @@ export function ConditionForm({
           errors={state.fieldErrors}
           hint="Déjala vacía si sigue abierto."
         >
-          <Input type="date" defaultValue={toDateInputValue(condition?.resolvedAt ?? null)} />
+          <TextInput type="date" defaultValue={toDateInputValue(condition?.resolvedAt ?? null)} />
         </Field>
       </div>
 

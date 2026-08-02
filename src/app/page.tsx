@@ -1,12 +1,13 @@
-import Link from "next/link";
 import { Suspense, ViewTransition } from "react";
 import { PawPrint, Plus } from "lucide-react";
 
 import { DogFact } from "@/components/pets/dog-fact";
-import { PetMuralCard } from "@/components/pets/pet-mural-card";
+import { MuralHero, MuralStats } from "@/components/pets/mural-hero";
+import { PetIndex, PetTicker } from "@/components/pets/pet-ticker";
 import { SetupNotice } from "@/components/setup-notice";
-import { EmptyState } from "@/components/ui/section";
-import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+import { ActionLink } from "@/components/ui/action";
+import { EmptyState, Eyebrow } from "@/components/ui/section";
+import { getSessionUser } from "@/lib/auth";
 import { isSupabaseConfigured } from "@/lib/env";
 import { listMuralPets } from "@/server/queries";
 import { getDogBreedPhoto } from "@/services/breeds/photos";
@@ -27,25 +28,21 @@ export const metadata = {
  */
 export const dynamic = "force-dynamic";
 
-export default function MuralPage() {
+export default async function MuralPage() {
   if (!isSupabaseConfigured()) return <SetupNotice />;
+
+  const user = await getSessionUser();
 
   return (
     <div className="flex flex-col gap-10">
-      <header className="flex flex-col gap-3">
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">El mural</h1>
-        <TextGenerateEffect
-          words="Las mascotas de la casa, sus fotos y todo lo que hay que saber de su salud."
-          className="text-muted-foreground max-w-2xl text-base font-normal"
-        />
-      </header>
+      <MuralHero signedIn={Boolean(user)} />
 
       {/* Suspense propio: una curiosidad no debe retrasar el mural. */}
       <Suspense fallback={null}>
         <DogFact />
       </Suspense>
 
-      {/* El esqueleto sale por `exit` y la parrilla entra por `enter`, así el
+      {/* El esqueleto sale por `exit` y la cinta entra por `enter`, así el
           contenido no aparece de golpe cuando termina la consulta. */}
       <Suspense
         fallback={
@@ -55,14 +52,14 @@ export default function MuralPage() {
         }
       >
         <ViewTransition enter="slide-up" default="none">
-          <MuralGrid />
+          <MuralBoard signedIn={Boolean(user)} />
         </ViewTransition>
       </Suspense>
     </div>
   );
 }
 
-async function MuralGrid() {
+async function MuralBoard({ signedIn }: { signedIn: boolean }) {
   const pets = await listMuralPets();
 
   // Para las mascotas sin foto propia se busca una de su raza en dog.ceo, en
@@ -81,52 +78,77 @@ async function MuralGrid() {
       <EmptyState
         icon={<PawPrint className="size-10" />}
         title="El mural está vacío"
-        description="Las mascotas marcadas como públicas aparecen aquí con su foto de portada y su descripción."
+        description="Las mascotas aparecen aquí con su foto de portada y su descripción, salvo que su dueño prefiera lo contrario."
         action={
-          <Link
-            href="/mascotas/nueva"
-            className="bg-brand text-brand-foreground inline-flex h-10 items-center gap-2 rounded-md px-4 text-sm font-medium transition hover:opacity-90"
-          >
-            <Plus className="size-4" />
-            Añadir la primera
-          </Link>
+          signedIn ? (
+            <ActionLink href="/mascotas/nueva">
+              <Plus className="size-4" />
+              Añadir la primera
+            </ActionLink>
+          ) : (
+            <ActionLink href="/registro">
+              <Plus className="size-4" />
+              Crear una cuenta
+            </ActionLink>
+          )
         }
       />
     );
   }
 
   return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {pets.map((pet, index) => (
-        // Las tres primeras cargan con prioridad: son las que entran en
-        // pantalla y marcan el LCP.
-        <PetMuralCard
-          key={pet.id}
-          pet={pet}
-          priority={index < 3}
-          breedPhotoUrl={breedPhotos[index]}
-        />
-      ))}
+    <div className="flex flex-col gap-10">
+      <MuralStats pets={pets} />
+
+      <section className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-xl font-extrabold tracking-[-0.02em]">En la casa</h2>
+          <p className="text-muted-foreground text-xs">
+            Pasa el cursor sobre la cinta para detenerla.
+          </p>
+        </div>
+
+        {/* La cinta se sale de la caja de contenido: cancela el margen del
+            armazón para llegar a los bordes y leerse como una tira continua. */}
+        <div className="-mx-4 sm:-mx-6 lg:-mx-8">
+          <PetTicker pets={pets} breedPhotos={breedPhotos} />
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <Eyebrow>Índice · {pets.length} fichas</Eyebrow>
+        <PetIndex pets={pets} />
+      </section>
     </div>
   );
 }
 
 function MuralSkeleton() {
   return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {Array.from({ length: 6 }).map((_, index) => (
-        <div
-          key={index}
-          className="border-border bg-card overflow-hidden rounded-2xl border"
-          aria-hidden="true"
-        >
-          <div className="bg-muted aspect-[4/3] animate-pulse" />
-          <div className="flex flex-col gap-2 p-4">
-            <div className="bg-muted h-5 w-1/2 animate-pulse rounded" />
-            <div className="bg-muted h-4 w-3/4 animate-pulse rounded" />
+    <div className="flex flex-col gap-10" aria-hidden="true">
+      <div className="bg-border border-border grid grid-cols-2 gap-px overflow-hidden rounded-lg border sm:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div key={index} className="bg-card flex flex-col gap-2 px-4 py-4">
+            <div className="bg-muted h-8 w-12 animate-pulse rounded" />
+            <div className="bg-muted h-3 w-24 animate-pulse rounded" />
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
+
+      <div className="-mx-4 flex overflow-hidden sm:-mx-6 lg:-mx-8">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <div
+            key={index}
+            className="border-border bg-card mr-4 w-[300px] shrink-0 overflow-hidden rounded-lg border"
+          >
+            <div className="bg-muted aspect-[4/3] animate-pulse" />
+            <div className="flex flex-col gap-2 p-4">
+              <div className="bg-muted h-5 w-1/2 animate-pulse rounded" />
+              <div className="bg-muted h-3 w-3/4 animate-pulse rounded" />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -4,6 +4,10 @@
  * SVG escrito a mano en vez de una librería de gráficas: son ~80 líneas, se
  * renderiza en el servidor sin JavaScript en el cliente y evita añadir una
  * dependencia de las pesadas sólo para dibujar una línea.
+ *
+ * Los colores salen de la escala `--chart-*` de globals.css: la curva en el
+ * rojo de marca (`--chart-1`) y los puntos en tinta (`--chart-5`), que es lo
+ * que hace que cada medida se lea como una marca sobre la línea.
  */
 
 import type { WeightEntry } from "@/domain/types";
@@ -46,8 +50,7 @@ export function WeightChart({
   const plotWidth = WIDTH - PADDING.left - PADDING.right;
   const plotHeight = HEIGHT - PADDING.top - PADDING.bottom;
 
-  const x = (index: number) =>
-    PADDING.left + (index / (points.length - 1)) * plotWidth;
+  const x = (index: number) => PADDING.left + (index / (points.length - 1)) * plotWidth;
   const y = (value: number) =>
     PADDING.top + plotHeight - ((value - min) / (max - min)) * plotHeight;
 
@@ -102,11 +105,11 @@ export function WeightChart({
           );
         })}
 
-        <polygon points={area} className="fill-brand/10" />
+        <polygon points={area} className="fill-chart-1/10" />
         <polyline
           points={line}
           fill="none"
-          className="stroke-brand"
+          className="stroke-chart-1"
           strokeWidth={2}
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -118,7 +121,7 @@ export function WeightChart({
             cx={x(index)}
             cy={y(point.weightKg)}
             r={3}
-            className="fill-brand"
+            className="fill-chart-5"
           >
             <title>{`${formatDate(point.measuredAt)}: ${formatWeight(point.weightKg)}`}</title>
           </circle>
@@ -126,11 +129,7 @@ export function WeightChart({
 
         {/* Sólo se etiquetan los extremos del eje X: con muchos registros las
             fechas intermedias se solapan y no aportan. */}
-        <text
-          x={PADDING.left}
-          y={HEIGHT - 8}
-          className="fill-muted-foreground text-[10px]"
-        >
+        <text x={PADDING.left} y={HEIGHT - 8} className="fill-muted-foreground text-[10px]">
           {formatDate(first.measuredAt)}
         </text>
         <text
@@ -145,8 +144,8 @@ export function WeightChart({
 
       {breedRange && (
         <figcaption className="text-muted-foreground text-xs">
-          La banda verde es el rango de peso típico de la raza (
-          {formatWeight(breedRange.minKg)} – {formatWeight(breedRange.maxKg)}).
+          La banda verde es el rango de peso típico de la raza ({formatWeight(breedRange.minKg)} –{" "}
+          {formatWeight(breedRange.maxKg)}).
         </figcaption>
       )}
     </figure>

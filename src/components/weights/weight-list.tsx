@@ -9,7 +9,7 @@
 import { Minus, Scale, TrendingDown, TrendingUp } from "lucide-react";
 
 import { WeightDeleteButton } from "@/components/weights/weight-delete-button";
-import { EmptyState } from "@/components/ui/section";
+import { EmptyState, Eyebrow } from "@/components/ui/section";
 import { HEALTH_LEVEL_STYLES } from "@/components/health/health-ui";
 import {
   assessBodyCondition,
@@ -49,22 +49,20 @@ export function WeightList({ weights, petId }: { weights: WeightEntry[]; petId: 
       <ul className="divide-border divide-y">
         {ordered.map((entry) => {
           const bcs =
-            entry.bodyConditionScore != null
-              ? assessBodyCondition(entry.bodyConditionScore)
-              : null;
+            entry.bodyConditionScore != null ? assessBodyCondition(entry.bodyConditionScore) : null;
 
           return (
             <li key={entry.id} className="flex items-start gap-4 py-3">
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                  <span className="text-base font-semibold">{formatWeight(entry.weightKg)}</span>
-                  <span className="text-muted-foreground text-sm">
-                    {formatDate(entry.measuredAt)}
+                  <span className="text-base font-extrabold tracking-[-0.02em]">
+                    {formatWeight(entry.weightKg)}
                   </span>
+                  <Eyebrow>{formatDate(entry.measuredAt)}</Eyebrow>
                   {bcs && (
                     <span
                       className={cn(
-                        "rounded-full px-2 py-0.5 text-xs font-medium",
+                        "eyebrow rounded px-2 py-1",
                         HEALTH_LEVEL_STYLES[bcs.level].bg,
                         HEALTH_LEVEL_STYLES[bcs.level].text,
                       )}
@@ -73,9 +71,7 @@ export function WeightList({ weights, petId }: { weights: WeightEntry[]; petId: 
                     </span>
                   )}
                 </div>
-                {entry.notes && (
-                  <p className="text-muted-foreground mt-1 text-sm">{entry.notes}</p>
-                )}
+                {entry.notes && <p className="text-muted-foreground mt-1 text-sm">{entry.notes}</p>}
               </div>
 
               <WeightDeleteButton id={entry.id} petId={petId} />
@@ -94,11 +90,13 @@ function WeightTrendCard({ trend }: { trend: WeightTrend }) {
   const signedPercent = `${trend.changePercent > 0 ? "+" : ""}${formatNumber(trend.changePercent, 1)} %`;
 
   return (
-    <div className={cn("flex items-start gap-3 rounded-xl border p-4", styles.bg, styles.border)}>
+    <div className={cn("flex items-start gap-3 rounded-lg border p-4", styles.bg, styles.border)}>
       <Icon className={cn("mt-0.5 size-5 shrink-0", styles.text)} aria-hidden="true" />
       <div className="flex flex-col gap-1">
         <p className="flex flex-wrap items-baseline gap-x-2">
-          <span className="text-lg font-semibold">{formatWeight(trend.latest.weightKg)}</span>
+          <span className="text-lg font-extrabold tracking-[-0.02em]">
+            {formatWeight(trend.latest.weightKg)}
+          </span>
           {trend.previous && (
             <span className={cn("text-sm font-medium", styles.text)}>
               {signedKg} ({signedPercent})

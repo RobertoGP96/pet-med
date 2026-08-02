@@ -7,15 +7,22 @@
  *   (prevState: ActionState, formData: FormData) => Promise<ActionState>
  *
  * Toda acción hace lo mismo en el mismo orden:
- *   1. valida el FormData con su esquema de zod,
- *   2. escribe en la base de datos,
- *   3. invalida las rutas afectadas,
- *   4. devuelve un ActionState que el formulario sabe pintar.
+ *   1. exige sesión,
+ *   2. valida el FormData con su esquema de zod,
+ *   3. escribe en la base de datos con el cliente de la sesión,
+ *   4. invalida las rutas afectadas,
+ *   5. devuelve un ActionState que el formulario sabe pintar.
  *
- * Nota de seguridad: las Server Actions se publican como endpoints POST. Al no
- * haber sesión todavía, la autorización se apoya en `getCurrentOwnerId()`. En
- * cuanto exista login, cada acción debe verificar que la mascota pertenece a
- * quien la está pidiendo — está marcado con `TODO(auth)`.
+ * SEGURIDAD. Las Server Actions se publican como endpoints POST: cualquiera
+ * puede llamarlas con el `petId` que quiera. Quien decide si esa fila es suya
+ * es la RLS del esquema, porque estas acciones entran con el cliente de sesión
+ * y no con la clave de servicio.
+ *
+ * Eso deja un detalle que hay que tratar a mano y que es la razón de
+ * `denyIfUntouched()`: un UPDATE o un DELETE que la RLS no permite no falla,
+ * simplemente afecta a cero filas. Sin comprobarlo, la app respondería «Ficha
+ * actualizada» sin haber actualizado nada. Por eso todas las escrituras sobre
+ * filas existentes llevan `.select("id")` y se comprueba qué volvió.
  */
 
 import { revalidatePath } from "next/cache";
@@ -30,6 +37,8 @@ import {
   petInputSchema,
   photoUploadSchema,
   reminderInputSchema,
+  signInSchema,
+  signUpSchema,
   weightInputSchema,
 } from "@/domain/schemas";
 import { generateDoseSchedule } from "@/domain/health/medication";
@@ -40,9 +49,10 @@ import {
   successState,
   type ActionState,
 } from "@/lib/action-result";
-import { getCurrentOwnerId } from "@/lib/env";
+import { requireUser } from "@/lib/auth";
 import { getStorage } from "@/lib/storage";
-import { getDb } from "@/lib/supabase/admin";
+import type { Db } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 
 /** Días de tomas que se planifican por adelantado al guardar un tratamiento. */
 const DOSE_HORIZON_DAYS = 30;
@@ -52,7 +62,158 @@ function revalidatePet(petId: string): void {
   revalidatePath("/");
   revalidatePath("/mascotas");
   revalidatePath(`/mascotas/${petId}`);
+  revalidatePath(`/mural/${petId}`);
   revalidatePath("/recordatorios");
+}
+
+/**
+ * Traduce el resultado de una escritura en un `ActionState` de error, o en
+ * `null` si todo fue bien.
+ *
+ * El caso de «cero filas» es el que importa: significa que la fila no existe o
+ * que la RLS no deja tocarla. Se responde igual en los dos casos a propósito —
+ * distinguirlos le confirmaría a quien va probando identificadores que ese
+ * registro existe y es de otra persona.
+ */
+function denyIfUntouched(
+  result: { data: unknown[] | null; error: { code?: string; message: string } | null },
+  what: string,
+): ActionState | null {
+  if (result.error) return errorState(describeDatabaseError(result.error));
+  if (!result.data || result.data.length === 0) {
+    return errorState(`No se encontró ${what}, o no es tuyo.`);
+  }
+  return null;
+}
+
+/**
+ * ¿Es tuya esta mascota?
+ *
+ * Sólo hace falta cuando hay un efecto secundario ANTES de escribir en la base
+ * de datos —subir una foto al almacenamiento, hoy el único caso—. En el resto
+ * de acciones la propia escritura ya es la comprobación.
+ */
+async function ownsPet(db: Db, petId: string): Promise<boolean> {
+  const { data } = await db.from("pets").select("id").eq("id", petId).maybeSingle();
+  return Boolean(data);
+}
+
+// ===========================================================================
+// Cuenta
+// ===========================================================================
+
+/**
+ * Traduce los errores del servidor de autenticación de Supabase, que llegan en
+ * inglés. Sólo se traducen los que una persona puede provocar por su cuenta;
+ * el resto cae en un mensaje genérico, porque detallarlo no la ayudaría.
+ */
+function describeAuthError(message: string): string {
+  const normalized = message.toLowerCase();
+
+  if (normalized.includes("invalid login credentials")) {
+    // A propósito no dice cuál de los dos falla: eso confirmaría qué correos
+    // están registrados.
+    return "El correo o la contraseña no son correctos.";
+  }
+  if (normalized.includes("email not confirmed")) {
+    return "Tienes que confirmar tu correo antes de entrar. Busca el mensaje que te enviamos.";
+  }
+  if (normalized.includes("already registered") || normalized.includes("already been registered")) {
+    return "Ya hay una cuenta con ese correo. Prueba a entrar.";
+  }
+  if (normalized.includes("rate limit") || normalized.includes("too many")) {
+    return "Demasiados intentos seguidos. Espera un momento y vuelve a probar.";
+  }
+  if (normalized.includes("password")) {
+    return "Esa contraseña no cumple los requisitos mínimos.";
+  }
+
+  return "No se pudo completar la operación. Inténtalo de nuevo.";
+}
+
+/**
+ * A dónde ir después de entrar.
+ *
+ * El destino viene de la barra de direcciones (`?siguiente=`), así que es
+ * entrada no confiable: sin este filtro, un enlace a
+ * `/acceso?siguiente=https://otro-sitio` convertiría el formulario de acceso en
+ * un trampolín para llevarse a la gente a otra parte con la credibilidad de
+ * este dominio. Sólo se aceptan rutas internas, y `//` queda fuera porque el
+ * navegador lo lee como el principio de otro dominio.
+ */
+function safeNextPath(value: FormDataEntryValue | null): string {
+  const path = typeof value === "string" ? value : "";
+  if (!path.startsWith("/") || path.startsWith("//")) return "/mascotas";
+  return path;
+}
+
+export async function signInAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const parsed = parseFormData(signInSchema, formData);
+  if (!parsed.success) {
+    return errorState(parsed.formError ?? "Revisa los campos marcados.", parsed.fieldErrors);
+  }
+
+  const destination = safeNextPath(formData.get("siguiente"));
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email: parsed.data.email,
+    password: parsed.data.password,
+  });
+
+  if (error) return errorState(describeAuthError(error.message));
+
+  // Toda la interfaz cambia al iniciar sesión —la navegación, el mural, los
+  // listados—, así que se invalida el árbol entero en vez de ruta a ruta.
+  revalidatePath("/", "layout");
+  redirect(destination);
+}
+
+export async function signUpAction(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const parsed = parseFormData(signUpSchema, formData);
+  if (!parsed.success) {
+    return errorState(parsed.formError ?? "Revisa los campos marcados.", parsed.fieldErrors);
+  }
+
+  const input = parsed.data;
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.signUp({
+    email: input.email,
+    password: input.password,
+    // Lo recoge el disparador `handle_new_user` para rellenar
+    // `profiles.display_name`. Ojo: `user_metadata` lo escribe el cliente, así
+    // que sirve para el nombre y para nada más — el rol NO se toca desde aquí.
+    options: { data: { display_name: input.displayName } },
+  });
+
+  if (error) return errorState(describeAuthError(error.message));
+
+  // Si el proyecto de Supabase tiene activada la confirmación por correo —lo
+  // está por defecto—, `signUp` no abre sesión: devuelve el usuario y espera a
+  // que se pulse el enlace del mensaje.
+  if (!data.session) {
+    return successState(
+      `Te hemos enviado un correo a ${input.email}. Abre el enlace para confirmar tu cuenta y ya podrás entrar.`,
+    );
+  }
+
+  revalidatePath("/", "layout");
+  redirect("/mascotas");
+}
+
+export async function signOutAction(): Promise<void> {
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+
+  revalidatePath("/", "layout");
+  redirect("/");
 }
 
 // ===========================================================================
@@ -63,17 +224,23 @@ export async function createPetAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  const user = await requireUser();
+
   const parsed = parseFormData(petInputSchema, formData);
   if (!parsed.success) {
     return errorState(parsed.formError ?? "Revisa los campos marcados.", parsed.fieldErrors);
   }
 
   const input = parsed.data;
+  const db = await createClient();
 
-  const { data, error } = await getDb()
+  const { data, error } = await db
     .from("pets")
     .insert({
-      owner_id: getCurrentOwnerId(),
+      // La identidad la pone el servidor a partir de la sesión. Si viniera del
+      // formulario, cualquiera podría dar de alta mascotas a nombre de otra
+      // persona. La política `pets_owner_insert` lo rechazaría de todas formas.
+      owner_id: user.id,
       name: input.name,
       species: input.species,
       breed: input.breed,
@@ -105,6 +272,8 @@ export async function updatePetAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireUser();
+
   const petId = String(formData.get("petId") ?? "");
   if (!petId) return errorState("Falta la mascota que hay que actualizar.");
 
@@ -114,9 +283,10 @@ export async function updatePetAction(
   }
 
   const input = parsed.data;
+  const db = await createClient();
 
-  // TODO(auth): comprobar que la mascota pertenece al usuario de la sesión.
-  const { error } = await getDb()
+  // `owner_id` no se toca: una mascota no cambia de dueño desde el formulario.
+  const result = await db
     .from("pets")
     .update({
       name: input.name,
@@ -134,9 +304,11 @@ export async function updatePetAction(
       avatar_url: input.avatarUrl,
       is_public: input.isPublic,
     })
-    .eq("id", petId);
+    .eq("id", petId)
+    .select("id");
 
-  if (error) return errorState(describeDatabaseError(error));
+  const denied = denyIfUntouched(result, "esa mascota");
+  if (denied) return denied;
 
   revalidatePet(petId);
   return successState("Ficha actualizada.");
@@ -146,12 +318,18 @@ export async function deletePetAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireUser();
+
   const petId = String(formData.get("petId") ?? "");
   if (!petId) return errorState("Falta la mascota que hay que borrar.");
 
+  const db = await createClient();
+
   // Las tablas hijas tienen `on delete cascade`: se van con ella.
-  const { error } = await getDb().from("pets").delete().eq("id", petId);
-  if (error) return errorState(describeDatabaseError(error));
+  const result = await db.from("pets").delete().eq("id", petId).select("id");
+
+  const denied = denyIfUntouched(result, "esa mascota");
+  if (denied) return denied;
 
   revalidatePath("/");
   revalidatePath("/mascotas");
@@ -166,14 +344,17 @@ export async function addWeightAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireUser();
+
   const parsed = parseFormData(weightInputSchema, formData);
   if (!parsed.success) {
     return errorState(parsed.formError ?? "Revisa los campos marcados.", parsed.fieldErrors);
   }
 
   const input = parsed.data;
+  const db = await createClient();
 
-  const { error } = await getDb().from("weight_entries").insert({
+  const { error } = await db.from("weight_entries").insert({
     pet_id: input.petId,
     measured_at: input.measuredAt,
     weight_kg: input.weightKg,
@@ -191,12 +372,17 @@ export async function deleteWeightAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireUser();
+
   const id = String(formData.get("id") ?? "");
   const petId = String(formData.get("petId") ?? "");
   if (!id || !petId) return errorState("Falta el registro que hay que borrar.");
 
-  const { error } = await getDb().from("weight_entries").delete().eq("id", id);
-  if (error) return errorState(describeDatabaseError(error));
+  const db = await createClient();
+  const result = await db.from("weight_entries").delete().eq("id", id).select("id");
+
+  const denied = denyIfUntouched(result, "ese pesaje");
+  if (denied) return denied;
 
   revalidatePet(petId);
   return successState("Registro de peso eliminado.");
@@ -210,6 +396,8 @@ export async function saveConditionAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireUser();
+
   const parsed = parseFormData(conditionInputSchema, formData);
   if (!parsed.success) {
     return errorState(parsed.formError ?? "Revisa los campos marcados.", parsed.fieldErrors);
@@ -229,12 +417,18 @@ export async function saveConditionAction(
     notes: input.notes,
   };
 
-  const db = getDb();
-  const { error } = id
-    ? await db.from("conditions").update(values).eq("id", id)
-    : await db.from("conditions").insert(values);
+  const db = await createClient();
 
-  if (error) return errorState(describeDatabaseError(error));
+  if (id) {
+    const denied = denyIfUntouched(
+      await db.from("conditions").update(values).eq("id", id).select("id"),
+      "ese padecimiento",
+    );
+    if (denied) return denied;
+  } else {
+    const { error } = await db.from("conditions").insert(values);
+    if (error) return errorState(describeDatabaseError(error));
+  }
 
   revalidatePet(input.petId);
   return successState(id ? "Padecimiento actualizado." : "Padecimiento registrado.");
@@ -244,12 +438,18 @@ export async function deleteConditionAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireUser();
+
   const id = String(formData.get("id") ?? "");
   const petId = String(formData.get("petId") ?? "");
   if (!id || !petId) return errorState("Falta el padecimiento que hay que borrar.");
 
-  const { error } = await getDb().from("conditions").delete().eq("id", id);
-  if (error) return errorState(describeDatabaseError(error));
+  const db = await createClient();
+  const denied = denyIfUntouched(
+    await db.from("conditions").delete().eq("id", id).select("id"),
+    "ese padecimiento",
+  );
+  if (denied) return denied;
 
   revalidatePet(petId);
   return successState("Padecimiento eliminado.");
@@ -267,6 +467,7 @@ export async function deleteConditionAction(
  * pisa las que ya se marcaron como administradas.
  */
 async function scheduleDoses(
+  db: Db,
   medicationId: string,
   petId: string,
   medication: { startDate: string; endDate: string | null; intervalHours: number },
@@ -278,23 +479,23 @@ async function scheduleDoses(
   const schedule = generateDoseSchedule(medication, now, horizon);
   if (schedule.length === 0) return;
 
-  await getDb()
-    .from("medication_doses")
-    .upsert(
-      schedule.map((scheduledAt) => ({
-        medication_id: medicationId,
-        pet_id: petId,
-        scheduled_at: scheduledAt,
-        status: "pending" as const,
-      })),
-      { onConflict: "medication_id,scheduled_at", ignoreDuplicates: true },
-    );
+  await db.from("medication_doses").upsert(
+    schedule.map((scheduledAt) => ({
+      medication_id: medicationId,
+      pet_id: petId,
+      scheduled_at: scheduledAt,
+      status: "pending" as const,
+    })),
+    { onConflict: "medication_id,scheduled_at", ignoreDuplicates: true },
+  );
 }
 
 export async function saveMedicationAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireUser();
+
   const parsed = parseFormData(medicationInputSchema, formData);
   if (!parsed.success) {
     return errorState(parsed.formError ?? "Revisa los campos marcados.", parsed.fieldErrors);
@@ -317,15 +518,17 @@ export async function saveMedicationAction(
     is_active: input.isActive,
   };
 
-  const db = getDb();
+  const db = await createClient();
   const { data, error } = id
-    ? await db.from("medications").update(values).eq("id", id).select("id").single()
-    : await db.from("medications").insert(values).select("id").single();
+    ? await db.from("medications").update(values).eq("id", id).select("id").maybeSingle()
+    : await db.from("medications").insert(values).select("id").maybeSingle();
 
   if (error) return errorState(describeDatabaseError(error));
+  if (!data) return errorState("No se encontró ese tratamiento, o no es tuyo.");
 
   if (input.isActive) {
     await scheduleDoses(
+      db,
       data.id,
       input.petId,
       { startDate: input.startDate, endDate: input.endDate, intervalHours: input.intervalHours },
@@ -341,12 +544,18 @@ export async function deleteMedicationAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireUser();
+
   const id = String(formData.get("id") ?? "");
   const petId = String(formData.get("petId") ?? "");
   if (!id || !petId) return errorState("Falta el tratamiento que hay que borrar.");
 
-  const { error } = await getDb().from("medications").delete().eq("id", id);
-  if (error) return errorState(describeDatabaseError(error));
+  const db = await createClient();
+  const denied = denyIfUntouched(
+    await db.from("medications").delete().eq("id", id).select("id"),
+    "ese tratamiento",
+  );
+  if (denied) return denied;
 
   revalidatePet(petId);
   return successState("Tratamiento eliminado.");
@@ -357,6 +566,8 @@ export async function updateDoseAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireUser();
+
   const parsed = parseFormData(doseUpdateSchema, formData);
   if (!parsed.success) {
     return errorState(parsed.formError ?? "No se pudo actualizar la toma.", parsed.fieldErrors);
@@ -364,18 +575,22 @@ export async function updateDoseAction(
 
   const petId = String(formData.get("petId") ?? "");
   const input = parsed.data;
+  const db = await createClient();
 
-  const { error } = await getDb()
-    .from("medication_doses")
-    .update({
-      status: input.status,
-      // La hora de administración sólo tiene sentido si se administró.
-      taken_at: input.status === "taken" ? new Date().toISOString() : null,
-      notes: input.notes,
-    })
-    .eq("id", input.doseId);
-
-  if (error) return errorState(describeDatabaseError(error));
+  const denied = denyIfUntouched(
+    await db
+      .from("medication_doses")
+      .update({
+        status: input.status,
+        // La hora de administración sólo tiene sentido si se administró.
+        taken_at: input.status === "taken" ? new Date().toISOString() : null,
+        notes: input.notes,
+      })
+      .eq("id", input.doseId)
+      .select("id"),
+    "esa toma",
+  );
+  if (denied) return denied;
 
   if (petId) revalidatePet(petId);
   return successState(input.status === "taken" ? "Toma registrada." : "Toma actualizada.");
@@ -389,6 +604,8 @@ export async function saveClinicalEventAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireUser();
+
   const parsed = parseFormData(clinicalEventInputSchema, formData);
   if (!parsed.success) {
     return errorState(parsed.formError ?? "Revisa los campos marcados.", parsed.fieldErrors);
@@ -408,14 +625,21 @@ export async function saveClinicalEventAction(
     next_due_at: input.nextDueAt,
   };
 
-  const db = getDb();
-  const { error } = id
-    ? await db.from("clinical_events").update(values).eq("id", id)
-    : await db.from("clinical_events").insert(values);
+  const db = await createClient();
 
-  if (error) return errorState(describeDatabaseError(error));
+  if (id) {
+    const denied = denyIfUntouched(
+      await db.from("clinical_events").update(values).eq("id", id).select("id"),
+      "ese evento",
+    );
+    if (denied) return denied;
+  } else {
+    const { error } = await db.from("clinical_events").insert(values);
+    if (error) return errorState(describeDatabaseError(error));
+  }
 
   revalidatePet(input.petId);
+  revalidatePath("/vacunas");
   return successState(id ? "Evento actualizado." : "Evento añadido a la historia clínica.");
 }
 
@@ -423,14 +647,21 @@ export async function deleteClinicalEventAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireUser();
+
   const id = String(formData.get("id") ?? "");
   const petId = String(formData.get("petId") ?? "");
   if (!id || !petId) return errorState("Falta el evento que hay que borrar.");
 
-  const { error } = await getDb().from("clinical_events").delete().eq("id", id);
-  if (error) return errorState(describeDatabaseError(error));
+  const db = await createClient();
+  const denied = denyIfUntouched(
+    await db.from("clinical_events").delete().eq("id", id).select("id"),
+    "ese evento",
+  );
+  if (denied) return denied;
 
   revalidatePet(petId);
+  revalidatePath("/vacunas");
   return successState("Evento eliminado.");
 }
 
@@ -442,23 +673,30 @@ export async function uploadPhotoAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireUser();
+
   const parsed = parseFormData(photoUploadSchema, formData);
   if (!parsed.success) {
     return errorState(parsed.formError ?? "Revisa la imagen seleccionada.", parsed.fieldErrors);
   }
 
   const input = parsed.data;
+  const db = await createClient();
+
+  // Aquí SÍ hace falta comprobar antes: subir el archivo es un efecto que
+  // ocurre fuera de la base de datos, y si se hiciera primero, cualquiera
+  // podría dejar archivos en la carpeta de una mascota ajena aunque la fila
+  // acabara rechazada por la RLS.
+  if (!(await ownsPet(db, input.petId))) {
+    return errorState("No se encontró esa mascota, o no es tuya.");
+  }
 
   let stored;
   try {
     stored = await getStorage().upload(input.file, input.petId);
   } catch (error) {
-    return errorState(
-      error instanceof Error ? error.message : "No se pudo subir la imagen.",
-    );
+    return errorState(error instanceof Error ? error.message : "No se pudo subir la imagen.");
   }
-
-  const db = getDb();
 
   // Sólo puede haber una portada por mascota (índice único parcial): se baja
   // la anterior antes de insertar la nueva.
@@ -481,6 +719,7 @@ export async function uploadPhotoAction(
   }
 
   revalidatePet(input.petId);
+  revalidatePath("/fotos");
   return successState("Foto añadida.");
 }
 
@@ -488,17 +727,23 @@ export async function setCoverPhotoAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireUser();
+
   const id = String(formData.get("id") ?? "");
   const petId = String(formData.get("petId") ?? "");
   if (!id || !petId) return errorState("Falta la foto.");
 
-  const db = getDb();
+  const db = await createClient();
   await db.from("photos").update({ is_cover: false }).eq("pet_id", petId).eq("is_cover", true);
 
-  const { error } = await db.from("photos").update({ is_cover: true }).eq("id", id);
-  if (error) return errorState(describeDatabaseError(error));
+  const denied = denyIfUntouched(
+    await db.from("photos").update({ is_cover: true }).eq("id", id).select("id"),
+    "esa foto",
+  );
+  if (denied) return denied;
 
   revalidatePet(petId);
+  revalidatePath("/fotos");
   return successState("Portada actualizada.");
 }
 
@@ -506,23 +751,30 @@ export async function deletePhotoAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireUser();
+
   const id = String(formData.get("id") ?? "");
   const petId = String(formData.get("petId") ?? "");
   if (!id || !petId) return errorState("Falta la foto que hay que borrar.");
 
-  const db = getDb();
-  const { data: photo } = await db.from("photos").select("url").eq("id", id).maybeSingle();
+  const db = await createClient();
 
-  const { error } = await db.from("photos").delete().eq("id", id);
-  if (error) return errorState(describeDatabaseError(error));
+  // Se borra la fila y se recupera su `url` en la misma operación: así el
+  // archivo sólo se toca si la RLS dejó borrar la fila.
+  const result = await db.from("photos").delete().eq("id", id).select("id, url");
+
+  const denied = denyIfUntouched(result, "esa foto");
+  if (denied) return denied;
 
   // El archivo se borra después de la fila: si esto falla, sobra un archivo,
   // que es mucho menos grave que una foto rota en la galería.
-  if (photo?.url) {
-    await getStorage().remove(photo.url.replace(/^\/uploads\//, ""));
+  const url = result.data?.[0]?.url;
+  if (url) {
+    await getStorage().remove(url.replace(/^\/uploads\//, ""));
   }
 
   revalidatePet(petId);
+  revalidatePath("/fotos");
   return successState("Foto eliminada.");
 }
 
@@ -534,6 +786,8 @@ export async function saveReminderAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireUser();
+
   const parsed = parseFormData(reminderInputSchema, formData);
   if (!parsed.success) {
     return errorState(parsed.formError ?? "Revisa los campos marcados.", parsed.fieldErrors);
@@ -552,12 +806,18 @@ export async function saveReminderAction(
     notes: input.notes,
   };
 
-  const db = getDb();
-  const { error } = id
-    ? await db.from("reminders").update(values).eq("id", id)
-    : await db.from("reminders").insert(values);
+  const db = await createClient();
 
-  if (error) return errorState(describeDatabaseError(error));
+  if (id) {
+    const denied = denyIfUntouched(
+      await db.from("reminders").update(values).eq("id", id).select("id"),
+      "ese recordatorio",
+    );
+    if (denied) return denied;
+  } else {
+    const { error } = await db.from("reminders").insert(values);
+    if (error) return errorState(describeDatabaseError(error));
+  }
 
   revalidatePet(input.petId);
   return successState(id ? "Recordatorio actualizado." : "Recordatorio creado.");
@@ -571,28 +831,28 @@ export async function completeReminderAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireUser();
+
   const id = String(formData.get("id") ?? "");
   const petId = String(formData.get("petId") ?? "");
   if (!id || !petId) return errorState("Falta el recordatorio.");
 
-  const db = getDb();
-  const { data: reminder, error: readError } = await db
-    .from("reminders")
-    .select("*")
-    .eq("id", id)
-    .maybeSingle();
+  const db = await createClient();
 
-  if (readError) return errorState(describeDatabaseError(readError));
-  if (!reminder) return errorState("Ese recordatorio ya no existe.");
-
-  const { error } = await db
+  // Se marca como hecho y se recupera la fila en una sola operación: si la RLS
+  // no deja tocarla, `data` viene vacío y no hay nada más que hacer.
+  const result = await db
     .from("reminders")
     .update({ completed_at: new Date().toISOString() })
-    .eq("id", id);
+    .eq("id", id)
+    .select("*");
 
-  if (error) return errorState(describeDatabaseError(error));
+  const denied = denyIfUntouched(result, "ese recordatorio");
+  if (denied) return denied;
 
+  const reminder = result.data![0];
   const days = RECURRENCE_DAYS[reminder.recurrence];
+
   if (days != null) {
     const next = new Date(reminder.due_at);
     next.setDate(next.getDate() + days);
@@ -616,12 +876,18 @@ export async function deleteReminderAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  await requireUser();
+
   const id = String(formData.get("id") ?? "");
   const petId = String(formData.get("petId") ?? "");
   if (!id || !petId) return errorState("Falta el recordatorio que hay que borrar.");
 
-  const { error } = await getDb().from("reminders").delete().eq("id", id);
-  if (error) return errorState(describeDatabaseError(error));
+  const db = await createClient();
+  const denied = denyIfUntouched(
+    await db.from("reminders").delete().eq("id", id).select("id"),
+    "ese recordatorio",
+  );
+  if (denied) return denied;
 
   revalidatePet(petId);
   return successState("Recordatorio eliminado.");

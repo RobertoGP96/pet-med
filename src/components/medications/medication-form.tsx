@@ -10,9 +10,8 @@
 
 import { useActionState } from "react";
 
-import { Checkbox, Field, Select, Textarea } from "@/components/ui/field";
+import { Checkbox, Field, Select, TextInput, Textarea } from "@/components/ui/field";
 import { FormFeedback, SubmitButton } from "@/components/ui/form-feedback";
-import { Input } from "@/components/ui/input";
 import { MEDICATION_ROUTES, MEDICATION_ROUTE_LABELS } from "@/domain/enums";
 import type { Condition, Medication } from "@/domain/types";
 import { idleState } from "@/lib/action-result";
@@ -41,12 +40,12 @@ export function MedicationForm({
       {medication && <input type="hidden" name="id" value={medication.id} />}
 
       <Field name="name" label="Medicamento" required errors={state.fieldErrors}>
-        <Input type="text" defaultValue={medication?.name ?? ""} placeholder="Apoquel" />
+        <TextInput defaultValue={medication?.name ?? ""} placeholder="Apoquel" />
       </Field>
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Field name="dose" label="Dosis por toma" required errors={state.fieldErrors}>
-          <Input
+          <TextInput
             type="number"
             step="0.001"
             min="0.001"
@@ -56,7 +55,7 @@ export function MedicationForm({
         </Field>
 
         <Field name="doseUnit" label="Unidad" required errors={state.fieldErrors}>
-          <Input type="text" defaultValue={medication?.doseUnit ?? ""} placeholder="mg" />
+          <TextInput defaultValue={medication?.doseUnit ?? ""} placeholder="mg" />
         </Field>
 
         <Field name="route" label="Vía" errors={state.fieldErrors}>
@@ -81,7 +80,9 @@ export function MedicationForm({
           {/* Si el tratamiento guardado usa un intervalo fuera de los presets,
               se añade para no perderlo al editar. */}
           {[
-            ...new Set([...INTERVAL_PRESETS, medication?.intervalHours].filter(Boolean) as number[]),
+            ...new Set(
+              [...INTERVAL_PRESETS, medication?.intervalHours].filter(Boolean) as number[],
+            ),
           ]
             .sort((a, b) => a - b)
             .map((hours) => (
@@ -94,7 +95,7 @@ export function MedicationForm({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field name="startDate" label="Inicio" required errors={state.fieldErrors}>
-          <Input type="date" defaultValue={toDateInputValue(medication?.startDate ?? today)} />
+          <TextInput type="date" defaultValue={toDateInputValue(medication?.startDate ?? today)} />
         </Field>
 
         <Field
@@ -103,15 +104,11 @@ export function MedicationForm({
           errors={state.fieldErrors}
           hint="Vacío si es un tratamiento crónico."
         >
-          <Input type="date" defaultValue={toDateInputValue(medication?.endDate ?? null)} />
+          <TextInput type="date" defaultValue={toDateInputValue(medication?.endDate ?? null)} />
         </Field>
       </div>
 
-      <Field
-        name="conditionId"
-        label="Padecimiento que trata"
-        errors={state.fieldErrors}
-      >
+      <Field name="conditionId" label="Padecimiento que trata" errors={state.fieldErrors}>
         <Select defaultValue={medication?.conditionId ?? ""}>
           <option value="">Ninguno</option>
           {conditions.map((condition) => (

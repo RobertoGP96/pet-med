@@ -2,14 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Camera,
-  HeartPulse,
-  LayoutDashboard,
-  Pill,
-  Scale,
-  Stethoscope,
-} from "lucide-react";
+import { Camera, HeartPulse, LayoutDashboard, Pill, Scale, Stethoscope } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -18,6 +11,9 @@ import { cn } from "@/lib/utils";
  *
  * Cada pestaña es su propia URL: se puede compartir, recargar y navegar con
  * atrás. Además cada una carga sólo sus datos en lugar de traerlo todo.
+ *
+ * La activa se marca como un rótulo en negativo —tinta llena con un filete rojo
+ * debajo—, no como una píldora: el diseño no redondea las pestañas.
  */
 const TABS = [
   { segment: "", label: "Resumen", icon: LayoutDashboard },
@@ -47,9 +43,9 @@ export function PetTabs({ petId }: { petId: string }) {
             href={href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "flex shrink-0 items-center gap-2 rounded-t-lg border-b-2 px-3 py-2.5 text-sm whitespace-nowrap transition",
+              "flex shrink-0 items-center gap-2 border-b-2 px-3 py-2.5 text-sm font-bold whitespace-nowrap transition",
               active
-                ? "border-brand text-brand font-medium"
+                ? "border-brand bg-primary text-primary-foreground"
                 : "text-muted-foreground hover:text-foreground border-transparent",
             )}
           >

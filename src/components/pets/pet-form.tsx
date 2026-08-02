@@ -2,9 +2,8 @@
 
 import { useActionState, useState } from "react";
 
-import { Field, Checkbox, Select, Textarea } from "@/components/ui/field";
+import { Field, Checkbox, Select, TextInput, Textarea } from "@/components/ui/field";
 import { FormFeedback, SubmitButton } from "@/components/ui/form-feedback";
-import { Input } from "@/components/ui/input";
 import { Section } from "@/components/ui/section";
 import {
   SEXES,
@@ -32,10 +31,7 @@ export interface BreedOption {
  * precarga los valores. Así no hay dos formularios que se desincronicen.
  */
 export function PetForm({ pet, breeds }: { pet?: Pet; breeds: BreedOption[] }) {
-  const [state, formAction] = useActionState(
-    pet ? updatePetAction : createPetAction,
-    idleState,
-  );
+  const [state, formAction] = useActionState(pet ? updatePetAction : createPetAction, idleState);
 
   // La especie se controla en cliente sólo para filtrar el catálogo de razas
   // que se ofrece como sugerencia.
@@ -49,7 +45,7 @@ export function PetForm({ pet, breeds }: { pet?: Pet; breeds: BreedOption[] }) {
       <Section title="Identidad">
         <div className="grid gap-5 sm:grid-cols-2">
           <Field name="name" label="Nombre" required errors={state.fieldErrors}>
-            <Input defaultValue={pet?.name} placeholder="Luna" autoComplete="off" />
+            <TextInput defaultValue={pet?.name} placeholder="Luna" autoComplete="off" />
           </Field>
 
           <Field name="species" label="Especie" required errors={state.fieldErrors}>
@@ -75,7 +71,7 @@ export function PetForm({ pet, breeds }: { pet?: Pet; breeds: BreedOption[] }) {
                 : undefined
             }
           >
-            <Input
+            <TextInput
               defaultValue={pet?.breed ?? ""}
               list={breedSuggestions.length > 0 ? "breed-options" : undefined}
               placeholder="Golden retriever"
@@ -118,7 +114,7 @@ export function PetForm({ pet, breeds }: { pet?: Pet; breeds: BreedOption[] }) {
           </Field>
 
           <Field name="color" label="Color" errors={state.fieldErrors}>
-            <Input defaultValue={pet?.color ?? ""} placeholder="Dorado" autoComplete="off" />
+            <TextInput defaultValue={pet?.color ?? ""} placeholder="Dorado" autoComplete="off" />
           </Field>
         </div>
       </Section>
@@ -131,15 +127,15 @@ export function PetForm({ pet, breeds }: { pet?: Pet; breeds: BreedOption[] }) {
             errors={state.fieldErrors}
             hint="Sin ella no se puede calcular la edad ni la etapa vital."
           >
-            <Input type="date" defaultValue={pet?.birthDate ?? ""} />
+            <TextInput type="date" defaultValue={pet?.birthDate ?? ""} />
           </Field>
 
           <Field name="adoptionDate" label="Fecha de adopción" errors={state.fieldErrors}>
-            <Input type="date" defaultValue={pet?.adoptionDate ?? ""} />
+            <TextInput type="date" defaultValue={pet?.adoptionDate ?? ""} />
           </Field>
 
           <Field name="microchip" label="Microchip" errors={state.fieldErrors}>
-            <Input defaultValue={pet?.microchip ?? ""} autoComplete="off" inputMode="numeric" />
+            <TextInput defaultValue={pet?.microchip ?? ""} autoComplete="off" inputMode="numeric" />
           </Field>
 
           <div className="flex items-end pb-2">
@@ -169,7 +165,7 @@ export function PetForm({ pet, breeds }: { pet?: Pet; breeds: BreedOption[] }) {
             errors={state.fieldErrors}
             hint="Opcional. También puedes subir fotos desde la pestaña Fotos y marcar una como portada."
           >
-            <Input type="url" defaultValue={pet?.avatarUrl ?? ""} placeholder="https://…" />
+            <TextInput type="url" defaultValue={pet?.avatarUrl ?? ""} placeholder="https://…" />
           </Field>
 
           <Checkbox

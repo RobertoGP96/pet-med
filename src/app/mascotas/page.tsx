@@ -3,6 +3,7 @@ import { PawPrint, Plus } from "lucide-react";
 
 import { PetAvatar } from "@/components/pets/pet-avatar";
 import { SetupNotice } from "@/components/setup-notice";
+import { ActionLink } from "@/components/ui/action";
 import { EmptyState, PageHeader } from "@/components/ui/section";
 import { SPECIES_LABELS } from "@/domain/enums";
 import { getAge } from "@/domain/health/age";
@@ -29,13 +30,10 @@ export default async function PetsPage() {
         title="Mis mascotas"
         description="Todas las fichas, incluidas las que no salen en el mural."
         action={
-          <Link
-            href="/mascotas/nueva"
-            className="bg-brand text-brand-foreground inline-flex h-10 items-center gap-2 rounded-md px-4 text-sm font-medium transition hover:opacity-90"
-          >
+          <ActionLink href="/mascotas/nueva">
             <Plus className="size-4" />
             Añadir mascota
-          </Link>
+          </ActionLink>
         }
       />
 
@@ -45,13 +43,10 @@ export default async function PetsPage() {
           title="Todavía no hay ninguna ficha"
           description="Crea la primera para empezar a registrar peso, tratamientos y visitas al veterinario."
           action={
-            <Link
-              href="/mascotas/nueva"
-              className="bg-brand text-brand-foreground inline-flex h-10 items-center gap-2 rounded-md px-4 text-sm font-medium transition hover:opacity-90"
-            >
+            <ActionLink href="/mascotas/nueva">
               <Plus className="size-4" />
               Crear ficha
-            </Link>
+            </ActionLink>
           }
         />
       ) : (
@@ -64,7 +59,10 @@ export default async function PetsPage() {
                 <Link
                   href={`/mascotas/${pet.id}`}
                   transitionTypes={["nav-forward"]}
-                  className="border-border bg-card hover:border-brand/40 focus-visible:ring-brand flex items-center gap-4 rounded-xl border p-4 transition focus-visible:ring-2 focus-visible:outline-none"
+                  // `group` es lo que despierta al avatar: la foto está en
+                  // escala de grises y recupera el color al pasar el cursor
+                  // por la fila entera, no sólo por la miniatura.
+                  className="group border-border bg-card hover:border-brand focus-visible:ring-brand flex items-center gap-4 rounded-lg border p-4 transition focus-visible:ring-2 focus-visible:outline-none"
                 >
                   <PetAvatar
                     name={pet.name}
@@ -74,7 +72,7 @@ export default async function PetsPage() {
                   />
 
                   <div className="flex min-w-0 flex-1 flex-col">
-                    <p className="truncate font-medium">{pet.name}</p>
+                    <p className="truncate font-extrabold tracking-[-0.02em]">{pet.name}</p>
                     <p className="text-muted-foreground truncate text-sm">
                       {SPECIES_LABELS[pet.species]}
                       {pet.breed ? ` · ${pet.breed}` : ""}

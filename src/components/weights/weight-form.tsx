@@ -9,9 +9,8 @@
 
 import { useActionState } from "react";
 
-import { Field, Select, Textarea } from "@/components/ui/field";
+import { Field, Select, Textarea, TextInput } from "@/components/ui/field";
 import { FormFeedback, SubmitButton } from "@/components/ui/form-feedback";
-import { Input } from "@/components/ui/input";
 import { assessBodyCondition } from "@/domain/health/weight";
 import { idleState } from "@/lib/action-result";
 import { addWeightAction } from "@/server/actions";
@@ -31,11 +30,11 @@ export function WeightForm({ petId }: { petId: string }) {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field name="measuredAt" label="Fecha de la medición" required errors={state.fieldErrors}>
-          <Input type="date" defaultValue={today} max={today} />
+          <TextInput type="date" defaultValue={today} max={today} />
         </Field>
 
         <Field name="weightKg" label="Peso (kg)" required errors={state.fieldErrors}>
-          <Input type="number" step="0.01" min="0.05" max="200" placeholder="12,5" />
+          <TextInput type="number" step="0.01" min="0.05" max="200" placeholder="12,5" />
         </Field>
       </div>
 
