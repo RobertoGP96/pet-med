@@ -99,6 +99,10 @@ Supabase Auth con correo y contraseña. Reglas que sostienen el modelo:
    Server Action llamada a pelo no pasa por él.
 6. El mural es público: `MuralPet` (no `PetSummary`) es lo que sale de
    `listMuralPets()`, y a propósito no lleva nada del historial médico.
+7. **El alcance del admin acaba en el mural.** Sólo `pets` y `profiles` tienen
+   `is_admin()` en sus políticas. Las seis tablas médicas siguen siendo del
+   dueño y punto: si alguna vista de administración las necesitara, es que la
+   vista está mal planteada.
 
 ## Antes de dar algo por terminado
 

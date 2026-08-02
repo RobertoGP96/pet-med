@@ -25,7 +25,20 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CalendarClock, Images, LogOut, PawPrint, Plus, Shield } from "lucide-react";
+import { useState } from "react";
+import {
+  CalendarClock,
+  Camera,
+  Ellipsis,
+  Images,
+  LogOut,
+  PawPrint,
+  Plus,
+  Scale,
+  Shield,
+  Syringe,
+  X,
+} from "lucide-react";
 
 import { Logo, LogoMark } from "@/components/layout/logo";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
@@ -45,13 +58,32 @@ interface NavLink {
   short: string;
   href: string;
   icon: typeof Images;
+  /**
+   * Si va en la barra inferior del móvil.
+   *
+   * En la barra lateral caben las seis secciones, pero abajo no: a partir de
+   * cinco huecos cada uno baja de 70 px en un móvil estrecho y el rótulo deja
+   * de leerse. Las que no son primarias viven en el desplegable «Más».
+   */
+  primary?: boolean;
 }
 
-const PUBLIC_LINKS: NavLink[] = [{ label: "Mural", short: "Mural", href: "/", icon: Images }];
+const PUBLIC_LINKS: NavLink[] = [
+  { label: "Mural", short: "Mural", href: "/", icon: Images, primary: true },
+];
 
 const PRIVATE_LINKS: NavLink[] = [
-  { label: "Mis mascotas", short: "Mascotas", href: "/mascotas", icon: PawPrint },
-  { label: "Recordatorios", short: "Agenda", href: "/recordatorios", icon: CalendarClock },
+  { label: "Mis mascotas", short: "Mascotas", href: "/mascotas", icon: PawPrint, primary: true },
+  { label: "Vacunas", short: "Vacunas", href: "/vacunas", icon: Syringe, primary: true },
+  { label: "Peso", short: "Peso", href: "/peso", icon: Scale },
+  { label: "Fotos", short: "Fotos", href: "/fotos", icon: Camera },
+  {
+    label: "Recordatorios",
+    short: "Agenda",
+    href: "/recordatorios",
+    icon: CalendarClock,
+    primary: true,
+  },
 ];
 
 const ADMIN_LINK: NavLink = {
@@ -327,6 +359,11 @@ function MobileTopBar({ account }: { account: ShellAccount | null }) {
  * Va abajo y no arriba porque es donde llega el pulgar. `env(safe-area-inset-
  * bottom)` reserva el hueco de la barra gestual de los iPhone: sin eso, el
  * último rótulo queda debajo del indicador de inicio.
+ *
+ * Cuatro secciones primarias y un «Más» con el resto. El desplegable se abre
+ * hacia arriba, que es de donde viene el dedo, y se cierra al elegir o al tocar
+ * fuera — de ahí el velo, que además apaga el contenido y deja claro que la
+ * hoja es lo que manda mientras esté abierta.
  */
 function MobileBottomNav({
   links,
@@ -335,40 +372,110 @@ function MobileBottomNav({
   links: NavLink[];
   isActive: (href: string) => boolean;
 }) {
+  const [moreOpen, setMoreOpen] = useState(false);
+
+  const primary = links.filter((link) => link.primary);
+  const rest = links.filter((link) => !link.primary);
+  const moreActive = rest.some((link) => isActive(link.href));
+
   return (
-    <nav
-      aria-label="Navegación principal"
-      className="border-border bg-background/95 fixed inset-x-0 bottom-0 z-30 flex items-stretch border-t backdrop-blur md:hidden"
-      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
-    >
-      {links.map((link) => {
-        const active = isActive(link.href);
-        return (
-          <Link
-            key={link.href}
-            href={link.href}
-            aria-current={active ? "page" : undefined}
+    <>
+      {moreOpen && (
+        <div
+          className="bg-primary/40 fixed inset-0 z-30 md:hidden"
+          onClick={() => setMoreOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      <nav
+        aria-label="Navegación principal"
+        className="border-border bg-background/95 fixed inset-x-0 bottom-0 z-30 border-t backdrop-blur md:hidden"
+        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      >
+        {moreOpen && (
+          <div className="border-border flex flex-col gap-1 border-b p-3">
+            <div className="flex items-center justify-between px-1 pb-1">
+              <span className="eyebrow text-muted-foreground">Más secciones</span>
+              <button
+                type="button"
+                onClick={() => setMoreOpen(false)}
+                className="text-muted-foreground hover:text-foreground p-1"
+              >
+                <X className="size-4" aria-hidden="true" />
+                <span className="sr-only">Cerrar</span>
+              </button>
+            </div>
+
+            {rest.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMoreOpen(false)}
+                aria-current={isActive(link.href) ? "page" : undefined}
+                className={cn(
+                  "flex items-center gap-3 rounded-md px-3 py-2.5 font-extrabold transition",
+                  isActive(link.href) ? "bg-accent text-brand" : "hover:bg-accent",
+                )}
+              >
+                <link.icon className="size-5 shrink-0" aria-hidden="true" />
+                {link.label}
+              </Link>
+            ))}
+
+            <Link
+              href="/mascotas/nueva"
+              onClick={() => setMoreOpen(false)}
+              className="text-brand hover:bg-accent flex items-center gap-3 rounded-md px-3 py-2.5 font-extrabold transition"
+            >
+              <Plus className="size-5 shrink-0" aria-hidden="true" />
+              Añadir mascota
+            </Link>
+          </div>
+        )}
+
+        <div className="flex items-stretch">
+          {primary.map((link) => {
+            const active = isActive(link.href);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMoreOpen(false)}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "relative flex flex-1 flex-col items-center justify-center gap-1 py-2.5 transition",
+                  active
+                    ? "text-brand after:bg-brand after:absolute after:inset-x-4 after:top-0 after:h-0.5 after:rounded-full after:content-['']"
+                    : "text-muted-foreground",
+                )}
+              >
+                <link.icon className="size-5" aria-hidden="true" />
+                <span className="eyebrow">{link.short}</span>
+              </Link>
+            );
+          })}
+
+          <button
+            type="button"
+            onClick={() => setMoreOpen((open) => !open)}
+            aria-expanded={moreOpen}
             className={cn(
               "relative flex flex-1 flex-col items-center justify-center gap-1 py-2.5 transition",
-              active
+              // Si la sección actual vive dentro del desplegable, el botón se
+              // marca igual que un enlace activo: si no, estarías en «Peso» y
+              // la barra no señalaría nada.
+              moreOpen || moreActive
                 ? "text-brand after:bg-brand after:absolute after:inset-x-4 after:top-0 after:h-0.5 after:rounded-full after:content-['']"
                 : "text-muted-foreground",
             )}
           >
-            <link.icon className="size-5" aria-hidden="true" />
-            <span className="eyebrow">{link.short}</span>
-          </Link>
-        );
-      })}
-
-      <Link
-        href="/mascotas/nueva"
-        className="text-brand flex flex-1 flex-col items-center justify-center gap-1 py-2.5"
-      >
-        <Plus className="size-5" aria-hidden="true" />
-        <span className="eyebrow">Añadir</span>
-      </Link>
-    </nav>
+            <Ellipsis className="size-5" aria-hidden="true" />
+            <span className="eyebrow">Más</span>
+          </button>
+        </div>
+      </nav>
+    </>
   );
 }
 

@@ -21,8 +21,19 @@
 
 import { cache } from "react";
 
-import type { MedicationDose, MuralPet, PetDossier, PetSummary, Reminder } from "@/domain/types";
-import { requireUser } from "@/lib/auth";
+import type { Species } from "@/domain/enums";
+import type {
+  ClinicalEvent,
+  DateTime,
+  MedicationDose,
+  MuralPet,
+  PetDossier,
+  PetSummary,
+  Photo,
+  Reminder,
+  WeightEntry,
+} from "@/domain/types";
+import { requireAdmin, requireUser, type UserRole } from "@/lib/auth";
 import { formatDose } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
 import type { Db } from "@/lib/supabase/admin";
@@ -111,6 +122,287 @@ async function decorate(db: Db, pets: Tables<"pets">[]): Promise<PetSummary[]> {
     activeMedicationsCount: medicationCounts.get(row.id) ?? 0,
   }));
 }
+
+// ---------------------------------------------------------------------------
+// Vistas transversales: lo mismo, pero de todas tus mascotas a la vez
+// ---------------------------------------------------------------------------
+//
+// Las páginas /vacunas, /peso y /fotos responden a preguntas que la ficha de
+// una mascota no puede contestar: «¿a quién le toca el refuerzo?», «¿cómo van
+// de peso?», «enséñame las fotos». Las tres siguen el mismo patrón: una
+// consulta para las mascotas y otra para la tabla hija, agrupada en memoria.
+//
+// Ninguna calcula estados de salud: eso son funciones de dominio y necesitan
+// que se les pase `now` desde la página (AGENTS.md, regla 3). Aquí sólo se lee.
+
+/** Lo mínimo para identificar una mascota en una lista. */
+export interface PetRef {
+  id: string;
+  name: string;
+  species: Species;
+  avatarUrl: string | null;
+}
+
+/** Un grupo por mascota, con lo que se haya pedido de la tabla hija. */
+export interface PetGroup<T> {
+  pet: PetRef;
+  items: T[];
+}
+
+/**
+ * Las mascotas propias, en el orden en que se dieron de alta.
+ *
+ * Es la primera mitad de las tres consultas de abajo. Va aparte para que las
+ * tres coincidan en el orden: si cada una ordenara por su cuenta, las mascotas
+ * saldrían en distinta posición en cada página sin motivo aparente.
+ */
+const listOwnedPetRefs = cache(async function listOwnedPetRefs(): Promise<PetRef[]> {
+  const user = await requireUser();
+  const db = await createClient();
+
+  const rows = unwrap(
+    await db
+      .from("pets")
+      .select("id, name, species, avatar_url")
+      .eq("owner_id", user.id)
+      .order("created_at", { ascending: true }),
+    "las mascotas",
+  );
+
+  return rows.map((row) => ({
+    id: row.id,
+    name: row.name,
+    species: row.species,
+    avatarUrl: row.avatar_url,
+  }));
+});
+
+/**
+ * Agrupa las filas de una tabla hija bajo su mascota.
+ *
+ * Devuelve TODAS las mascotas, también las que no tengan ninguna fila: una
+ * mascota sin pesar es justo la que hay que ver en la página de peso, y si se
+ * filtrara aquí desaparecería sin explicación.
+ */
+function groupByPet<T extends { petId: string }>(pets: PetRef[], items: T[]): PetGroup<T>[] {
+  const byPet = new Map<string, T[]>(pets.map((pet) => [pet.id, []]));
+  for (const item of items) byPet.get(item.petId)?.push(item);
+  return pets.map((pet) => ({ pet, items: byPet.get(pet.id) ?? [] }));
+}
+
+/**
+ * Historia preventiva de todas tus mascotas: vacunas y desparasitaciones.
+ *
+ * Trae los dos tipos juntos porque `getPreventionStatus` necesita ver la serie
+ * completa de un tipo para dar con la próxima fecha, que puede estar anotada en
+ * un evento anterior y no en el último.
+ */
+export const listPreventionByPet = cache(async function listPreventionByPet(): Promise<
+  PetGroup<ClinicalEvent>[]
+> {
+  const pets = await listOwnedPetRefs();
+  if (pets.length === 0) return [];
+
+  const db = await createClient();
+
+  const rows = unwrap(
+    await db
+      .from("clinical_events")
+      .select("*")
+      .in(
+        "pet_id",
+        pets.map((pet) => pet.id),
+      )
+      .in("type", ["vaccine", "deworming"])
+      .order("occurred_at", { ascending: false }),
+    "las vacunas",
+  );
+
+  return groupByPet(pets, rows.map(toClinicalEvent));
+});
+
+/** Todos los pesajes de todas tus mascotas, del más antiguo al más reciente. */
+export const listWeightsByPet = cache(async function listWeightsByPet(): Promise<
+  PetGroup<WeightEntry>[]
+> {
+  const pets = await listOwnedPetRefs();
+  if (pets.length === 0) return [];
+
+  const db = await createClient();
+
+  const rows = unwrap(
+    await db
+      .from("weight_entries")
+      .select("*")
+      .in(
+        "pet_id",
+        pets.map((pet) => pet.id),
+      )
+      // Ascendente porque es el orden que espera la gráfica y el que necesita
+      // `getWeightTrend` para comparar contra el peso de hace 90 días.
+      .order("measured_at", { ascending: true }),
+    "los pesos",
+  );
+
+  return groupByPet(pets, rows.map(toWeightEntry));
+});
+
+/** Todas las fotos de todas tus mascotas, la portada primero. */
+export const listPhotosByPet = cache(async function listPhotosByPet(): Promise<PetGroup<Photo>[]> {
+  const pets = await listOwnedPetRefs();
+  if (pets.length === 0) return [];
+
+  const db = await createClient();
+
+  const rows = unwrap(
+    await db
+      .from("photos")
+      .select("*")
+      .in(
+        "pet_id",
+        pets.map((pet) => pet.id),
+      )
+      .order("is_cover", { ascending: false })
+      .order("created_at", { ascending: false }),
+    "las fotos",
+  );
+
+  return groupByPet(pets, rows.map(toPhoto));
+});
+
+// ---------------------------------------------------------------------------
+// Administración
+// ---------------------------------------------------------------------------
+//
+// Estas dos consultas no llevan ningún filtro por dueño, y no es un descuido:
+// dependen de que `requireAdmin()` haya pasado y de que las políticas
+// `pets_owner_select` y `profiles_self_select` incluyan `public.is_admin()`.
+// Para quien no sea administrador devuelven exactamente sus propias filas, que
+// es el modo seguro de fallar.
+//
+// Lo que un administrador NO puede leer es el historial clínico ajeno: las
+// políticas de weight_entries, conditions, medications, medication_doses,
+// clinical_events y reminders siguen siendo sólo del dueño. Moderar el mural no
+// es motivo para abrir el expediente médico de nadie.
+
+export interface AdminPet {
+  id: string;
+  name: string;
+  species: Species;
+  breed: string | null;
+  avatarUrl: string | null;
+  coverPhotoUrl: string | null;
+  /** Lo que decidió el dueño. */
+  isPublic: boolean;
+  /** Lo que decidió la moderación. */
+  hiddenByAdmin: boolean;
+  featured: boolean;
+  featuredAt: DateTime | null;
+  createdAt: DateTime;
+  ownerId: string;
+  ownerName: string | null;
+  ownerEmail: string | null;
+}
+
+export interface AdminProfile {
+  id: string;
+  displayName: string | null;
+  email: string | null;
+  role: UserRole;
+  createdAt: DateTime;
+  petsCount: number;
+}
+
+/** Todas las mascotas del sistema, en el orden en que salen en el mural. */
+export const listPetsForAdmin = cache(async function listPetsForAdmin(): Promise<AdminPet[]> {
+  await requireAdmin();
+  const db = await createClient();
+
+  const pets = unwrap(
+    await db
+      .from("pets")
+      .select(
+        "id, name, species, breed, avatar_url, is_public, hidden_by_admin, featured, featured_at, created_at, owner_id",
+      )
+      .order("featured", { ascending: false })
+      .order("featured_at", { ascending: false, nullsFirst: false })
+      .order("created_at", { ascending: false }),
+    "las mascotas",
+  );
+
+  if (pets.length === 0) return [];
+
+  // No hay `join` de PostgREST entre pets y profiles: la clave foránea de
+  // `owner_id` apunta a auth.users, no a profiles. Se resuelve con dos
+  // consultas y un Map, como el resto del módulo.
+  const [profiles, covers] = await Promise.all([
+    db
+      .from("profiles")
+      .select("id, display_name, email")
+      .in("id", [...new Set(pets.map((pet) => pet.owner_id))]),
+    db
+      .from("photos")
+      .select("pet_id, url")
+      .in(
+        "pet_id",
+        pets.map((pet) => pet.id),
+      )
+      .eq("is_cover", true),
+  ]);
+
+  const ownerById = new Map(
+    unwrap(profiles, "los perfiles").map((profile) => [profile.id, profile]),
+  );
+  const coverByPet = new Map(
+    unwrap(covers, "las fotos de portada").map((photo) => [photo.pet_id, photo.url]),
+  );
+
+  return pets.map((pet) => ({
+    id: pet.id,
+    name: pet.name,
+    species: pet.species,
+    breed: pet.breed,
+    avatarUrl: pet.avatar_url,
+    coverPhotoUrl: coverByPet.get(pet.id) ?? null,
+    isPublic: pet.is_public,
+    hiddenByAdmin: pet.hidden_by_admin,
+    featured: pet.featured,
+    featuredAt: pet.featured_at,
+    createdAt: pet.created_at,
+    ownerId: pet.owner_id,
+    // Las mascotas del seed apuntan a un dueño que no existe en auth.users, así
+    // que aquí no habrá perfil. Se deja en null y la interfaz lo dice.
+    ownerName: ownerById.get(pet.owner_id)?.display_name ?? null,
+    ownerEmail: ownerById.get(pet.owner_id)?.email ?? null,
+  }));
+});
+
+/** Todas las cuentas, con cuántas mascotas tiene cada una. */
+export const listProfilesForAdmin = cache(async function listProfilesForAdmin(): Promise<
+  AdminProfile[]
+> {
+  await requireAdmin();
+  const db = await createClient();
+
+  const [profiles, pets] = await Promise.all([
+    db.from("profiles").select("*").order("created_at", { ascending: true }),
+    db.from("pets").select("owner_id"),
+  ]);
+
+  const counts = new Map<string, number>();
+  for (const pet of unwrap(pets, "las mascotas")) {
+    counts.set(pet.owner_id, (counts.get(pet.owner_id) ?? 0) + 1);
+  }
+
+  return unwrap(profiles, "los perfiles").map((profile) => ({
+    id: profile.id,
+    displayName: profile.display_name,
+    email: profile.email,
+    role: profile.role,
+    createdAt: profile.created_at,
+    petsCount: counts.get(profile.id) ?? 0,
+  }));
+});
 
 /** Todas las mascotas de quien ha iniciado sesión. */
 export const listPets = cache(async function listPets(): Promise<PetSummary[]> {

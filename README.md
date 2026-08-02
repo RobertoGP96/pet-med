@@ -43,7 +43,9 @@ En el **SQL Editor** del panel, ejecutar en este orden:
    triggers y políticas RLS.
 2. `supabase/migrations/20260802120000_auth_profiles_roles.sql` — perfiles,
    roles y moderación del mural.
-3. `supabase/seed.sql` — *opcional*, tres mascotas de ejemplo con historial
+3. `supabase/migrations/20260803120000_profiles_email.sql` — el correo en el
+   perfil, que es lo que permite distinguir cuentas en el panel.
+4. `supabase/seed.sql` — *opcional*, tres mascotas de ejemplo con historial
    completo para ver la app con datos.
 
 > **Sobre el seed y la clave foránea.** `seed.sql` siembra con un dueño
@@ -187,9 +189,17 @@ calendarios de vacunación, alimentos tóxicos y dosis de medicamentos.
   devuelve un error, devuelve cero filas. `lib/supabase/admin.ts`
   (`service_role`, salta RLS) queda reservado al almacenamiento de fotos.
 - **Dos roles, `user` y `admin`**, en `profiles.role`. El administrador modera
-  qué se ve en el mural —destacar y ocultar— pero **no** ve el historial
-  clínico de mascotas ajenas: las políticas de las seis tablas médicas no lo
-  contemplan, y es deliberado.
+  qué se ve en el mural —destacar y ocultar— desde `/admin`, y cambia roles
+  desde `/admin/usuarios`. Lo que **no** puede es ver el historial clínico de
+  mascotas ajenas: las políticas de las seis tablas médicas no lo contemplan, y
+  es deliberado.
+- **El mural tiene dos interruptores y hacen falta los dos.** `pets.is_public`
+  es del dueño y `pets.hidden_by_admin` de la moderación: basta con que uno
+  diga que no para que la mascota no aparezca. Un administrador puede retirar
+  del mural, pero no publicar lo que su dueño quiso privado.
+- **Destacar es también reordenar.** Al destacar se sella `featured_at`, y ese
+  sello es lo que ordena entre las destacadas: volver a destacar una mascota la
+  sube al principio. No hay campo de posición que recalcular en cadena.
 - **Las fotos se guardan en `public/uploads/` por defecto.** Eso **no funciona
   en Vercel** ni en ningún entorno con sistema de archivos de sólo lectura:
   ahí hay que poner `STORAGE_DRIVER="supabase"` y crear el bucket. El
