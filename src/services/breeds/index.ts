@@ -179,8 +179,10 @@ export async function findBreedById(
  * importa: así «bulldog» devuelve «Bulldog» y no «American Bulldog», y sólo se
  * cae a la coincidencia parcial cuando no hay nada mejor.
  *
- * Ojo: las dos APIs publican los nombres en inglés, así que un nombre escrito
- * en español («Pastor Alemán») no encontrará nada. Para eso está el id.
+ * Se prueba contra los dos nombres, el español y el inglés de la API: una
+ * mascota dada de alta antes de que hubiera traducciones tiene guardado
+ * «German Shepherd Dog», y una de ahora, «Pastor Alemán». Las dos deben
+ * encontrar su ficha.
  */
 export async function findBreedByName(
   species: Species,
@@ -192,12 +194,19 @@ export async function findBreedByName(
   const breeds = await listBreeds(species);
   if (breeds.length === 0) return null;
 
-  const folded = breeds.map((breed) => ({ breed, name: foldText(breed.name) }));
+  const folded = breeds.map((breed) => ({
+    breed,
+    // Sin repetidos: en las razas que no se traducen los dos nombres coinciden.
+    names: [...new Set([foldText(breed.name), foldText(breed.sourceName)])],
+  }));
+
+  const findBy = (matches: (candidate: string) => boolean) =>
+    folded.find((entry) => entry.names.some(matches))?.breed;
 
   return (
-    folded.find((entry) => entry.name === wanted)?.breed ??
-    folded.find((entry) => entry.name.startsWith(wanted))?.breed ??
-    folded.find((entry) => entry.name.includes(wanted))?.breed ??
+    findBy((candidate) => candidate === wanted) ??
+    findBy((candidate) => candidate.startsWith(wanted)) ??
+    findBy((candidate) => candidate.includes(wanted)) ??
     null
   );
 }

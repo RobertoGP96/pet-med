@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { ClinicalEventForm } from "@/components/events/clinical-event-form";
 import { ClinicalTimeline } from "@/components/events/clinical-timeline";
 import { Section } from "@/components/ui/section";
-import { getPetDossier } from "@/server/queries";
+import { getPetEvents } from "@/server/queries";
 
 export const metadata = { title: "Historia clínica" };
 
@@ -11,8 +11,8 @@ export default async function PetHistoryPage({
   params,
 }: PageProps<"/mascotas/[petId]/historia">) {
   const { petId } = await params;
-  const dossier = await getPetDossier(petId);
-  if (!dossier) notFound();
+  const result = await getPetEvents(petId);
+  if (!result) notFound();
 
   return (
     <div className="flex flex-col gap-6">
@@ -24,7 +24,7 @@ export default async function PetHistoryPage({
       </Section>
 
       <Section title="Historial">
-        <ClinicalTimeline events={dossier.events} petId={petId} />
+        <ClinicalTimeline events={result.data} petId={petId} />
       </Section>
     </div>
   );

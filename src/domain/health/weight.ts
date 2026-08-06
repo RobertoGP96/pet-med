@@ -103,29 +103,42 @@ export interface BcsAssessment {
 }
 
 /**
+ * Etiqueta propia de cada punto de la escala: son nueve grados distintos y el
+ * desplegable los lista todos, así que no pueden compartir texto. La
+ * agrupación clínica vive en `level`, no aquí.
+ */
+const BCS_LABELS: Record<number, string> = {
+  1: "Caquéctico",
+  2: "Muy delgado",
+  3: "Delgado",
+  4: "Ideal (algo justo)",
+  5: "Ideal",
+  6: "Ligero sobrepeso",
+  7: "Sobrepeso",
+  8: "Obesidad",
+  9: "Obesidad grave",
+};
+
+/** Nivel de salud de cada punto: 4-5 ideal, 3/6/7 vigilar, extremos alerta. */
+function bcsLevel(score: number): HealthLevel {
+  if (score <= 2 || score >= 8) return "alert";
+  if (score === 4 || score === 5) return "good";
+  return "watch";
+}
+
+/**
  * Interpreta el Body Condition Score de 9 puntos (escala Purina/WSAVA).
  * 4-5 es el rango ideal; cada punto por encima equivale a ~10 % de exceso.
  */
 export function assessBodyCondition(score: number): BcsAssessment {
   const clamped = Math.min(9, Math.max(1, Math.round(score)));
-  const excessPercent = (clamped - 5) * 10;
 
-  if (clamped <= 2) {
-    return { score: clamped, label: "Muy delgado", level: "alert", excessPercent };
-  }
-  if (clamped === 3) {
-    return { score: clamped, label: "Delgado", level: "watch", excessPercent };
-  }
-  if (clamped <= 5) {
-    return { score: clamped, label: "Ideal", level: "good", excessPercent };
-  }
-  if (clamped === 6) {
-    return { score: clamped, label: "Ligero sobrepeso", level: "watch", excessPercent };
-  }
-  if (clamped === 7) {
-    return { score: clamped, label: "Sobrepeso", level: "watch", excessPercent };
-  }
-  return { score: clamped, label: "Obesidad", level: "alert", excessPercent };
+  return {
+    score: clamped,
+    label: BCS_LABELS[clamped],
+    level: bcsLevel(clamped),
+    excessPercent: (clamped - 5) * 10,
+  };
 }
 
 /**

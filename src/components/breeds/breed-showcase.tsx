@@ -3,15 +3,17 @@ import Image from "next/image";
 import { BreedCard, type FeaturedBreed } from "@/components/breeds/breed-card";
 import { Eyebrow } from "@/components/ui/section";
 import { findBreedByName } from "@/services/breeds";
+import { findBreedText } from "@/services/breeds/i18n/breeds";
 import { getDogBreedPhoto, listRandomDogPhotos } from "@/services/breeds/photos";
 
 /**
  * Razas de la guía.
  *
- * Escritas en inglés a propósito: los dos catálogos publican los nombres en
- * ese idioma y la búsqueda por nombre no traduce (ver `findBreedByName`). Son
- * razas conocidas y presentes en las dos fuentes, para que la sección no salga
- * medio vacía.
+ * Escritas con el nombre inglés del catálogo, que es el que no cambia: las
+ * fichas se pintan traducidas igual (`findBreedByName` busca en los dos
+ * idiomas), pero si un día se retocara una traducción, la lista seguiría
+ * encontrando su raza. Son razas conocidas y presentes en las dos fuentes, para
+ * que la sección no salga medio vacía.
  */
 const FEATURED_BREEDS = [
   "Labrador Retriever",
@@ -47,9 +49,6 @@ const GALLERY_SIZES = "(min-width: 640px) 17vw, 33vw";
  * Todo lo que se pinta aquí sale de APIs públicas y gratuitas: los datos de
  * cada raza de dogapi.dog y las fotos de dog.ceo. Ninguna de las dos necesita
  * clave.
- *
- * Las curiosidades no se repiten aquí: de eso se encarga <DogFact> arriba del
- * mural, y las dos saldrían de la misma llamada a `listDogFacts`.
  *
  * Como el resto de `src/services/breeds`, nada de esto lanza: cada pieza que
  * falle se queda fuera y, si no queda nada que enseñar, la sección entera
@@ -140,7 +139,13 @@ async function loadFeaturedBreeds(): Promise<FeaturedBreed[]> {
           getDogBreedPhoto(name),
         ]);
 
-        return { name, profile, photoUrl } satisfies FeaturedBreed;
+        // El nombre de respaldo también traducido: si el catálogo no responde
+        // pero sí llega la foto, la tarjeta no debe titularse en inglés.
+        return {
+          name: findBreedText("dog", name)?.name ?? name,
+          profile,
+          photoUrl,
+        } satisfies FeaturedBreed;
       }),
     );
 

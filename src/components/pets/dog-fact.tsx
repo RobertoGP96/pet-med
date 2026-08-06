@@ -1,17 +1,17 @@
 import { Sparkles } from "lucide-react";
 
 import { Eyebrow } from "@/components/ui/section";
-import { getDogFact } from "@/services/breeds/facts";
+import { pickDogFact } from "@/domain/dog-facts";
 
 /**
  * Bloque «¿Sabías que…?» del mural.
  *
- * Si la API de curiosidades no responde, `getDogFact` devuelve `null` y este
- * componente no pinta nada: es un adorno, no debe dejar un hueco ni un error.
+ * La curiosidad ya no viene de ninguna API: está escrita en español en
+ * `src/domain/dog-facts.ts` y rota una al día. Por eso este componente ya no es
+ * asíncrono ni puede quedarse sin nada que pintar.
  */
-export async function DogFact() {
-  const fact = await getDogFact();
-  if (!fact) return null;
+export function DogFact() {
+  const fact = pickDogFact(new Date());
 
   return (
     <aside className="border-brand/20 bg-brand-muted/40 flex items-start gap-3 rounded-lg border p-4">
@@ -20,10 +20,7 @@ export async function DogFact() {
       </span>
       <div className="flex flex-col gap-1">
         <Eyebrow tone="brand">¿Sabías que…?</Eyebrow>
-        {/* El dato llega en inglés desde dogapi.dog. */}
-        <p className="text-sm" lang="en">
-          {fact}
-        </p>
+        <p className="text-sm">{fact}</p>
       </div>
     </aside>
   );

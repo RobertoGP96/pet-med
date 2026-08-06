@@ -7,7 +7,7 @@ import type { BreedProfile } from "@/domain/breed";
 
 /** Una raza de la guía: lo que se sabe de ella y una foto de ejemplo. */
 export interface FeaturedBreed {
-  /** Nombre que se pidió al catálogo; es el que se muestra si la API no responde. */
+  /** Nombre en español; es el que se muestra si la API no responde. */
   name: string;
   /** Ficha de dogapi.dog, o `null` si no se encontró la raza. */
   profile: BreedProfile | null;
@@ -85,9 +85,13 @@ export function BreedCard({ breed, sizes }: { breed: FeaturedBreed; sizes: strin
           </dl>
         )}
 
-        {/* dogapi.dog publica las reseñas en inglés. */}
+        {/* `lang` sale del perfil: la reseña está traducida salvo que la API
+            haya estrenado una raza que aún no lo esté. */}
         {profile?.description && (
-          <p className="text-muted-foreground mt-auto line-clamp-4 pt-1 text-xs text-pretty" lang="en">
+          <p
+            className="text-muted-foreground mt-auto line-clamp-4 pt-1 text-xs text-pretty"
+            lang={profile.descriptionLang}
+          >
             {profile.description}
           </p>
         )}

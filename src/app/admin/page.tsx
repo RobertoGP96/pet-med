@@ -8,6 +8,7 @@ import { EmptyState, Eyebrow } from "@/components/ui/section";
 import { SPECIES_LABELS } from "@/domain/enums";
 import { formatDate } from "@/lib/format";
 import { listPetsForAdmin, type AdminPet } from "@/server/queries";
+import { toDisplayBreedName } from "@/services/breeds/i18n/breeds";
 
 export const metadata = {
   title: "Mural",
@@ -118,7 +119,8 @@ function AdminPetRow({ pet }: { pet: AdminPet }) {
 
           <p className="text-muted-foreground truncate text-xs">
             {SPECIES_LABELS[pet.species]}
-            {pet.breed ? ` · ${pet.breed}` : ""} · alta el {formatDate(pet.createdAt.slice(0, 10))}
+            {pet.breed ? ` · ${toDisplayBreedName(pet.species, pet.breed)}` : ""} · alta el{" "}
+            {formatDate(pet.createdAt.slice(0, 10))}
           </p>
 
           <p className="text-muted-foreground truncate text-xs">

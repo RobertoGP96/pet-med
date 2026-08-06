@@ -4,6 +4,7 @@ import { CalendarClock, Info } from "lucide-react";
 
 import { BreedBadges, BreedTraitsList } from "@/components/health/breed-traits";
 import { HealthIndicatorGrid } from "@/components/health/health-indicator-card";
+import { IndicatorGridSkeleton } from "@/components/pets/pet-tab-skeleton";
 import { WeightChart } from "@/components/health/weight-chart";
 import { ActionLink } from "@/components/ui/action";
 import { Eyebrow, Section } from "@/components/ui/section";
@@ -11,7 +12,7 @@ import { hasTraits } from "@/domain/breed";
 import { buildHealthIndicators } from "@/domain/health/indicators";
 import { getUpcomingDoses, getOverdueDoses } from "@/domain/health/medication";
 import { formatDateTime } from "@/lib/format";
-import { getPetDossier } from "@/server/queries";
+import { getPet, getPetOverview } from "@/server/queries";
 import { resolveBreedProfile } from "@/services/breeds";
 
 export default function PetOverviewPage({ params }: PageProps<"/mascotas/[petId]">) {
@@ -26,15 +27,25 @@ export default function PetOverviewPage({ params }: PageProps<"/mascotas/[petId]
 
 async function Overview({ params }: { params: PageProps<"/mascotas/[petId]">["params"] }) {
   const { petId } = await params;
-  const dossier = await getPetDossier(petId);
 
-  if (!dossier) notFound();
+  // `getPet` ya lo resolvió el layout de la ficha y va envuelto en `cache()`:
+  // aquí no cuesta una consulta más, sólo da los datos de la raza que hacen
+  // falta para lanzar la llamada externa cuanto antes.
+  const pet = await getPet(petId);
+  if (!pet) notFound();
 
-  const { pet, weights, conditions, medications, doses, events } = dossier;
+  // En paralelo, no en cascada. El perfil de raza es un extra —si la API falla,
+  // `resolveBreedProfile` devuelve null y los indicadores que dependen de él
+  // simplemente no salen—, pero tarda lo suyo: no tiene sentido empezar a
+  // pedirlo sólo cuando ya han vuelto las cinco consultas del historial.
+  const [overview, breed] = await Promise.all([
+    getPetOverview(petId),
+    resolveBreedProfile(pet.species, pet.breedRefId, pet.breed),
+  ]);
 
-  // El perfil de raza es un extra: si la API falla, `resolveBreedProfile`
-  // devuelve null y los indicadores que dependen de él simplemente no salen.
-  const breed = await resolveBreedProfile(pet.species, pet.breedRefId, pet.breed);
+  if (!overview) notFound();
+
+  const { weights, conditions, medications, doses, events } = overview.data;
 
   const now = new Date();
   const indicators = buildHealthIndicators({
@@ -202,21 +213,7 @@ async function Overview({ params }: { params: PageProps<"/mascotas/[petId]">["pa
   );
 }
 
+/** El mismo esqueleto que sirve de `loading.tsx` de esta pestaña. */
 function OverviewSkeleton() {
-  return (
-    // Mismo dibujo que la rejilla de indicadores para que no salte al llegar
-    // los datos: filete de 1px entre celdas y nada de bordes por tarjeta.
-    <div
-      className="bg-border border-border grid gap-px overflow-hidden rounded-lg border sm:grid-cols-2 lg:grid-cols-3"
-      aria-hidden="true"
-    >
-      {Array.from({ length: 6 }).map((_, index) => (
-        <div key={index} className="bg-card flex h-32 flex-col gap-3 p-4">
-          <div className="bg-muted size-8 animate-pulse rounded" />
-          <div className="bg-muted h-3 w-24 animate-pulse rounded" />
-          <div className="bg-muted h-5 w-16 animate-pulse rounded" />
-        </div>
-      ))}
-    </div>
-  );
+  return <IndicatorGridSkeleton />;
 }

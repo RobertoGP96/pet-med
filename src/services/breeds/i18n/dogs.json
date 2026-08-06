@@ -1,0 +1,1134 @@
+{
+  "affenpinscher": {
+    "name": "Affenpinscher",
+    "description": "El Affenpinscher es una raza pequeña y juguetona, criada en origen en Alemania para la caza menor. Es inteligente, enérgico y cariñoso, y resulta un excelente perro de compañía."
+  },
+  "afghan hound": {
+    "name": "Galgo Afgano",
+    "description": "El Galgo Afgano es una raza grande y elegante, criada en origen en Afganistán para la caza menor. Es inteligente, independiente y atlético, y resulta un excelente perro de compañía."
+  },
+  "airedale terrier": {
+    "name": "Airedale Terrier",
+    "description": "El Airedale Terrier es una raza grande y poderosa, criada en origen en Inglaterra para la caza menor. Es inteligente, enérgico y tenaz, y resulta un excelente perro de caza."
+  },
+  "akita": {
+    "name": "Akita",
+    "description": "El Akita es una raza grande y musculosa originaria de Japón. Es conocido por su lealtad y su valentía."
+  },
+  "alaskan klee kai": {
+    "name": "Alaskan Klee Kai",
+    "description": "El Alaskan Klee Kai es una raza de tamaño pequeño a mediano desarrollada en Alaska en los años setenta. Es una raza activa e inteligente, leal y sociable. Mide entre 33 y 43 centímetros a la cruz y tiene un manto doble que puede presentar colores y patrones muy variados."
+  },
+  "alaskan malamute": {
+    "name": "Malamute de Alaska",
+    "description": "El Malamute de Alaska es un perro de trineo grande y poderoso procedente de Alaska. Es fuerte y trabajador, pero también sociable y leal. Su manto es doble y espeso, y admite cualquier color. Es un perro activo que necesita mucho ejercicio y estímulo mental para mantenerse sano y feliz."
+  },
+  "american bulldog": {
+    "name": "Bulldog Americano",
+    "description": "El Bulldog Americano es una raza grande y poderosa, criada en origen en Estados Unidos para el trabajo en las granjas. Es inteligente, leal y protector, y resulta un excelente perro guardián."
+  },
+  "american english coonhound": {
+    "name": "American English Coonhound",
+    "description": "El American English Coonhound es una raza grande y atlética, criada en origen en Estados Unidos para cazar mapaches. Es inteligente, enérgico y tenaz, y resulta un excelente perro de caza."
+  },
+  "american eskimo dog": {
+    "name": "Perro Esquimal Americano",
+    "description": "El Perro Esquimal Americano es una raza de tamaño pequeño a mediano, de pelo espeso y mullido en tonos blanco, crema o galleta. Destaca por su inteligencia y por su facilidad para aprender todo tipo de trucos."
+  },
+  "american foxhound": {
+    "name": "Foxhound Americano",
+    "description": "El Foxhound Americano es una raza grande y atlética, criada en origen en Estados Unidos para la caza del zorro. Es inteligente, enérgico y tenaz, y resulta un excelente perro de caza."
+  },
+  "american hairless terrier": {
+    "name": "Terrier Americano sin Pelo",
+    "description": "El Terrier Americano sin Pelo es un terrier de tamaño pequeño a mediano originario de Estados Unidos. Es la variedad sin pelo del Rat Terrier y se obtuvo seleccionando el gen responsable de la ausencia de manto. Se le atribuye un carácter más tranquilo y relajado que a su pariente con pelo, aunque sigue siendo una raza activa e inteligente a la que le encanta agradar y mantenerse ocupada. Mide entre 30 y 41 centímetros a la cruz y se presenta en gran variedad de colores."
+  },
+  "american leopard hound": {
+    "name": "American Leopard Hound",
+    "description": "El American Leopard Hound es una raza grande y atlética criada en origen para la caza. Destaca por su manto moteado y por su finísimo olfato."
+  },
+  "american staffordshire terrier": {
+    "name": "American Staffordshire Terrier",
+    "description": "El American Staffordshire Terrier es una raza de tamaño mediano criada en origen para las peleas de perros. Es inteligente, leal y protector, y resulta un excelente perro de familia."
+  },
+  "american water spaniel": {
+    "name": "Perro de Agua Americano",
+    "description": "El Perro de Agua Americano es una raza de tamaño mediano, criada en origen en Estados Unidos para la caza de aves acuáticas. Es inteligente, enérgico y muy dispuesto a agradar, y resulta un excelente perro de caza."
+  },
+  "anatolian shepherd dog": {
+    "name": "Pastor de Anatolia",
+    "description": "El Pastor de Anatolia es una raza grande de perro guardián de rebaños originaria de Turquía. Es una raza poderosa y atlética, de pelo largo y áspero. Tiene la cabeza grande y redondeada, con orejas pequeñas y erguidas; las patas son fuertes y musculosas, y la cola suele llevarse amputada. Es una raza inteligente y leal que resulta un excelente perro de familia. Al ser muy activo, necesita mucho ejercicio y estímulo mental. Es fiel y cariñoso, y disfruta pasando tiempo con los suyos."
+  },
+  "appenzeller sennenhund": {
+    "name": "Boyero de Appenzell",
+    "description": "El Boyero de Appenzell es una raza grande de perro de montaña originaria de Suiza. Es una raza poderosa y atlética, de manto doble y espeso. Tiene la cabeza grande y redondeada, con orejas pequeñas y erguidas; las patas son fuertes y musculosas, y la cola suele llevarse amputada. Es una raza inteligente y leal que resulta un excelente perro de familia. Al ser muy activo, necesita mucho ejercicio y estímulo mental. Es fiel y cariñoso, y disfruta pasando tiempo con los suyos."
+  },
+  "australian cattle dog": {
+    "name": "Boyero Australiano",
+    "description": "El Boyero Australiano es una raza de tamaño mediano, criada en origen en Australia para conducir y guardar el ganado. Es inteligente, enérgico y trabajador, y resulta un excelente perro de trabajo."
+  },
+  "australian kelpie": {
+    "name": "Kelpie Australiano",
+    "description": "El Kelpie Australiano es un perro pastor vivaz e inteligente procedente de Australia. Es activo, sociable y leal, y resulta un gran perro de familia. Su manto es doble y espeso, y admite cualquier color. Se adiestra con facilidad y necesita mucho ejercicio y estímulo mental para mantenerse sano y feliz."
+  },
+  "australian shepherd": {
+    "name": "Pastor Australiano",
+    "description": "El Pastor Australiano es una raza de tamaño mediano con manto doble de longitud media. Tiene la cabeza en forma de cuña y el cuerpo musculoso, con la cola recta y de longitud media. Es un perro de trabajo inteligente, dispuesto a agradar y que adora estar con su familia. Es célebre por su lealtad y participa a menudo en pruebas de agility, obediencia y pastoreo."
+  },
+  "australian stumpy tail cattle dog": {
+    "name": "Boyero Australiano de Cola Corta",
+    "description": "El Boyero Australiano de Cola Corta es un perro pastor de tamaño mediano, reconocible por su cola corta y su pelo liso y denso, que puede ser azul, rojo o leonado. Es inteligente, enérgico y obediente, y se crió en origen para ayudar a los ganaderos a conducir el ganado a lo largo de grandes distancias."
+  },
+  "australian terrier": {
+    "name": "Terrier Australiano",
+    "description": "El Terrier Australiano es una raza pequeña de terrier originaria de Australia. Es una raza compacta y vivaz, de pelo corto y duro. Tiene la cabeza grande y redondeada, con orejas pequeñas y erguidas; las patas son cortas y fuertes, y la cola suele llevarse amputada. Es una raza inteligente y leal que resulta un excelente perro de familia. Al ser muy activo, necesita ejercicio y estímulo mental con regularidad. Es fiel y cariñoso, y disfruta pasando tiempo con los suyos."
+  },
+  "azawakh": {
+    "name": "Azawakh",
+    "description": "El Azawakh es una raza pequeña y esbelta, criada en origen en África para la caza y la guarda. Es inteligente, despierto y atlético, y resulta un excelente perro de compañía."
+  },
+  "barbado da terceira": {
+    "name": "Barbado da Terceira",
+    "description": "El Barbado da Terceira es una raza grande de perro de trabajo originaria de las Azores. Es una raza fuerte y poderosa, de pelo corto y duro. Tiene la cabeza grande y redondeada, con orejas pequeñas y erguidas; las patas son fuertes y musculosas, y la cola suele llevarse amputada. Es una raza inteligente y leal que resulta un excelente perro de familia. Al ser muy activo, necesita mucho ejercicio y estímulo mental. Es fiel y cariñoso, y disfruta pasando tiempo con los suyos."
+  },
+  "barbet": {
+    "name": "Barbet",
+    "description": "El Barbet es una antigua raza francesa de perro de agua. Es activo, sociable y muy inteligente, y resulta un gran perro de familia. Su manto es característico, lanoso y de rizo u onda, y admite cualquier color. Tiene los pies palmeados y nada estupendamente. El Barbet se une mucho a su familia y vive mejor en hogares donde reciba atención y ejercicio de sobra."
+  },
+  "basenji": {
+    "name": "Basenji",
+    "description": "El Basenji es una raza pequeña y ágil, criada en origen en África para la caza menor. Es inteligente, independiente y despierto, y resulta un excelente perro de compañía."
+  },
+  "basset fauve de bretagne": {
+    "name": "Basset Fauve de Bretagne",
+    "description": "El Basset Fauve de Bretagne es una raza pequeña y juguetona, criada en origen en Francia para la caza menor. Es inteligente, cariñoso y leal, y resulta un excelente perro de compañía."
+  },
+  "basset hound": {
+    "name": "Basset Hound",
+    "description": "El Basset Hound es una raza pequeña y juguetona, criada en origen en Francia para la caza menor. Es inteligente, cariñoso y leal, y resulta un excelente perro de compañía."
+  },
+  "bavarian mountain scent houn": {
+    "name": "Sabueso de Montaña de Baviera",
+    "description": "El Sabueso de Montaña de Baviera es una raza de tamaño mediano, criada en origen en Alemania para la caza menor. Es inteligente, enérgico y tenaz, y resulta un excelente perro de caza."
+  },
+  "beagle": {
+    "name": "Beagle",
+    "description": "El Beagle es una raza de tamaño pequeño a mediano criada en origen para la caza. Es conocido por su carácter alegre y por su finísimo olfato."
+  },
+  "bearded collie": {
+    "name": "Bearded Collie",
+    "description": "El Bearded Collie es un perro pastor de tamaño mediano, de manto doble, espeso y desgreñado, con una «barba» muy característica alrededor de la cara."
+  },
+  "beauceron": {
+    "name": "Beauceron",
+    "description": "El Beauceron es una raza de perro grande y poderosa, criada originalmente en Francia para pastorear y proteger el ganado. Son inteligentes, leales y protectores, y resultan excelentes perros de trabajo."
+  },
+  "bedlington terrier": {
+    "name": "Bedlington Terrier",
+    "description": "El Bedlington Terrier es una raza de perro pequeña y atlética, criada originalmente en Inglaterra para cazar piezas menores. Son inteligentes, juguetones y cariñosos, y resultan excelentes perros de compañía."
+  },
+  "belgian laekenois": {
+    "name": "Pastor Belga Laekenois",
+    "description": "El Pastor Belga Laekenois es una raza fuerte y ágil, de pelo áspero y duro. Tiene una constitución potente y musculada, con la cabeza grande y rectangular y los ojos de tamaño medio. Es una raza inteligente y despierta, de carácter independiente y vivaz. Compañero fiel y entregado con la familia, destaca por su instinto protector y su valentía."
+  },
+  "belgian malinois": {
+    "name": "Pastor Belga Malinois",
+    "description": "El Pastor Belga Malinois es una raza pastora de tamaño mediano originaria de Bélgica. Es un perro activo e inteligente, fiel y entregado a su familia. Mide entre 56 y 66 cm a la cruz y luce un pelo corto y denso que puede presentarse en colores y patrones muy variados."
+  },
+  "belgian sheepdog": {
+    "name": "Pastor Belga",
+    "description": "El Pastor Belga es una raza de perro grande e inteligente, criada originalmente en Bélgica para pastorear y proteger el ganado. Son leales, protectores y muy trabajadores, y resultan excelentes perros de trabajo."
+  },
+  "belgian tervuren": {
+    "name": "Pastor Belga Tervuren",
+    "description": "El Pastor Belga Tervuren es una raza pastora de tamaño mediano procedente de Bélgica. Son perros de talla media, con un manto doble y espeso que los protege del frío. Tienen un carácter enérgico e inteligente, con instinto para el pastoreo y el trabajo. Aprenden con facilidad y son obedientes, aunque necesitan un adiestramiento firme y constante. Son fieles y devotos con su familia, y su naturaleza independiente los hace idóneos para el pastoreo y la guarda."
+  },
+  "bergamasco sheepdog": {
+    "name": "Pastor Bergamasco",
+    "description": "El Pastor Bergamasco es una raza pastora de gran tamaño procedente de la comarca de Bérgamo, en Italia. Son perros grandes, de pelo espeso y desgreñado. Tienen un porte digno y un carácter fiel, lo que los convierte en excelentes perros de guarda y de compañía. Son muy inteligentes y fáciles de adiestrar, con instinto para pastorear y proteger a su familia y su territorio. Valientes y despiertos, su naturaleza independiente los hace idóneos para el pastoreo y la guarda."
+  },
+  "berger picard": {
+    "name": "Berger Picard",
+    "description": "El Berger Picard es una raza de perro de tamaño mediano, criada originalmente en Francia para pastorear y proteger el ganado. Son inteligentes, leales y protectores, y resultan excelentes perros de trabajo."
+  },
+  "bernese mountain dog": {
+    "name": "Boyero de Berna",
+    "description": "El Boyero de Berna es un perro grande y robusto, de pelo largo y sedoso, casi siempre negro, blanco y fuego. Criado en un principio para conducir el ganado y tirar de carros en las montañas suizas, destaca por su inteligencia, su fuerza y su agilidad."
+  },
+  "bichon frise": {
+    "name": "Bichón Frisé",
+    "description": "El Bichón Frisé es una raza de perro pequeña y juguetona, criada originalmente en Francia como perro de compañía. Son inteligentes, cariñosos y leales, y resultan excelentes mascotas familiares."
+  },
+  "biewer terrier": {
+    "name": "Biewer Terrier",
+    "description": "El Biewer Terrier es una raza de perro pequeña y juguetona, criada originalmente en Alemania para cazar piezas menores. Son inteligentes, cariñosos y leales, y resultan excelentes perros de compañía."
+  },
+  "black and tan coonhound": {
+    "name": "Coonhound Negro y Fuego",
+    "description": "El Coonhound Negro y Fuego es una raza de perro grande y musculosa, criada originalmente para la caza del mapache. Son inteligentes, enérgicos y tenaces, y resultan excelentes perros de caza."
+  },
+  "black russian terrier": {
+    "name": "Terrier Negro Ruso",
+    "description": "El Terrier Negro Ruso es una raza de perro grande y poderosa, criada originalmente en Rusia para vigilar y proteger propiedades. Son inteligentes, leales y protectores, y resultan excelentes perros guardianes."
+  },
+  "bloodhound": {
+    "name": "Sabueso de San Huberto",
+    "description": "El Sabueso de San Huberto es un perro de rastro de gran tamaño, criado para seguir la pista y buscar a personas o animales por su olor."
+  },
+  "bluetick coonhound": {
+    "name": "Bluetick Coonhound",
+    "description": "El Bluetick Coonhound es una raza de perro grande y atlética, criada originalmente en Estados Unidos para la caza del mapache. Son inteligentes, enérgicos y tenaces, y resultan excelentes perros de caza."
+  },
+  "boerboel": {
+    "name": "Boerboel",
+    "description": "El Boerboel es una raza de tipo mastín, grande, poderosa y segura de sí misma, originaria de Sudáfrica y conocida por su lealtad, su fuerza y su instinto protector."
+  },
+  "bohemian shepherd": {
+    "name": "Pastor de Bohemia",
+    "description": "El Pastor de Bohemia es una raza pastora de tamaño mediano originaria de la República Checa. Es un perro activo e inteligente, fiel y amistoso. Mide entre 43 y 53 cm a la cruz y luce un pelo de longitud media que puede presentarse en colores y patrones muy variados."
+  },
+  "bolognese": {
+    "name": "Bichón Boloñés",
+    "description": "El Bichón Boloñés es una raza de perro pequeña y juguetona, criada originalmente en Italia como perro de compañía. Son inteligentes, cariñosos y leales, y resultan excelentes mascotas familiares."
+  },
+  "border collie": {
+    "name": "Border Collie",
+    "description": "El Border Collie es una raza pastora de tamaño mediano procedente de la frontera entre Inglaterra y Escocia. Son perros de talla media, con un manto doble y espeso que los protege del frío. Tienen un carácter enérgico e inteligente, con instinto para el pastoreo y el trabajo. Aprenden con facilidad y son obedientes, aunque necesitan un adiestramiento firme y constante. Son fieles y devotos con su familia, y su naturaleza independiente los hace idóneos para el pastoreo y la guarda."
+  },
+  "border terrier": {
+    "name": "Border Terrier",
+    "description": "El Border Terrier es una raza de perro pequeña y enérgica, criada originalmente en Inglaterra para cazar piezas menores. Son inteligentes, juguetones y cariñosos, y resultan excelentes perros de compañía."
+  },
+  "borzoi": {
+    "name": "Borzoi",
+    "description": "El Borzoi es una raza de perro grande y atlética, criada originalmente en Rusia para cazar lobos y otras piezas mayores. Son inteligentes, independientes y elegantes, y resultan excelentes perros de compañía."
+  },
+  "boston terrier": {
+    "name": "Boston Terrier",
+    "description": "El Boston Terrier es una raza de perro pequeña e inteligente originaria de Estados Unidos. Se les conoce por su carácter simpático y por su inconfundible manto blanco y negro."
+  },
+  "bouvier des flandres": {
+    "name": "Boyero de Flandes",
+    "description": "El Boyero de Flandes es una raza de perro grande y poderosa procedente de la región de Flandes, en Bélgica. Son perros de gran talla, con un manto doble y espeso de pelo duro. Tienen un porte digno pero enérgico, lo que los convierte en excelentes perros de trabajo. Son muy inteligentes y fáciles de adiestrar, con instinto para proteger a su familia y su territorio. Valientes y leales, su naturaleza independiente los hace idóneos para el pastoreo y la guarda."
+  },
+  "boxer": {
+    "name": "Bóxer",
+    "description": "El Bóxer es una raza de perro grande y musculosa, criada originalmente en Alemania para vigilar y proteger propiedades. Son inteligentes, leales y protectores, y resultan excelentes perros guardianes."
+  },
+  "boykin spaniel": {
+    "name": "Boykin Spaniel",
+    "description": "El Boykin Spaniel es una raza de perro de tamaño mediano, criada originalmente en Estados Unidos para la caza de aves acuáticas. Son inteligentes, simpáticos y muy dispuestos a agradar, y resultan excelentes perros de caza."
+  },
+  "bracco italiano": {
+    "name": "Braco Italiano",
+    "description": "El Braco Italiano es una raza de perro de muestra de gran tamaño originaria de Italia. Es un perro potente y atlético, de pelo largo y áspero. Tiene la cabeza grande y redondeada, con las orejas pequeñas y erguidas. Sus patas son fuertes y musculosas, y la cola suele llevarse amputada. El Braco Italiano es una raza inteligente y leal que resulta una magnífica mascota familiar. Es un perro activo, que necesita mucho ejercicio y estímulo mental. Cariñoso y fiel, disfruta pasando tiempo con su familia."
+  },
+  "braque du bourbonnais": {
+    "name": "Braco del Bourbonnais",
+    "description": "El Braco del Bourbonnais es una raza de caza de tamaño mediano procedente de la región francesa del Borbonesado. Son perros de talla media, de pelo corto y áspero. Tienen un carácter simpático y enérgico, con un marcado instinto de caza. Son muy inteligentes y fáciles de adiestrar, aunque necesitan una educación firme y constante. Son fieles y devotos con su familia, si bien a veces pueden mostrarse tercos e independientes."
+  },
+  "braque francais pyrenean": {
+    "name": "Braco Francés tipo Pirineos",
+    "description": "El Braco Francés tipo Pirineos es una raza versátil de tamaño mediano, conocida por su inteligencia, su facilidad para el adiestramiento y su pasión por el aire libre. Procede de los Pirineos franceses, donde se empleaba originalmente para cazar y marcar la pieza."
+  },
+  "briard": {
+    "name": "Briard",
+    "description": "El Briard es una raza grande y musculosa, de pelo largo y desgreñado, normalmente negro, leonado o gris. Se le conoce por su lealtad y su instinto protector."
+  },
+  "brittany": {
+    "name": "Bretón",
+    "description": "El Bretón es una raza de tamaño mediano, de pelo corto y denso y complexión musculosa y atlética. Destaca por su enorme energía y por lo bien que se desenvuelve en actividades muy distintas, como la caza, el agility y la obediencia."
+  },
+  "broholmer": {
+    "name": "Broholmer",
+    "description": "El Broholmer es una raza grande y poderosa, criada originalmente en Dinamarca para la caza."
+  },
+  "brussels griffon": {
+    "name": "Grifón de Bruselas",
+    "description": "El Grifón de Bruselas es una raza pequeña y juguetona, célebre por su inteligencia, su expresión cómica y su carácter cariñoso. Es originaria de Bélgica, donde se crió desde el principio como perro de compañía y de regazo."
+  },
+  "bull terrier": {
+    "name": "Bull Terrier",
+    "description": "El Bull Terrier es un terrier de tamaño mediano que se desarrolló en Inglaterra durante el siglo XIX. Es una raza activa y enérgica, leal y sociable. Mide entre 46 y 56 cm a la cruz y tiene un pelo corto y denso que puede presentar colores muy variados."
+  },
+  "bulldog": {
+    "name": "Bulldog",
+    "description": "Los Bulldogs son una raza fuerte y robusta, de pelo corto y liso. Tienen la cabeza ancha y el cuello grueso, con el hocico corto y los ojos hundidos, de expresión decidida y amable. Se les reconoce su valentía y su tenacidad, y son mascotas muy populares gracias a su temperamento equilibrado y a su carácter afable y leal."
+  },
+  "bullmastiff": {
+    "name": "Bullmastiff",
+    "description": "El Bullmastiff es una raza grande y poderosa, criada originalmente en Inglaterra para vigilar y proteger propiedades. Es inteligente, leal y protector, y resulta un excelente perro guardián."
+  },
+  "cairn terrier": {
+    "name": "Cairn Terrier",
+    "description": "El Cairn Terrier es una raza pequeña y enérgica, criada originalmente en Escocia para cazar piezas menores. Es inteligente, juguetón y cariñoso, y resulta un excelente perro de compañía."
+  },
+  "canaan dog": {
+    "name": "Perro de Canaán",
+    "description": "El Perro de Canaán es una raza atlética de tamaño mediano, conocida por su inteligencia, su facilidad para el adiestramiento y su viveza. Es originaria de Oriente Medio, donde se empleaba para pastorear y guardar."
+  },
+  "cane corso": {
+    "name": "Cane Corso",
+    "description": "El Cane Corso es una raza grande y poderosa, criada originalmente en Italia para vigilar y proteger propiedades. Es inteligente, leal y protector, y resulta un excelente perro guardián."
+  },
+  "cardigan welsh corgi": {
+    "name": "Corgi Galés de Cardigan",
+    "description": "El Corgi Galés de Cardigan es un perro pastor de tamaño mediano originario de Gales. Es una de las dos razas conocidas como Corgi Galés; la otra es el Corgi Galés de Pembroke. A los Cardigan se les distingue por su cuerpo largo, muy pegado al suelo, y sus patas cortas. Son perros de constitución fuerte, con el pecho profundo y las extremidades robustas. Tienen una cola de longitud media que suele amputarse, y el pelo largo y denso. De carácter simpático y alegre, son magníficos perros de familia: leales, inteligentes y con ganas de estar siempre en marcha."
+  },
+  "carolina dog": {
+    "name": "Perro de Carolina",
+    "description": "El Perro de Carolina es una raza de tamaño mediano originaria de Estados Unidos. Es activa y enérgica, de pelo corto y liso. Tiene la cabeza grande y redondeada, con orejas pequeñas y erguidas; las patas son fuertes y musculosas, y la cola suele amputarse. Es una raza inteligente y leal que resulta una magnífica mascota familiar. Al ser muy activo, necesita bastante ejercicio y estímulo mental. Es fiel y afectuoso, y disfruta pasando tiempo con su familia."
+  },
+  "catahoula leopard dog": {
+    "name": "Perro Leopardo de Catahoula",
+    "description": "El Perro Leopardo de Catahoula es una raza grande y poderosa, criada originalmente en Estados Unidos para pastorear y guardar el ganado. Es inteligente, leal y protector, y resulta un excelente perro de trabajo."
+  },
+  "caucasian shepherd dog": {
+    "name": "Pastor del Cáucaso",
+    "description": "El Pastor del Cáucaso es una raza grande y poderosa procedente de la región de las montañas del Cáucaso. Son perros de gran tamaño, con un doble manto espeso que los protege del frío. Tienen un porte señorial y un aire orgulloso y seguro de sí mismos. Su gran inteligencia y lealtad los convierten en excelentes perros guardianes. Son valientes y despiertos, con el instinto de proteger a su familia y su propiedad. Aprenden con facilidad, pero necesitan un adiestramiento firme y constante."
+  },
+  "cavalier king charles spaniel": {
+    "name": "Cavalier King Charles Spaniel",
+    "description": "El Cavalier King Charles Spaniel es una raza pequeña originaria del Reino Unido. Tiene el pelo largo y sedoso, y se presenta en colores muy variados. Es una raza dulce y cariñosa que hace de buen compañero para la familia. Al ser activa, necesita bastante ejercicio y estímulo. Además, es muy leal y entregada a sus dueños."
+  },
+  "central asian shepherd dog": {
+    "name": "Pastor de Asia Central",
+    "description": "El Pastor de Asia Central es una raza grande y poderosa, conocida por su inteligencia, su lealtad y su instinto protector. Es originaria de Asia Central, donde se empleaba para custodiar los rebaños de ovejas y proteger a las familias y sus hogares."
+  },
+  "cesky terrier": {
+    "name": "Terrier Checo",
+    "description": "El Terrier Checo es una raza pequeña y recia, conocida por su inteligencia, su carácter juguetón y su lealtad. Es originaria de la República Checa, donde se empleaba para cazar piezas menores y alimañas."
+  },
+  "chesapeake bay retriever": {
+    "name": "Retriever de la Bahía de Chesapeake",
+    "description": "El Retriever de la Bahía de Chesapeake es una raza grande y musculosa, criada originalmente en Estados Unidos para cobrar aves acuáticas. Es inteligente, sociable y muy dispuesto a agradar, y resulta un excelente perro de caza."
+  },
+  "chihuahua": {
+    "name": "Chihuahua",
+    "description": "El Chihuahua es una raza pequeña y enérgica, conocida por su inteligencia, su lealtad y su enorme personalidad. Es originaria de México, donde se criaba como perro de compañía y de regazo."
+  },
+  "chinese crested": {
+    "name": "Crestado Chino",
+    "description": "El Crestado Chino es una raza pequeña y sin pelo, conocida por su aspecto delicado y su carácter juguetón."
+  },
+  "chinese shar-pei": {
+    "name": "Shar Pei Chino",
+    "description": "El Shar Pei Chino es una raza grande y musculosa, criada originalmente en China para vigilar y proteger propiedades. Es inteligente, leal y protector, y resulta un excelente perro guardián."
+  },
+  "chinook": {
+    "name": "Chinook",
+    "description": "El Chinook es una raza grande y poderosa, criada originalmente en Estados Unidos para tirar de trineos y hacer guardia. Es inteligente, leal y trabajador, y resulta un excelente perro de trabajo."
+  },
+  "chow chow": {
+    "name": "Chow Chow",
+    "description": "El Chow Chow es una raza de tamaño mediano originaria de China. Es independiente y leal, y destaca por su característica lengua de color azul negruzco. Mide entre 43 y 51 cm a la cruz y tiene un pelo largo y denso que puede presentar colores muy variados."
+  },
+  "cirneco dell'etna": {
+    "name": "Cirneco del Etna",
+    "description": "El Cirneco del Etna es una raza pequeña y esbelta, criada originalmente en Sicilia para cazar conejos. Es inteligente, enérgico e independiente, y resulta un excelente perro de compañía."
+  },
+  "clumber spaniel": {
+    "name": "Clumber Spaniel",
+    "description": "El Clumber Spaniel es un perro de caza grande, cariñoso y de trato apacible. Se trata de una raza antigua, desarrollada en el condado inglés de Clumber en el siglo XVIII. Destaca por su espeso manto blanco, normalmente doble y de mantenimiento bastante sencillo. Son magníficos perros de familia, aunque también brillan en el campo como perros de caza. Los Clumber pueden ser muy sensibles y no llevan nada bien el trato brusco. Son leales y entregados a los suyos, y por lo general se llevan bien con los niños."
+  },
+  "cocker spaniel": {
+    "name": "Cocker Spaniel",
+    "description": "El Cocker Spaniel es una raza de tamaño mediano, criada originalmente en Inglaterra para levantar y cobrar las piezas. Es inteligente, sociable y muy dispuesto a agradar, y resulta un excelente perro de caza."
+  },
+  "collie": {
+    "name": "Collie",
+    "description": "El Collie es un perro pastor de tamaño mediano originario de Escocia. Es una raza activa e inteligente, leal y entregada a su familia. Mide entre 56 y 66 cm a la cruz y tiene un pelo largo y denso que puede presentar colores y patrones muy variados."
+  },
+  "coton de tulear": {
+    "name": "Coton de Tuléar",
+    "description": "El Coton de Tuléar es una raza pequeña y esponjosa, con un manto algodonoso que resulta suave e hipoalergénico. Destaca por su carácter simpático y juguetón."
+  },
+  "croatian sheepdog": {
+    "name": "Perro Pastor Croata",
+    "description": "El Perro Pastor Croata es una raza de tamaño mediano, criada originalmente en Croacia para pastorear y guardar el ganado. Es inteligente, leal y protector, y resulta un excelente perro de trabajo."
+  },
+  "curly-coated retriever": {
+    "name": "Retriever de Pelo Rizado",
+    "description": "El Retriever de Pelo Rizado es una raza cobradora de gran tamaño procedente de Inglaterra. Son perros grandes, cubiertos de un pelaje rizado. Tienen un porte digno y enérgico que los convierte en excelentes perros de trabajo. Son muy inteligentes y fáciles de adiestrar, con un instinto natural para cobrar las piezas. Son leales y entregados a su familia, y su carácter independiente los hace idóneos tanto para el cobro como para las labores de guarda."
+  },
+  "czechoslovakian vlcak": {
+    "name": "Perro Lobo Checoslovaco",
+    "description": "El Perro Lobo Checoslovaco es una raza inteligente y despierta, de complexión atlética y pelo espeso y áspero. Es un perro de trabajo listo y muy fácil de adiestrar, que se emplea en cometidos muy diversos: como perro guardián, en búsqueda y rescate o en la policía. El vlcak checo destaca además por su extraordinaria lealtad y entrega hacia sus dueños."
+  },
+  "dachshund": {
+    "name": "Teckel",
+    "description": "El Teckel es una raza pequeña y juguetona, criada originalmente en Alemania para cazar piezas menores. Es inteligente, independiente y cariñoso, y resulta un excelente perro de compañía."
+  },
+  "dalmatian": {
+    "name": "Dálmata",
+    "description": "El Dálmata es una raza de tamaño medio originaria de Croacia. Tiene el pelo corto y denso, y se presenta en distintos colores. Es una raza activa y enérgica, que necesita mucho ejercicio y estimulación mental. Son leales y muy apegados a sus dueños, y resultan buenos compañeros para la familia."
+  },
+  "dandie dinmont terrier": {
+    "name": "Dandie Dinmont Terrier",
+    "description": "El Dandie Dinmont Terrier es una raza pequeña y juguetona, criada originalmente en Escocia para la caza menor. Es inteligente, independiente y cariñoso, y resulta un excelente perro de compañía."
+  },
+  "danish-swedish farmdog": {
+    "name": "Perro de Granja Danés-Sueco",
+    "description": "El Perro de Granja Danés-Sueco es una raza pastora pequeña y enérgica, de pelo corto y liso y una inteligencia muy despierta."
+  },
+  "deutscher wachtelhund": {
+    "name": "Deutscher Wachtelhund",
+    "description": "El Deutscher Wachtelhund es un perro de caza polivalente originario de Alemania. Es fuerte, vivaz e inteligente, y resulta un excelente compañero tanto en el campo como en casa. Tiene el pelo corto y denso, normalmente de color blanco y negro. Es una raza activa que necesita mucho ejercicio y estimulación mental para mantenerse sana y feliz."
+  },
+  "doberman pinscher": {
+    "name": "Dóberman",
+    "description": "El Dóberman es una raza grande y poderosa, criada originalmente en Alemania para la guardia y la protección de fincas. Es inteligente, leal y protector, y resulta un excelente perro guardián."
+  },
+  "dogo argentino": {
+    "name": "Dogo Argentino",
+    "description": "El Dogo Argentino es una raza de gran tamaño originaria de Argentina. Es un perro potente y atlético, de pelo corto y blanco. Tiene la cabeza grande y redondeada, con orejas pequeñas y erguidas. Sus patas son fuertes y musculosas, y suele llevar la cola cortada. Es una raza inteligente y fiel, y resulta una excelente mascota para la familia. Es un perro activo que necesita mucho ejercicio y estimulación mental. Es leal y cariñoso, y disfruta pasando tiempo con los suyos."
+  },
+  "dogue de bordeaux": {
+    "name": "Dogo de Burdeos",
+    "description": "El Dogo de Burdeos es una raza de gran tamaño originaria de Francia. Es un perro potente y atlético, de pelo corto y liso. Tiene la cabeza grande y redondeada, con orejas pequeñas y erguidas. Sus patas son fuertes y musculosas, y suele llevar la cola cortada. Es una raza inteligente y fiel, y resulta una excelente mascota para la familia. Es un perro activo que necesita mucho ejercicio y estimulación mental. Es leal y cariñoso, y disfruta pasando tiempo con los suyos."
+  },
+  "drentsche patrijshond": {
+    "name": "Drentsche Patrijshond",
+    "description": "El Drentsche Patrijshond es una raza de tamaño medio criada originalmente en los Países Bajos para la caza menor. Es inteligente, enérgico y tenaz, y resulta un excelente perro de caza."
+  },
+  "drever": {
+    "name": "Drever",
+    "description": "El Drever es una raza pequeña y ágil, criada originalmente en Suecia para la caza menor. Es inteligente, enérgico y tenaz, y resulta un excelente perro de caza."
+  },
+  "dutch shepherd": {
+    "name": "Pastor Holandés",
+    "description": "El Pastor Holandés es una raza de tamaño medio y complexión atlética, conocida por su inteligencia, su lealtad y su facilidad para el adiestramiento. Es originaria de los Países Bajos, donde se empleaba como perro de pastoreo y de guarda."
+  },
+  "english cocker spaniel": {
+    "name": "Cocker Spaniel Inglés",
+    "description": "El Cocker Spaniel Inglés es una raza de tamaño medio criada originalmente en Inglaterra para la caza menor. Es inteligente, sociable y muy dispuesto a agradar, y resulta un excelente perro de caza."
+  },
+  "english foxhound": {
+    "name": "Foxhound Inglés",
+    "description": "El Foxhound Inglés es un sabueso de tamaño medio que se empleaba antiguamente para cazar zorros. Es una raza activa y enérgica, amistosa y de carácter equilibrado, considerada muy inteligente y obediente. Mide entre 53 y 63 cm a la cruz y tiene un pelo de longitud corta a media que puede presentarse en distintos colores."
+  },
+  "english setter": {
+    "name": "Setter Inglés",
+    "description": "El Setter Inglés es un perro de caza grande y apacible, de pelo sedoso y ondulado muy característico y temperamento tranquilo e inteligente."
+  },
+  "english springer spaniel": {
+    "name": "Springer Spaniel Inglés",
+    "description": "El Springer Spaniel Inglés es una raza de tamaño medio criada originalmente en Inglaterra para levantar y cobrar las piezas. Es inteligente, enérgico y muy dispuesto a agradar, y resulta un excelente perro de caza."
+  },
+  "english toy spaniel": {
+    "name": "Spaniel Toy Inglés",
+    "description": "El Spaniel Toy Inglés es una raza pequeña y juguetona, criada originalmente en Inglaterra como perro de compañía. Es inteligente, cariñoso y leal, y resulta una excelente mascota para la familia."
+  },
+  "entlebucher mountain dog": {
+    "name": "Boyero de Entlebuch",
+    "description": "El Boyero de Entlebuch es una raza de tamaño medio originaria de Suiza. Destaca por su inteligencia y su lealtad."
+  },
+  "estrela mountain dog": {
+    "name": "Perro de la Sierra de la Estrella",
+    "description": "El Perro de la Sierra de la Estrella es una raza de gran tamaño originaria de Portugal. Es un perro potente y atlético, de pelo doble y espeso. Tiene la cabeza grande y redondeada, con orejas pequeñas y erguidas. Sus patas son fuertes y musculosas, y suele llevar la cola cortada. Es una raza inteligente y fiel, y resulta una excelente mascota para la familia. Es un perro activo que necesita mucho ejercicio y estimulación mental. Es leal y cariñoso, y disfruta pasando tiempo con los suyos."
+  },
+  "eurasier": {
+    "name": "Eurasier",
+    "description": "El Eurasier es una raza de tamaño medio criada originalmente en Alemania como perro de compañía. Es inteligente, leal y cariñoso, y resulta una excelente mascota para la familia."
+  },
+  "field spaniel": {
+    "name": "Field Spaniel",
+    "description": "El Field Spaniel es una raza de tamaño medio y complexión atlética, conocida por su inteligencia, su facilidad para el adiestramiento y su afición al agua. Es originaria de Inglaterra, donde se empleaba para cazar y levantar las piezas."
+  },
+  "finnish lapphund": {
+    "name": "Perro Finlandés de Laponia",
+    "description": "El Perro Finlandés de Laponia es una raza de tamaño medio originaria de Finlandia. Destaca por su pelo doble y espeso y por su carácter amistoso."
+  },
+  "finnish spitz": {
+    "name": "Spitz Finlandés",
+    "description": "El Spitz Finlandés es una raza pequeña y ágil, criada originalmente en Finlandia para la caza menor. Es inteligente, enérgico y tenaz, y resulta un excelente perro de caza."
+  },
+  "flat-coated retriever": {
+    "name": "Flat-Coated Retriever",
+    "description": "El Flat-Coated Retriever es una raza grande de perro cobrador originaria de Inglaterra. Son perros de buen tamaño, con un manto liso y brillante. Tienen un carácter vivaz y cariñoso, lo que los convierte en excelentes compañeros y perros de trabajo. Son muy inteligentes y fáciles de adiestrar, con un instinto natural para cobrar las piezas. Son leales y devotos con su familia, y su carácter independiente los hace muy aptos para el cobro y las tareas de guarda."
+  },
+  "french bulldog": {
+    "name": "Bulldog Francés",
+    "description": "El Bulldog Francés es una raza pequeña y juguetona, criada originalmente en Francia como perro de compañía. Es inteligente, cariñoso y leal, y resulta una excelente mascota para la familia."
+  },
+  "french spaniel": {
+    "name": "Spaniel Francés",
+    "description": "El Spaniel Francés es un perro de caza de tamaño medio originario de Francia. Es una raza fuerte y potente, de pelo corto y liso. Tiene la cabeza grande, con el hocico largo y las orejas grandes y caídas. Sus patas son fuertes y musculosas, y suele llevar la cola cortada. Es una raza inteligente y fiel, y resulta una excelente mascota para la familia. Es un perro activo que necesita mucho ejercicio y estimulación mental. Es leal y cariñoso, y disfruta pasando tiempo con los suyos."
+  },
+  "german longhaired pointer": {
+    "name": "Braco Alemán de Pelo Largo",
+    "description": "El Braco Alemán de Pelo Largo es una raza de tamaño medio originaria de Alemania. Tiene el pelo espeso y ondulado, y se presenta en distintos colores. Es una raza activa que necesita mucho ejercicio y estimulación mental. Son leales y muy apegados a sus dueños, y resultan buenos compañeros para la familia."
+  },
+  "german pinscher": {
+    "name": "Pinscher Alemán",
+    "description": "El Pinscher Alemán es una raza de tamaño medio, enérgica e inteligente, de pelo corto y liso y una silueta estilizada y atlética."
+  },
+  "german shepherd dog": {
+    "name": "Pastor Alemán",
+    "description": "El Pastor Alemán es una raza grande originaria de Alemania, surgida a finales del siglo XIX. Es una raza de trabajo capaz de dedicarse a tareas muy variadas, desde el pastoreo y la guarda hasta el rescate y salvamento. Tiene un manto doble y espeso, en distintos colores, y es muy inteligente y leal. Es una raza activa que necesita mucho ejercicio y estimulación mental."
+  },
+  "german shorthaired pointer": {
+    "name": "Braco Alemán de Pelo Corto",
+    "description": "El Braco Alemán de Pelo Corto es una raza de tamaño mediano a grande criada originalmente para la caza. Destaca por su inteligencia y su carácter enérgico."
+  },
+  "german spitz": {
+    "name": "Spitz Alemán",
+    "description": "El Spitz Alemán es una raza de tamaño pequeño a mediano originaria de Alemania. Destaca por su pelo espeso y esponjoso y por su carácter juguetón."
+  },
+  "german wirehaired pointer": {
+    "name": "Braco Alemán de Pelo Duro",
+    "description": "El Braco Alemán de Pelo Duro es una raza robusta de tamaño medio originaria de Alemania, surgida a finales del siglo XIX. Es un perro de caza polivalente, capaz de trabajar en todo tipo de terrenos, del agua a la montaña. Su pelo es duro, denso y resistente a la intemperie, y luce una máscara facial muy característica. Es una raza activa, con mucha energía y muchas ganas de agradar. Es leal y resulta un buen compañero para la familia."
+  },
+  "giant schnauzer": {
+    "name": "Schnauzer Gigante",
+    "description": "El Schnauzer Gigante es un perro de trabajo de gran tamaño originario de Alemania. Es una raza potente y atlética, de pelo denso y áspero. Tiene la cabeza grande y redondeada, con orejas pequeñas y erguidas, extremidades fuertes y musculosas y una cola que suele llevarse amputada. Inteligente y fiel, es un magnífico perro de familia. Se trata de una raza activa que necesita mucho ejercicio y estímulo mental. Es cariñoso y apegado, y disfruta pasando tiempo con los suyos."
+  },
+  "glen of imaal terrier": {
+    "name": "Glen of Imaal Terrier",
+    "description": "El Glen of Imaal Terrier es un terrier de tamaño pequeño a mediano que se empleó históricamente para cazar piezas menores. Es una raza activa e inteligente, fiel y sociable. El Glen of Imaal Terrier mide entre 30 y 36 cm a la cruz y tiene un pelo largo y áspero que puede presentar colores muy variados."
+  },
+  "golden retriever": {
+    "name": "Golden Retriever",
+    "description": "El Golden Retriever es un perro grande y musculoso criado originalmente en Escocia para cobrar piezas de caza. Son inteligentes, sociables y muy dispuestos a complacer, y resultan excelentes perros de familia."
+  },
+  "gordon setter": {
+    "name": "Setter Gordon",
+    "description": "El Setter Gordon es un perro grande y atlético criado originalmente para la caza. Son inteligentes, enérgicos y deseosos de agradar, y resultan excelentes perros de compañía."
+  },
+  "grand basset griffon vendeen": {
+    "name": "Gran Basset Grifón Vendeano",
+    "description": "El Gran Basset Grifón Vendeano es un sabueso de tamaño mediano procedente de la región francesa de Vendée. Son perros medianos, con un pelaje largo y áspero. Tienen un carácter enérgico y alegre, con un marcado instinto para la caza y el rastreo. Son muy inteligentes y fáciles de adiestrar, aunque necesitan un entrenamiento firme y constante para obedecer. Son fieles y entregados a su familia, aunque a veces pueden mostrarse tercos e independientes."
+  },
+  "great dane": {
+    "name": "Gran Danés",
+    "description": "El Gran Danés es un perro grande y poderoso criado originalmente en Alemania para cazar piezas mayores. Son inteligentes, fieles y de trato amable, y resultan excelentes perros de compañía."
+  },
+  "great pyrenees": {
+    "name": "Perro de Montaña de los Pirineos",
+    "description": "El Perro de Montaña de los Pirineos es un perro grande y poderoso criado originalmente en los Pirineos para conducir y guardar el ganado. Son inteligentes, fieles y protectores, y resultan excelentes perros de trabajo."
+  },
+  "greater swiss mountain dog": {
+    "name": "Gran Boyero Suizo",
+    "description": "El Gran Boyero Suizo es un perro grande y poderoso criado originalmente en Suiza para conducir y guardar el ganado. Son inteligentes, fieles y trabajadores, y resultan excelentes perros de trabajo."
+  },
+  "greyhound": {
+    "name": "Galgo Inglés",
+    "description": "El Galgo Inglés es una raza estilizada y atlética, conocida por su velocidad, su elegancia y su resistencia. Es originaria de las Islas Británicas, donde se usó en un principio para la caza a la carrera y para las carreras de galgos."
+  },
+  "hamiltonstovare": {
+    "name": "Sabueso de Hamilton",
+    "description": "El Sabueso de Hamilton es un perro de caza de tamaño mediano procedente de Suecia. Es sociable, fiel e inteligente, y encaja muy bien como perro de familia. Tiene un manto doble y espeso que puede ser negro y blanco o dorado y blanco. Es una raza activa que necesita mucho ejercicio y estímulo mental para mantenerse sana y feliz."
+  },
+  "hanoverian scenthound": {
+    "name": "Sabueso de Hannover",
+    "description": "El Sabueso de Hannover es un sabueso de tamaño mediano procedente de la región alemana de Hannover. Son perros medianos, con un pelaje corto y áspero. Tienen un carácter sociable y enérgico, con un marcado instinto para la caza y el rastreo. Son muy inteligentes y fáciles de adiestrar, aunque necesitan un entrenamiento firme y constante para obedecer. Son fieles y entregados a su familia, aunque a veces pueden mostrarse tercos e independientes."
+  },
+  "harrier": {
+    "name": "Harrier",
+    "description": "El Harrier es un sabueso de tamaño mediano que se empleó históricamente para cazar liebres y otras piezas menores. Se cree que desciende de una mezcla de Foxhound, Galgo Inglés y otras razas de sabueso. Es una raza activa y enérgica, de carácter sociable y equilibrado, y suele mostrarse muy dispuesta a complacer. Mide entre 48 y 53 cm a la cruz, normalmente es tricolor y tiene un pelo denso y de longitud media."
+  },
+  "havanese": {
+    "name": "Bichón Habanero",
+    "description": "El Bichón Habanero es un perro pequeño y juguetón criado originalmente en Cuba como perro de compañía. Son inteligentes, cariñosos y fieles, y resultan excelentes perros de familia."
+  },
+  "hokkaido": {
+    "name": "Hokkaido",
+    "description": "El Hokkaido es un perro de tamaño mediano procedente de la isla japonesa de Hokkaido. Son perros medianos, con un manto doble y espeso que los protege del frío. Tienen un carácter digno y fiel, lo que los convierte en excelentes perros de guarda y de compañía. Son inteligentes y fáciles de adiestrar, aunque necesitan un entrenamiento firme y constante para obedecer. Son valientes y despiertos, con un instinto natural para proteger a su familia y su territorio."
+  },
+  "hovawart": {
+    "name": "Hovawart",
+    "description": "El Hovawart es un perro grande y poderoso criado originalmente en Alemania para vigilar y proteger la propiedad. Son inteligentes, fieles y protectores, y resultan excelentes perros de guarda."
+  },
+  "ibizan hound": {
+    "name": "Podenco Ibicenco",
+    "description": "El Podenco Ibicenco es un perro de caza de tamaño mediano procedente de las Islas Baleares. Es activo, sociable e inteligente, y encaja muy bien como perro de familia. Tiene un pelo corto y brillante, normalmente blanco con manchas rojas o color canela. Es una raza activa que necesita mucho ejercicio y estímulo mental para mantenerse sana y feliz."
+  },
+  "icelandic sheepdog": {
+    "name": "Perro Pastor Islandés",
+    "description": "El Perro Pastor Islandés es un perro pequeño y enérgico criado originalmente en Islandia para conducir y guardar el ganado. Son inteligentes, fieles y trabajadores, y resultan excelentes perros de trabajo."
+  },
+  "irish red and white setter": {
+    "name": "Setter Irlandés Rojo y Blanco",
+    "description": "El Setter Irlandés Rojo y Blanco es un perro de tamaño mediano criado originalmente en Irlanda para cazar piezas menores. Son inteligentes, enérgicos y tenaces, y resultan excelentes perros de caza."
+  },
+  "irish setter": {
+    "name": "Setter Irlandés",
+    "description": "El Setter Irlandés es un perro de tamaño mediano criado originalmente para la caza. Son sociables, enérgicos e inteligentes, y resultan excelentes perros de compañía."
+  },
+  "irish terrier": {
+    "name": "Terrier Irlandés",
+    "description": "El Terrier Irlandés es una raza mediana y enérgica, conocida por su inteligencia, su valentía y su fidelidad. Es originaria de Irlanda, donde se usó en un principio para cazar piezas menores y alimañas."
+  },
+  "irish water spaniel": {
+    "name": "Perro de Agua Irlandés",
+    "description": "El Perro de Agua Irlandés es una raza cobradora de gran tamaño procedente de Irlanda. Son perros grandes, con un pelaje largo y ondulado. Tienen un carácter vivaz y enérgico, lo que los convierte en excelentes perros de trabajo. Son muy inteligentes y fáciles de adiestrar, con un instinto natural para cobrar las piezas. Son fieles y entregados a su familia, y su naturaleza independiente los hace muy aptos para el cobro y la guarda."
+  },
+  "irish wolfhound": {
+    "name": "Lebrel Irlandés",
+    "description": "El Lebrel Irlandés es un perro grande y musculoso criado originalmente para cazar lobos. Son apacibles, inteligentes y fieles, y resultan excelentes perros de familia."
+  },
+  "italian greyhound": {
+    "name": "Galgo Italiano",
+    "description": "El Galgo Italiano es un perro pequeño y estilizado criado originalmente para cazar piezas menores. Son apacibles, inteligentes y cariñosos, y resultan excelentes perros de compañía."
+  },
+  "jagdterrier": {
+    "name": "Jagdterrier",
+    "description": "El Jagdterrier es un perro pequeño y ágil criado originalmente en Alemania para cazar piezas menores. Son inteligentes, enérgicos y tenaces, y resultan excelentes perros de caza."
+  },
+  "japanese akitainu": {
+    "name": "Akita Inu Japonés",
+    "description": "El Akita Inu Japonés es un perro grande y poderoso desarrollado originalmente en Japón para las peleas de perros. Son inteligentes, fieles y protectores, y resultan excelentes perros de guarda."
+  },
+  "japanese chin": {
+    "name": "Chin Japonés",
+    "description": "El Chin Japonés es un perro pequeño y elegante, de cabeza característica en forma de cuña y pelo largo y sedoso que puede ser negro, blanco o rojo. Destaca por su carácter sociable y juguetón y por su agilidad, y se crió en un principio como perro de compañía para la aristocracia japonesa."
+  },
+  "japanese spitz": {
+    "name": "Spitz Japonés",
+    "description": "El Spitz Japonés es una raza pequeña y activa, de pelo largo y esponjoso. Tiene la cabeza triangular y unos ojos oscuros de tamaño medio, con una expresión amable que a menudo se describe como «sonriente». El Spitz Japonés es un perro inteligente y fiel, que adora estar con su familia y es conocido por su carácter cariñoso."
+  },
+  "japanese terrier": {
+    "name": "Terrier Japonés",
+    "description": "El Terrier Japonés es una raza de terrier de pequeño tamaño procedente de Japón. Son perros pequeños, con un pelaje corto y áspero. Tienen un carácter vivaz y enérgico, con un marcado instinto para la caza. Son muy inteligentes y fáciles de adiestrar, aunque necesitan un entrenamiento firme y constante para obedecer. Son fieles y entregados a su familia, y su naturaleza independiente los hace muy aptos para el pastoreo y la guarda."
+  },
+  "jindo": {
+    "name": "Jindo",
+    "description": "El Jindo es un perro de tamaño mediano criado originalmente en Corea para la caza y la guarda. Son inteligentes, independientes y despiertos, y resultan excelentes perros de compañía."
+  },
+  "kai ken": {
+    "name": "Kai Ken",
+    "description": "El Kai Ken es un perro de tamaño mediano de pelaje atigrado característico y constitución fuerte y musculosa. Son inteligentes, fieles y despiertos, y se criaron en un principio para cazar en las montañas de Japón."
+  },
+  "karelian bear dog": {
+    "name": "Perro de Osos de Carelia",
+    "description": "El Perro de Osos de Carelia es una raza de tamaño mediano originaria de Finlandia. Tiene un pelaje doble y espeso y se presenta en varios colores. Es una raza activa y llena de energía, que necesita mucho ejercicio y estimulación mental. Se muestra fiel y entregado con sus dueños, y resulta un buen compañero de familia. También es un excelente perro guardián, conocido por su valentía y su coraje."
+  },
+  "keeshond": {
+    "name": "Keeshond",
+    "description": "El Keeshond es una raza de tamaño mediano criada originalmente en los Países Bajos para vigilar y proteger la propiedad. Es inteligente, sociable y juguetón, y resulta un excelente perro de compañía."
+  },
+  "kerry blue terrier": {
+    "name": "Kerry Blue Terrier",
+    "description": "El Kerry Blue Terrier es un terrier de tamaño mediano desarrollado en Irlanda. Es una raza activa e inteligente, fiel y entregada a su familia. El Kerry Blue Terrier mide entre 43 y 48 cm a la cruz y luce un pelaje largo y ondulado que puede darse en distintos colores."
+  },
+  "kishu ken": {
+    "name": "Kishu Ken",
+    "description": "El Kishu Ken es una raza de tamaño mediano criada originalmente en Japón para la caza menor. Es inteligente, independiente y despierto, y resulta un excelente perro de caza."
+  },
+  "komondor": {
+    "name": "Komondor",
+    "description": "El Komondor es una raza grande e imponente, conocida por su característico pelaje blanco acordonado y por su carácter independiente y protector. Es una raza propia de Hungría, donde se empleaba en origen para guardar rebaños de ovejas y de ganado."
+  },
+  "kromfohrlander": {
+    "name": "Kromfohrlander",
+    "description": "El Kromfohrlander es una raza de tamaño pequeño a mediano originaria de Alemania. Es una raza activa y enérgica, inteligente, fiel y sociable. El Kromfohrlander mide entre 36 y 48 cm a la cruz y tiene un pelaje corto y áspero que se presenta en distintos colores y patrones."
+  },
+  "kuvasz": {
+    "name": "Kuvasz",
+    "description": "El Kuvasz es una raza grande y musculosa, criada en origen para proteger el ganado. Es inteligente y fiel, aunque puede mostrarse reservado con los desconocidos."
+  },
+  "labrador retriever": {
+    "name": "Labrador Retriever",
+    "description": "El Labrador Retriever es una raza grande y musculosa criada originalmente en Canadá para cobrar piezas de caza. Es inteligente, sociable y muy dispuesto a agradar, y resulta una excelente mascota familiar."
+  },
+  "lagotto romagnolo": {
+    "name": "Lagotto Romagnolo",
+    "description": "El Lagotto Romagnolo es una raza pequeña y ágil criada originalmente en Italia para la caza menor. Es inteligente, enérgico y tenaz, y resulta un excelente perro de caza."
+  },
+  "lakeland terrier": {
+    "name": "Lakeland Terrier",
+    "description": "El Lakeland Terrier es un terrier pequeño y ágil, de pelaje áspero y resistente a la intemperie, con una cola característica en forma de penacho."
+  },
+  "lancashire heeler": {
+    "name": "Lancashire Heeler",
+    "description": "El Lancashire Heeler es una raza de tamaño pequeño a mediano desarrollada en Inglaterra. Es una raza activa e inteligente, fiel y sociable. El Lancashire Heeler mide entre 28 y 33 cm a la cruz y tiene un pelaje corto y denso que se presenta en distintos colores y patrones."
+  },
+  "lapponian herder": {
+    "name": "Pastor Lapón",
+    "description": "El Pastor Lapón es un perro pastor de tipo spitz, de tamaño pequeño a mediano, propio de Finlandia."
+  },
+  "leonberger": {
+    "name": "Leonberger",
+    "description": "El Leonberger es una raza grande y poderosa criada originalmente en Alemania para el trabajo en las granjas. Es inteligente, apacible y fiel, y resulta una excelente mascota familiar."
+  },
+  "lhasa apso": {
+    "name": "Lhasa Apso",
+    "description": "El Lhasa Apso es una raza pequeña y juguetona criada originalmente en el Tíbet como perro de compañía. Es inteligente, independiente y cariñoso, y resulta una excelente mascota familiar."
+  },
+  "lowchen": {
+    "name": "Löwchen",
+    "description": "El Löwchen es una raza pequeña y activa, de pelaje corto y ondulado. Tiene una cabeza pequeña en forma de cuña, con ojos grandes y oscuros y una expresión despierta. El Löwchen es una raza juguetona y fiel, a la que le encanta estar con su familia, conocida por sus ganas de agradar y por su carácter vivaz y sociable."
+  },
+  "maltese": {
+    "name": "Bichón Maltés",
+    "description": "El Bichón Maltés es una raza pequeña y elegante, de pelaje largo y sedoso. Tiene la cabeza redondeada, el hocico corto y unos ojos grandes y negros de expresión dulce. El Bichón Maltés es una raza cariñosa y alegre, a la que le encanta estar con su familia, conocida por su carácter tierno y juguetón."
+  },
+  "manchester terrier (standard)": {
+    "name": "Manchester Terrier (Estándar)",
+    "description": "El Manchester Terrier (Estándar) es un terrier pequeño y vivaz procedente de Inglaterra. Es activo y enérgico, pero también fiel y cariñoso. Los Manchester Terrier tienen un pelaje corto y liso, por lo general negro y fuego. Son inteligentes, fáciles de adiestrar y estupendas mascotas familiares."
+  },
+  "manchester terrier (toy)": {
+    "name": "Manchester Terrier (Toy)",
+    "description": "El Manchester Terrier (Toy) es una raza pequeña y enérgica criada en origen para cazar ratas."
+  },
+  "mastiff": {
+    "name": "Mastín Inglés",
+    "description": "El Mastín Inglés es una raza grande y poderosa criada en origen para vigilar y proteger la propiedad. Es inteligente, fiel y protector, y resulta un excelente perro guardián."
+  },
+  "miniature american shepherd": {
+    "name": "Pastor Americano Miniatura",
+    "description": "El Pastor Americano Miniatura es una raza pequeña y enérgica criada originalmente en Estados Unidos para pastorear y guardar el ganado. Es inteligente, fiel y trabajador, y resulta un excelente perro de trabajo."
+  },
+  "miniature bull terrier": {
+    "name": "Bull Terrier Miniatura",
+    "description": "El Bull Terrier Miniatura es una raza pequeña y enérgica criada originalmente en Inglaterra para el acoso de toros. Es inteligente, juguetón y cariñoso, y resulta un excelente perro de compañía."
+  },
+  "miniature pinscher": {
+    "name": "Pinscher Miniatura",
+    "description": "El Pinscher Miniatura es una raza pequeña originaria de Alemania. Es compacto y vivaz, de pelaje corto y liso. Tiene la cabeza grande y redondeada, con orejas pequeñas y erguidas. Sus patas son cortas y fuertes, y la cola suele llevarse amputada. El Pinscher Miniatura es una raza inteligente y fiel, y resulta una excelente mascota familiar. Es un perro activo que necesita ejercicio y estimulación mental con regularidad. Es leal y cariñoso, y disfruta rodeado de su familia."
+  },
+  "miniature schnauzer": {
+    "name": "Schnauzer Miniatura",
+    "description": "El Schnauzer Miniatura es una raza pequeña surgida en Alemania a finales del siglo XIX. Tiene un pelaje doble de textura áspera y se presenta en varios colores. Es una raza inteligente y activa, y un buen compañero de familia. Se mantiene siempre alerta, lo que lo convierte en un buen perro de aviso, y es fiel y entregado con sus dueños."
+  },
+  "mountain cur": {
+    "name": "Mountain Cur",
+    "description": "El Mountain Cur es una raza grande y poderosa criada originalmente en Estados Unidos para la caza y la guarda. Es inteligente, fiel y protector, y resulta un excelente perro de trabajo."
+  },
+  "mudi": {
+    "name": "Mudi",
+    "description": "El Mudi es una raza de tamaño pequeño a mediano originaria de Hungría. Destaca por su inteligencia y su versatilidad."
+  },
+  "neapolitan mastiff": {
+    "name": "Mastín Napolitano",
+    "description": "El Mastín Napolitano es una raza grande y poderosa, de pelaje corto y denso. Tiene una cabeza grande y rectangular y un cuerpo macizo y musculoso, con el pecho profundo y ancho y el cuello grueso y potente. El Mastín Napolitano es una raza fiel y entregada, de temperamento tranquilo y equilibrado y con un fuerte instinto protector."
+  },
+  "nederlandse kooikerhondje": {
+    "name": "Nederlandse Kooikerhondje",
+    "description": "El Nederlandse Kooikerhondje es una raza pequeña y enérgica criada originalmente en los Países Bajos para la caza del pato. Es inteligente, juguetón y cariñoso, y resulta un excelente perro de compañía."
+  },
+  "newfoundland": {
+    "name": "Terranova",
+    "description": "El Terranova es una raza grande y musculosa criada en origen para trabajar en los barcos y en el agua. Es apacible e inteligente, y resulta una excelente mascota familiar."
+  },
+  "norfolk terrier": {
+    "name": "Norfolk Terrier",
+    "description": "El Norfolk Terrier es una raza pequeña y enérgica criada originalmente en Inglaterra para la caza menor. Es inteligente, juguetón y cariñoso, y resulta un excelente perro de compañía."
+  },
+  "norrbottenspets": {
+    "name": "Norrbottenspets",
+    "description": "El Norrbottenspets es una raza pequeña y juguetona criada originalmente en Suecia para la caza menor. Es inteligente, enérgico y cariñoso, y resulta un excelente perro de compañía."
+  },
+  "norwegian buhund": {
+    "name": "Buhund Noruego",
+    "description": "El Buhund Noruego es una raza de tamaño mediano criada originalmente en Noruega para pastorear y guardar el ganado. Es inteligente, sociable y lleno de energía, y resulta un magnífico perro de trabajo."
+  },
+  "norwegian elkhound": {
+    "name": "Elkhound Noruego",
+    "description": "El Elkhound Noruego es una raza antiquísima de tipo spitz, criada en Noruega para la caza y la guarda. Es fuerte y poderoso, pero también afable y fiel. Su manto es doble y espeso, con una borra interna larga y abundante y un pelo exterior corto y denso. Se presenta en varios colores, entre ellos el negro y el gris. Independiente e inteligente, es un estupendo perro de familia."
+  },
+  "norwegian lundehund": {
+    "name": "Lundehund Noruego",
+    "description": "El Lundehund Noruego es una raza pequeña y ágil que se crió en Noruega para cazar frailecillos. Es inteligente, juguetón y muy activo, y resulta un excelente perro de compañía."
+  },
+  "norwich terrier": {
+    "name": "Norwich Terrier",
+    "description": "El Norwich Terrier es una raza pequeña originaria de Inglaterra. Es un perro compacto y vivaz, de pelo corto y áspero. Tiene la cabeza grande y redondeada, con orejas pequeñas y erguidas; las patas son cortas y robustas, y la cola suele llevarse cortada. Inteligente y simpático, es un gran perro de familia. Al ser muy activo, necesita ejercicio regular y estímulo mental. Fiel y cariñoso, disfruta estando cerca de los suyos."
+  },
+  "nova scotia duck tolling retriever": {
+    "name": "Retriever de Nueva Escocia",
+    "description": "El Retriever de Nueva Escocia es una raza de caza de tamaño mediano originaria de Nueva Escocia. Es un perro activo y enérgico, de pelo corto y ondulado. Tiene la cabeza grande y redondeada, con orejas pequeñas y erguidas; las patas son fuertes y musculosas, y la cola suele llevarse cortada. Inteligente y leal, es un excelente perro de familia. Como raza activa, necesita mucho ejercicio y estímulo mental. Fiel y cariñoso, disfruta pasando tiempo con los suyos."
+  },
+  "old english sheepdog": {
+    "name": "Antiguo Pastor Inglés",
+    "description": "El Antiguo Pastor Inglés es una raza pastora de gran tamaño procedente de Inglaterra. Son perros grandes, con un manto doble y espeso que los protege del frío. Su carácter dulce y afectuoso los convierte en excelentes compañeros y perros de trabajo. Muy inteligentes y fáciles de adiestrar, conservan el instinto de conducir el rebaño y de proteger a su familia y su propiedad. Son fieles y entregados a los suyos, con un carácter independiente que los hace idóneos para el pastoreo y la guarda."
+  },
+  "otterhound": {
+    "name": "Otterhound",
+    "description": "El Otterhound es una raza grande y atlética criada originalmente en Inglaterra para la caza de la nutria. Es inteligente, juguetón y afectuoso, y resulta un excelente perro de compañía."
+  },
+  "papillon": {
+    "name": "Papillón",
+    "description": "El Papillón es una raza toy de pequeño tamaño originaria de Francia. Es un perro activo e inteligente, sociable y muy abierto. Mide entre 20 y 28 cm a la cruz y luce un pelo largo y sedoso que puede presentarse en distintos colores y patrones."
+  },
+  "parson russell terrier": {
+    "name": "Parson Russell Terrier",
+    "description": "El Parson Russell Terrier es una raza pequeña y enérgica criada originalmente para cazar piezas menores. Es inteligente, juguetón y muy activo, y resulta un excelente perro de compañía."
+  },
+  "pekingese": {
+    "name": "Pequinés",
+    "description": "El Pequinés es una raza pequeña originaria de China. Es un perro compacto y vivaz, de pelo largo y sedoso. Tiene la cabeza grande y redondeada, con orejas pequeñas y erguidas; las patas son cortas y robustas, y la cola suele llevarse cortada. Inteligente y leal, es un excelente perro de familia. Al ser una raza activa, necesita ejercicio regular y estímulo mental. Fiel y cariñoso, disfruta estando cerca de los suyos."
+  },
+  "pembroke welsh corgi": {
+    "name": "Corgi Galés de Pembroke",
+    "description": "El Corgi Galés de Pembroke es una raza pequeña originaria de Gales. Tiene el pelo corto y denso y se presenta en una gran variedad de colores. Es inteligente y activo, por lo que necesita bastante ejercicio y estímulo mental. Fiel y entregado a sus dueños, resulta un buen compañero de familia."
+  },
+  "perro de presa canario": {
+    "name": "Perro de Presa Canario",
+    "description": "El Perro de Presa Canario es una raza de gran tamaño procedente de las Islas Canarias. Son perros grandes, de pelo corto y denso. Su porte digno y su lealtad los convierten en excelentes perros de guarda y de compañía. Muy inteligentes y fáciles de adiestrar, conservan el instinto de proteger a su familia y su propiedad. Son valientes y alerta, con un carácter independiente que los hace idóneos para la guarda."
+  },
+  "peruvian inca orchid": {
+    "name": "Perro sin Pelo del Perú",
+    "description": "El Perro sin Pelo del Perú es una raza pequeña y ágil criada originalmente en Perú para cazar piezas menores. Es inteligente, enérgico y tenaz, y resulta un excelente perro de caza."
+  },
+  "petit basset griffon vendeen": {
+    "name": "Petit Basset Griffon Vendéen",
+    "description": "El Petit Basset Griffon Vendéen es una raza pequeña y enérgica criada originalmente en Francia para cazar piezas menores. Es inteligente, juguetón y afectuoso, y resulta un excelente perro de compañía."
+  },
+  "pharaoh hound": {
+    "name": "Podenco Faraónico",
+    "description": "El Podenco Faraónico es una raza de tamaño mediano originaria de Malta. Se trata de una raza antiquísima, considerada una de las más antiguas entre los perros domésticos. Tiene un cuerpo mediano, con un pecho musculoso y bien marcado. La cabeza es ancha, con hocico largo y orejas grandes y erguidas. Su pelo es corto y liso, en tonos leonados y rojizos. Es un perro leal y cariñoso que disfruta pasando tiempo con su familia. Como raza activa, necesita mucho ejercicio y estímulo mental."
+  },
+  "plott": {
+    "name": "Plott",
+    "description": "El Plott es una raza de tamaño mediano originaria de Estados Unidos. Es un perro activo, que necesita bastante ejercicio y estímulo mental. Tiene el pelo corto y denso y se presenta en una gran variedad de colores. Fiel y entregado a sus dueños, resulta un buen compañero de familia."
+  },
+  "pointer": {
+    "name": "Pointer",
+    "description": "El Pointer es una raza de tamaño mediano, de pelo corto y liso y complexión musculosa y atlética. Destaca por su finísimo olfato y por su habilidad para marcar la caza de pluma."
+  },
+  "polish lowland sheepdog": {
+    "name": "Pastor Polaco de Llanura",
+    "description": "El Pastor Polaco de Llanura es una raza de tamaño mediano criada originalmente en Polonia para pastorear y guardar el ganado. Es inteligente, fiel y trabajador, y resulta un magnífico perro de trabajo."
+  },
+  "pomeranian": {
+    "name": "Pomerania",
+    "description": "El Pomerania es una raza pequeña y juguetona criada originalmente en Alemania como perro de compañía. Es inteligente, cariñoso y fiel, y resulta una excelente mascota familiar."
+  },
+  "poodle (miniature)": {
+    "name": "Caniche (Miniatura)",
+    "description": "El Caniche Miniatura es una raza pequeña y ágil criada originalmente en Alemania para cobrar aves acuáticas. Es inteligente, sociable y muy dispuesto a agradar, y resulta un excelente perro de compañía."
+  },
+  "poodle (standard)": {
+    "name": "Caniche (Estándar)",
+    "description": "El Caniche Estándar es una raza grande y elegante procedente de Alemania. Es inteligente, activo y fiel, y resulta una estupenda mascota familiar. Su manto es espeso y rizado, y admite cualquier color. Se adiestra con facilidad y necesita mucho ejercicio y estímulo mental para mantenerse sano y feliz."
+  },
+  "poodle (toy)": {
+    "name": "Caniche (Toy)",
+    "description": "El Caniche Toy es una raza pequeña e inteligente criada originalmente en Alemania para cobrar aves acuáticas. Es juguetón, enérgico y cariñoso, y resulta un excelente perro de compañía."
+  },
+  "porcelaine": {
+    "name": "Porcelaine",
+    "description": "El Porcelaine es una raza pequeña y ágil criada originalmente en Francia para cazar piezas menores. Es inteligente, enérgico y tenaz, y resulta un excelente perro de caza."
+  },
+  "portuguese podengo": {
+    "name": "Podenco Portugués",
+    "description": "El Podenco Portugués es una raza pequeña y ágil criada originalmente en Portugal para cazar piezas menores. Es inteligente, enérgico e independiente, y resulta un excelente perro de compañía."
+  },
+  "portuguese podengo pequeno": {
+    "name": "Podenco Portugués Pequeño",
+    "description": "El Podenco Portugués Pequeño es una raza pequeña y ágil, conocida por sus sentidos finísimos, su velocidad y su versatilidad. Es originaria de Portugal, donde se empleaba para cazar conejos, ratas y otras piezas menores."
+  },
+  "portuguese pointer": {
+    "name": "Perdiguero Portugués",
+    "description": "El Perdiguero Portugués es una raza de tamaño mediano originaria de Portugal. Tiene el pelo corto y denso y se presenta en una gran variedad de colores. Es activo y enérgico, y resulta un buen compañero de familia. Fiel y entregado a sus dueños, necesita bastante ejercicio y estímulo mental."
+  },
+  "portuguese sheepdog": {
+    "name": "Perro de Pastor Portugués",
+    "description": "El Perro de Pastor Portugués es una raza pastora de tamaño mediano originaria de Portugal. Es inteligente y fiel, y se lleva bien tanto con las personas como con otros animales. Mide entre 43 y 53 cm a la cruz y su pelo, de longitud media, puede presentarse en distintos colores y patrones."
+  },
+  "portuguese water dog": {
+    "name": "Perro de Agua Portugués",
+    "description": "El Perro de Agua Portugués es un perro de trabajo de tamaño mediano procedente de Portugal. Es activo, inteligente y fiel, y resulta una estupenda mascota familiar. Su manto es espeso y ondulado, y puede ser negro, marrón o blanco. Se adiestra con facilidad y necesita mucho ejercicio y estímulo mental para mantenerse sano y feliz."
+  },
+  "pudelpointer": {
+    "name": "Pudelpointer",
+    "description": "El Pudelpointer es una raza grande y atlética criada originalmente en Alemania para la caza. Es inteligente, enérgico y tenaz, y resulta un excelente perro de caza."
+  },
+  "pug": {
+    "name": "Carlino",
+    "description": "El Carlino es una raza pequeña y juguetona, célebre por su expresión cómica, su carácter encantador y su lealtad. Es originaria de China, donde la corte imperial lo criaba como perro de compañía y de regazo."
+  },
+  "puli": {
+    "name": "Puli",
+    "description": "El Puli es una raza pequeña y ágil criada originalmente en Hungría para pastorear y guardar el ganado. Es inteligente, fiel y muy trabajador, y resulta un excelente perro de trabajo."
+  },
+  "pumi": {
+    "name": "Pumi",
+    "description": "El Pumi es una raza pequeña y ágil criada originalmente en Hungría para pastorear y guardar el ganado. Es inteligente, enérgico y muy trabajador, y resulta un excelente perro de trabajo."
+  },
+  "pyrenean mastiff": {
+    "name": "Mastín del Pirineo",
+    "description": "El Mastín del Pirineo es una raza grande y poderosa procedente de los Pirineos españoles. Es fuerte, inteligente y fiel, y se lleva estupendamente en familia. Tiene un manto doble y espeso, normalmente blanco con manchas negras o marrones. Es un perro activo que necesita bastante ejercicio y estímulo mental para mantenerse sano y contento."
+  },
+  "pyrenean shepherd": {
+    "name": "Pastor de los Pirineos",
+    "description": "El Pastor de los Pirineos es una raza pequeña y ágil criada originalmente en los Pirineos para pastorear y guardar el ganado. Es inteligente, enérgico y muy trabajador, y resulta un excelente perro de trabajo."
+  },
+  "rafeiro do alentejo": {
+    "name": "Rafeiro do Alentejo",
+    "description": "El Rafeiro do Alentejo es una raza grande y poderosa criada originalmente en Portugal para vigilar y proteger la propiedad. Es inteligente, fiel y protector, y resulta un excelente perro guardián."
+  },
+  "rat terrier": {
+    "name": "Rat Terrier",
+    "description": "El Rat Terrier es una raza de tamaño pequeño criada originalmente para cazar ratas y otros roedores. Es enérgico y juguetón, y resulta un excelente perro de compañía."
+  },
+  "redbone coonhound": {
+    "name": "Redbone Coonhound",
+    "description": "El Redbone Coonhound es una raza grande y atlética criada originalmente en Estados Unidos para cazar mapaches. Es inteligente, enérgico y tenaz, y resulta un excelente perro de caza."
+  },
+  "rhodesian ridgeback": {
+    "name": "Rhodesian Ridgeback",
+    "description": "El Rhodesian Ridgeback es una raza grande y atlética criada originalmente en Zimbabue para cazar piezas de gran tamaño. Es inteligente, independiente y fiel, y resulta un excelente perro de compañía."
+  },
+  "romanian carpathian shepherd": {
+    "name": "Pastor Rumano de los Cárpatos",
+    "description": "El Pastor Rumano de los Cárpatos es una raza grande y poderosa criada originalmente para proteger el ganado. Destaca por su carácter protector y por su enorme entrega al trabajo."
+  },
+  "romanian mioritic shepherd dog": {
+    "name": "Pastor Rumano de Mioritza",
+    "description": "El Pastor Rumano de Mioritza es una raza grande y muy peluda, conocida por su inteligencia, su fidelidad y su instinto protector. Es originaria de los montes Cárpatos, en Rumanía, donde se empleaba para custodiar los rebaños de ovejas."
+  },
+  "rottweiler": {
+    "name": "Rottweiler",
+    "description": "El Rottweiler es una raza grande y poderosa criada originalmente en Alemania para pastorear y guardar el ganado. Es inteligente, fiel y protector, y resulta un excelente perro de trabajo."
+  },
+  "russell terrier": {
+    "name": "Russell Terrier",
+    "description": "El Russell Terrier es un terrier pequeño originario de Inglaterra. Es una raza vivaracha y enérgica, de pelo corto y duro. Tiene la cabeza pequeña y afilada, con orejas menudas y erguidas; las patas son cortas y fuertes, y la cola suele llevarse cortada. El Russell Terrier es inteligente y fiel, y resulta un magnífico perro de familia. Al ser tan activo, necesita mucho ejercicio y estímulo mental. Es leal y cariñoso, y disfruta pasando tiempo con los suyos."
+  },
+  "russian toy": {
+    "name": "Toy Ruso",
+    "description": "El Toy Ruso es una raza pequeña pero robusta, de cuerpo compacto y pelo corto y liso. Tiene un temperamento vivo y activo, y es el compañero ideal para familias y para quien busque una mascota menuda, fiel y cariñosa. Es una raza inteligente, fácil de adiestrar y encantada de complacer a los suyos."
+  },
+  "russian tsvetnaya bolonka": {
+    "name": "Bolonka Tsvetnaya Rusa",
+    "description": "La Bolonka Tsvetnaya Rusa es una raza pequeña y juguetona criada originalmente en Rusia como perro de compañía. Es inteligente, cariñosa y fiel, y se lleva estupendamente en familia."
+  },
+  "saint bernard": {
+    "name": "San Bernardo",
+    "description": "El San Bernardo es una raza grande y poderosa, de manto largo y espeso, normalmente rojo y blanco o marrón y blanco. Es célebre por su fuerza, su resistencia y su carácter apacible, y se crió en origen para ayudar a los monjes del hospicio del Gran San Bernardo, en los Alpes suizos."
+  },
+  "saluki": {
+    "name": "Saluki",
+    "description": "El Saluki es una raza grácil y elegante originaria de Oriente Medio. Es un lebrel de caza a la vista, con el pelo largo y sedoso en una gran variedad de colores. Muy inteligente, tiene un carácter independiente. Es una raza veloz, de zancada larga, que se emplea en carreras y en pruebas de coursing. Fiel y entregado a su familia, resulta un buen compañero."
+  },
+  "samoyed": {
+    "name": "Samoyedo",
+    "description": "El Samoyedo es una raza grande y peluda criada originalmente en Siberia para pastorear y guardar el ganado. Es inteligente, simpático y juguetón, y se lleva estupendamente en familia."
+  },
+  "schapendoes": {
+    "name": "Schapendoes",
+    "description": "El Schapendoes es una raza pequeña y ágil criada originalmente en los Países Bajos para pastorear y guardar el ganado. Es inteligente, simpático y enérgico, y resulta un excelente perro de trabajo."
+  },
+  "schipperke": {
+    "name": "Schipperke",
+    "description": "El Schipperke es una raza pequeña procedente de Bélgica. Son perros de tamaño reducido, con un manto doble y espeso. Tienen un carácter vivo y enérgico, y un marcado instinto para la caza y el rastreo. Son muy inteligentes y receptivos, pero necesitan un adiestramiento firme y constante para ser obedientes. Fieles y entregados a su familia, a veces pueden mostrarse tercos e independientes."
+  },
+  "scottish deerhound": {
+    "name": "Lebrel Escocés",
+    "description": "El Lebrel Escocés es un lebrel de gran tamaño originario de Escocia. Es una raza fuerte y atlética, de pelo largo y áspero. Tiene la cabeza grande y redondeada, con orejas pequeñas y erguidas; las patas son fuertes y musculosas, y la cola suele llevarse cortada. El Lebrel Escocés es inteligente y fiel, y resulta un magnífico perro de familia. Al ser tan activo, necesita mucho ejercicio y estímulo mental. Es leal y cariñoso, y disfruta pasando tiempo con los suyos."
+  },
+  "scottish terrier": {
+    "name": "Terrier Escocés",
+    "description": "El Terrier Escocés es una raza pequeña y recia, de pelo áspero y con una barba muy característica. Es conocido por su carácter independiente e inteligente."
+  },
+  "sealyham terrier": {
+    "name": "Sealyham Terrier",
+    "description": "El Sealyham Terrier es una raza pequeña y enérgica criada originalmente en Gales para cazar piezas menores. Es inteligente, juguetón y cariñoso, y resulta un excelente perro de compañía."
+  },
+  "segugio italiano": {
+    "name": "Sabueso Italiano",
+    "description": "El Sabueso Italiano es una raza de tamaño mediano criada originalmente en Italia para cazar piezas menores. Es inteligente, atlético y tenaz, y resulta un excelente perro de caza."
+  },
+  "shetland sheepdog": {
+    "name": "Pastor de Shetland",
+    "description": "El Pastor de Shetland es una raza pequeña y ágil, de pelo largo y abundante. Tiene la cabeza alargada y el hocico de longitud media, con ojos vivos y despiertos y una expresión muy animada. Destaca por su inteligencia, sus ganas de agradar y su enorme fidelidad hacia sus dueños. Se lleva estupendamente en familia y también compite en agility, obediencia y pruebas de pastoreo."
+  },
+  "shiba inu": {
+    "name": "Shiba Inu",
+    "description": "El Shiba Inu es una raza pequeña y ágil criada originalmente en Japón para cazar piezas menores. Es inteligente, independiente y despierto, y resulta un excelente perro de compañía."
+  },
+  "shih tzu": {
+    "name": "Shih Tzu",
+    "description": "El Shih Tzu es una raza pequeña y juguetona criada originalmente en China como perro de compañía. Es inteligente, cariñoso y fiel, y se lleva estupendamente en familia."
+  },
+  "shikoku": {
+    "name": "Shikoku",
+    "description": "El Shikoku es una raza de tamaño mediano criada originalmente en Japón para cazar piezas menores. Es inteligente, despierto y enérgico, y resulta un excelente perro de compañía."
+  },
+  "siberian husky": {
+    "name": "Husky Siberiano",
+    "description": "El Husky Siberiano es un perro de trabajo de tamaño mediano procedente de Siberia. Destaca por su manto doble y espeso, que puede ser negro, blanco, gris o rojo y blanco. Los huskies siberianos son simpáticos, abiertos y fieles, y se llevan estupendamente en familia. Son muy activos y necesitan bastante ejercicio y estímulo mental para mantenerse sanos y contentos."
+  },
+  "silky terrier": {
+    "name": "Silky Terrier",
+    "description": "El Silky Terrier es un terrier pequeño y recio, conocido por su pelo suave y sedoso. Tiene una personalidad viva y despierta, y se muestra muy fiel y cariñoso con su familia. Es activo y necesita ejercicio y estímulo mental con regularidad para mantenerse sano y contento. Inteligente y con ganas de agradar, resulta un magnífico perro de familia."
+  },
+  "skye terrier": {
+    "name": "Skye Terrier",
+    "description": "El Skye Terrier es un terrier pequeño originario de la isla de Skye, en Escocia. Son perros de tamaño reducido, con un pelaje largo y áspero. Tienen un porte digno e independiente, y un marcado instinto cazador. Son muy inteligentes y receptivos, pero necesitan un adiestramiento firme y constante para ser obedientes. Fieles y entregados a su familia, a veces pueden mostrarse tercos e independientes."
+  },
+  "sloughi": {
+    "name": "Sloughi",
+    "description": "El Sloughi es un perro grande y atlético, criado originalmente en el norte de África para la caza. Es inteligente, independiente y atlético, y resulta un excelente perro de compañía."
+  },
+  "slovakian wirehaired pointer": {
+    "name": "Pointer Eslovaco de Pelo Duro",
+    "description": "El Pointer Eslovaco de Pelo Duro es un perro de tamaño mediano criado originalmente en Eslovaquia para cazar piezas pequeñas. Es inteligente, enérgico y tenaz, y resulta un excelente perro de caza."
+  },
+  "slovensky cuvac": {
+    "name": "Cuvac Eslovaco",
+    "description": "El Cuvac Eslovaco es un perro grande y poderoso, criado originalmente en Eslovaquia para pastorear y guardar el ganado. Es inteligente, fiel y protector, y resulta un excelente perro de trabajo."
+  },
+  "slovensky kopov": {
+    "name": "Kopov Eslovaco",
+    "description": "El Kopov Eslovaco es un perro mediano y atlético, conocido por sus sentidos agudos, su resistencia y su versatilidad. La raza es originaria de Eslovaquia, donde se empleaba para la caza y para hacer guardia."
+  },
+  "small munsterlander": {
+    "name": "Pequeño Münsterländer",
+    "description": "El Pequeño Münsterländer es un perro de tamaño mediano con un pelaje denso y resistente al agua. Destaca por su inteligencia y por su versatilidad como perro de caza y de trabajo."
+  },
+  "smooth fox terrier": {
+    "name": "Fox Terrier de Pelo Corto",
+    "description": "El Fox Terrier de Pelo Corto es un terrier pequeño procedente de Inglaterra. Son perros de tamaño reducido, con el pelo corto y liso. Tienen un carácter vivo y enérgico, con un marcado instinto de caza. Son muy inteligentes y fáciles de educar, aunque necesitan un adiestramiento firme y constante para ser obedientes. Son leales y entregados a su familia, aunque a veces pueden mostrarse tercos e independientes."
+  },
+  "soft coated wheaten terrier": {
+    "name": "Soft Coated Wheaten Terrier",
+    "description": "El Soft Coated Wheaten Terrier es un perro de tamaño mediano criado originalmente en Irlanda para pastorear y guardar el ganado. Es inteligente, juguetón y enérgico, y resulta un excelente perro de compañía."
+  },
+  "spanish mastiff": {
+    "name": "Mastín Español",
+    "description": "El Mastín Español es un perro grande y poderoso, criado originalmente en España para pastorear y guardar el ganado. Es inteligente, fiel y protector, y resulta un excelente perro de trabajo."
+  },
+  "spanish water dog": {
+    "name": "Perro de Agua Español",
+    "description": "El Perro de Agua Español es un perro de tamaño mediano criado originalmente en España para pastorear y guardar el ganado. Es inteligente, enérgico y trabajador, y resulta un excelente perro de trabajo."
+  },
+  "spinone italiano": {
+    "name": "Spinone Italiano",
+    "description": "El Spinone Italiano es un perro de muestra de gran tamaño originario de Italia. Es una raza fuerte y atlética, de pelo espeso y áspero. Tiene la cabeza grande y redondeada, con orejas pequeñas y erguidas. Sus patas son fuertes y musculosas, y la cola suele llevarse amputada. El Spinone Italiano es una raza inteligente y fiel, y resulta una excelente mascota familiar. Es un perro activo que necesita mucho ejercicio y estimulación mental. Es leal y cariñoso, y disfruta pasando tiempo con su familia."
+  },
+  "stabyhoun": {
+    "name": "Stabyhoun",
+    "description": "El Stabyhoun es una raza de caza pequeña originaria de los Países Bajos. Es un perro inteligente y fiel, amistoso y deseoso de agradar. El Stabyhoun mide entre 43 y 48 cm a la cruz y tiene un pelaje de longitud media que se presenta en negro, blanco y naranja."
+  },
+  "staffordshire bull terrier": {
+    "name": "Staffordshire Bull Terrier",
+    "description": "El Staffordshire Bull Terrier es un perro pequeño y poderoso, criado originalmente en Inglaterra para el acoso de toros. Es inteligente, leal y protector, y resulta un excelente perro de compañía."
+  },
+  "standard schnauzer": {
+    "name": "Schnauzer Estándar",
+    "description": "El Schnauzer Estándar es un perro de trabajo alemán de tamaño mediano. Es inteligente, activo y leal, y resulta una gran mascota familiar. Los Schnauzer Estándar tienen un característico pelo duro que puede ser negro, sal y pimienta o negro y plata. Se adiestran con facilidad y necesitan mucho ejercicio y estimulación mental para mantenerse sanos y felices."
+  },
+  "sussex spaniel": {
+    "name": "Spaniel de Sussex",
+    "description": "El Spaniel de Sussex es un spaniel de tamaño mediano procedente de la región inglesa de Sussex. Son perros medianos, con el pelo largo y ondulado. Tienen un carácter dulce y cariñoso, lo que los convierte en excelentes perros de compañía. Son muy inteligentes y fáciles de educar, con instinto para cobrar las piezas. Son leales y entregados a su familia, con un carácter independiente que los hace idóneos para el cobro y la guarda."
+  },
+  "swedish lapphund": {
+    "name": "Lapphund Sueco",
+    "description": "El Lapphund Sueco es un perro de tamaño mediano criado originalmente en Suecia para pastorear y guardar el ganado. Es inteligente, amistoso y enérgico, y resulta un excelente perro de trabajo."
+  },
+  "swedish vallhund": {
+    "name": "Vallhund Sueco",
+    "description": "El Vallhund Sueco es un perro pequeño y enérgico, criado originalmente en Suecia para pastorear y guardar el ganado. Es inteligente, amistoso y juguetón, y resulta un excelente perro de trabajo."
+  },
+  "taiwan dog": {
+    "name": "Perro de Taiwán",
+    "description": "El Perro de Taiwán es un perro pequeño y ágil, criado originalmente en Taiwán para cazar piezas pequeñas. Es inteligente, despierto y enérgico, y resulta un excelente perro de compañía."
+  },
+  "teddy roosevelt terrier": {
+    "name": "Teddy Roosevelt Terrier",
+    "description": "El Teddy Roosevelt Terrier es un terrier pequeño originario de Estados Unidos. Es una raza compacta y vivaz, de pelo corto y áspero. Tiene la cabeza grande y redondeada, con orejas pequeñas y erguidas. Sus patas son cortas y potentes, y la cola suele llevarse amputada. El Teddy Roosevelt Terrier es una raza inteligente y fiel, y resulta una excelente mascota familiar. Es un perro activo que necesita ejercicio regular y estimulación mental. Es leal y cariñoso, y disfruta estando cerca de su familia."
+  },
+  "thai ridgeback": {
+    "name": "Ridgeback Tailandés",
+    "description": "El Ridgeback Tailandés es un perro de tamaño mediano originario de Tailandia. Es una raza activa e inteligente, leal y entregada a su familia. El Ridgeback Tailandés mide entre 51 y 61 cm a la cruz y tiene un pelaje corto o de longitud media que se presenta en varios colores."
+  },
+  "tibetan mastiff": {
+    "name": "Mastín Tibetano",
+    "description": "El Mastín Tibetano es una raza poderosa y musculosa, conocida por su valor, su independencia y su lealtad a toda prueba. Es originaria de la meseta tibetana, donde se empleaba para guardar los monasterios y proteger los rebaños de ovejas."
+  },
+  "tibetan spaniel": {
+    "name": "Spaniel Tibetano",
+    "description": "El Spaniel Tibetano es un spaniel pequeño procedente del Tíbet. Son perros de tamaño reducido, con el pelo corto y sedoso. Tienen un carácter alegre y cariñoso, lo que los convierte en excelentes perros de compañía. Son muy inteligentes y fáciles de educar, con instinto para proteger a su familia y su hogar. Son leales y entregados a su familia, aunque a veces pueden mostrarse tercos e independientes."
+  },
+  "tibetan terrier": {
+    "name": "Terrier Tibetano",
+    "description": "El Terrier Tibetano es un perro pequeño y juguetón, criado originalmente en el Tíbet como perro de compañía. Es inteligente, cariñoso y leal, y resulta una excelente mascota familiar."
+  },
+  "tornjak": {
+    "name": "Tornjak",
+    "description": "El Tornjak es un perro grande y poderoso, criado originalmente en Croacia para pastorear el ganado y guardar el hogar. Es inteligente, leal y protector, y resulta un excelente perro guardián."
+  },
+  "tosa": {
+    "name": "Tosa",
+    "description": "El Tosa es un perro grande y poderoso, criado originalmente en Japón para las peleas de perros. Es leal y protector, y resulta un excelente perro guardián."
+  },
+  "toy fox terrier": {
+    "name": "Fox Terrier Toy",
+    "description": "El Fox Terrier Toy es un perro pequeño y enérgico, criado originalmente en Estados Unidos para cazar piezas pequeñas. Es inteligente, juguetón y cariñoso, y resulta un excelente perro de compañía."
+  },
+  "transylvanian hound": {
+    "name": "Sabueso de Transilvania",
+    "description": "El Sabueso de Transilvania es un perro grande y poderoso, criado originalmente en Rumanía para la caza mayor. Es inteligente, atlético y tenaz, y resulta un excelente perro de caza."
+  },
+  "treeing tennessee brindle": {
+    "name": "Treeing Tennessee Brindle",
+    "description": "El Treeing Tennessee Brindle es un perro de tamaño mediano criado originalmente en Estados Unidos para cazar piezas pequeñas. Es inteligente, enérgico y tenaz, y resulta un excelente perro de caza."
+  },
+  "treeing walker coonhound": {
+    "name": "Treeing Walker Coonhound",
+    "description": "El Treeing Walker Coonhound es un sabueso de tamaño mediano que surgió del cruce entre el Foxhound Inglés y el Foxhound Americano. Es una raza activa y enérgica, amistosa, leal e inteligente. El Treeing Walker Coonhound mide entre 56 y 69 cm a la cruz y tiene un pelaje corto o de longitud media que se presenta en diversos colores y patrones."
+  },
+  "vizsla": {
+    "name": "Vizsla",
+    "description": "El Vizsla es un perro de tamaño mediano criado originalmente en Hungría para cazar piezas pequeñas. Es inteligente, enérgico y tenaz, y resulta un excelente perro de caza."
+  },
+  "volpino italiano": {
+    "name": "Volpino Italiano",
+    "description": "El Volpino Italiano es una raza italiana de tipo spitz muy emparentada con el Pomerania. Es un perro pequeño y vivaz, de carácter despierto y animoso. Son muy fieles, cariñosos y afectuosos, y resultan unas mascotas familiares estupendas. Los volpinos son activos y necesitan mucho ejercicio y muchos paseos, así que encajan bien en hogares dinámicos. Tienen un manto doble, espeso y blanco, que puede enredarse y apelmazarse si no se cepilla como es debido."
+  },
+  "weimaraner": {
+    "name": "Braco de Weimar",
+    "description": "El Braco de Weimar es una raza grande y potente de pelo corto y denso. Tiene una cabeza larga y elegante, de hocico profundo y mandíbula fuerte. Es una raza inteligente y activa, de carácter amistoso y fiel, que suele destacar en pruebas de agility, obediencia y caza."
+  },
+  "welsh springer spaniel": {
+    "name": "Springer Spaniel Galés",
+    "description": "El Springer Spaniel Galés es una raza de tamaño mediano originaria de Gales. Tiene el pelo corto y denso, y se presenta en distintos colores. Es una raza activa que necesita mucho ejercicio y estímulo mental. Fiel y entregado a los suyos, resulta un buen compañero de familia."
+  },
+  "welsh terrier": {
+    "name": "Terrier Galés",
+    "description": "El Terrier Galés es una raza pequeña y enérgica criada en su origen en Gales para cazar piezas menores. Es inteligente, juguetón y cariñoso, y resulta un perro de compañía excelente."
+  },
+  "west highland white terrier": {
+    "name": "West Highland White Terrier",
+    "description": "El West Highland White Terrier es una raza pequeña y enérgica, conocida por su inteligencia, su independencia y su tenacidad. Procede de las Tierras Altas de Escocia, donde se empleaba en origen para cazar piezas menores y roedores."
+  },
+  "wetterhoun": {
+    "name": "Wetterhoun",
+    "description": "El Wetterhoun es una raza grande y musculosa de pelo espeso y ondulado, normalmente negro, marrón o leonado. Destaca por su inteligencia, su lealtad y su fuerza, y se crió en origen para cazar aves acuáticas en los Países Bajos."
+  },
+  "whippet": {
+    "name": "Whippet",
+    "description": "El Whippet es una raza de tamaño mediano, de constitución esbelta y atlética y pelo corto y liso, normalmente azul, rojo o leonado. Destaca por su velocidad, su elegancia y su agilidad, y se crió en origen para cazar a la vista piezas menores, como conejos."
+  },
+  "wire fox terrier": {
+    "name": "Fox Terrier de Pelo Duro",
+    "description": "El Fox Terrier de Pelo Duro es una raza pequeña y enérgica criada en su origen en Inglaterra para cazar piezas menores. Es inteligente, juguetón y cariñoso, y resulta un perro de compañía excelente."
+  },
+  "wirehaired pointing griffon": {
+    "name": "Grifón de Muestra de Pelo Duro",
+    "description": "El Grifón de Muestra de Pelo Duro es una raza de tamaño mediano criada en su origen en Bélgica para cazar piezas menores. Es inteligente, enérgico y decidido, y resulta un perro de caza excelente."
+  },
+  "wirehaired vizsla": {
+    "name": "Vizsla de Pelo Duro",
+    "description": "El Vizsla de Pelo Duro es una raza cobradora de tamaño mediano procedente de Hungría. Son perros medianos, de pelo áspero, con un carácter amistoso y enérgico que los convierte en excelentes perros de trabajo. Son muy inteligentes y fáciles de adiestrar, con un instinto natural para cobrar la pieza. Fieles y entregados a su familia, tienen a la vez un punto independiente que los hace idóneos para el cobro y la guarda."
+  },
+  "working kelpie": {
+    "name": "Kelpie de Trabajo",
+    "description": "El Kelpie de Trabajo es una raza pastora de tamaño mediano originaria de Australia. Es una raza activa y enérgica, de pelo corto y áspero. Tiene la cabeza grande y redondeada, con orejas pequeñas y erguidas; las patas son fuertes y musculosas, y la cola suele llevarse amputada. El Kelpie de Trabajo es inteligente y fiel, y resulta una estupenda mascota para la familia. Al ser una raza activa, necesita mucho ejercicio y estímulo mental. Es leal y cariñoso, y disfruta pasando tiempo con los suyos."
+  },
+  "xoloitzcuintli": {
+    "name": "Xoloitzcuintle",
+    "description": "El Xoloitzcuintle, también conocido como perro pelón mexicano, es una raza pequeña e inteligente criada en su origen en México para la caza y la guarda. Es fiel, atento y cariñoso, y resulta un perro de compañía excelente."
+  },
+  "yakutian laika": {
+    "name": "Laika de Yakutia",
+    "description": "El Laika de Yakutia es una raza de tamaño mediano criada en su origen en Siberia para la caza y la guarda. Es inteligente, independiente y atento, y resulta un perro de compañía excelente."
+  },
+  "yorkshire terrier": {
+    "name": "Yorkshire Terrier",
+    "description": "El Yorkshire Terrier es una raza pequeña e inteligente, de pelo largo y sedoso, normalmente azul y fuego. Destaca por su carácter decidido e independiente y por lo cariñoso que es, y se crió en origen para cazar ratas y otras alimañas en las fábricas textiles de Yorkshire, en Inglaterra."
+  }
+}

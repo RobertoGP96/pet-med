@@ -10,6 +10,7 @@ import { getAge } from "@/domain/health/age";
 import { formatWeight } from "@/lib/format";
 import { isSupabaseConfigured } from "@/lib/env";
 import { listPets } from "@/server/queries";
+import { toDisplayBreedName } from "@/services/breeds/i18n/breeds";
 
 export const metadata = {
   title: "Mis mascotas",
@@ -75,7 +76,7 @@ export default async function PetsPage() {
                     <p className="truncate font-extrabold tracking-[-0.02em]">{pet.name}</p>
                     <p className="text-muted-foreground truncate text-sm">
                       {SPECIES_LABELS[pet.species]}
-                      {pet.breed ? ` · ${pet.breed}` : ""}
+                      {pet.breed ? ` · ${toDisplayBreedName(pet.species, pet.breed)}` : ""}
                       {age ? ` · ${age.years > 0 ? `${age.years} a` : `${age.totalMonths} m`}` : ""}
                     </p>
                   </div>

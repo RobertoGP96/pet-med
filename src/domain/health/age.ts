@@ -70,11 +70,24 @@ export function getLifeStage(species: Species, ageMonths: number, size: Size | n
 }
 
 /**
+ * Ritmo de envejecimiento anual del perro a partir del segundo año, en años
+ * humanos por año de perro. Cuanto más grande, más rápido envejece.
+ */
+const DOG_AGING_RATE: Record<Size, number> = {
+  small: 4,
+  medium: 5,
+  large: 6,
+  giant: 7,
+};
+
+/**
  * Edad humana equivalente.
  *
- * Perros: fórmula epigenética de Wang et al. (2020), `16 · ln(edad) + 31`,
- * válida a partir del primer año. Por debajo se interpola linealmente hasta
- * los 31 "años humanos" que corresponden al primer cumpleaños.
+ * Perros: escala veterinaria clásica (AKC/AVMA) ajustada por tamaño — 15 años
+ * humanos el primer año, 24 el segundo y de ahí en adelante el ritmo anual de
+ * `DOG_AGING_RATE`. Se abandonó la fórmula epigenética de Wang et al. (2020)
+ * porque se derivó sólo de labradores, ignora el tamaño y dispara la edad de
+ * los perros jóvenes (1 año ≈ 31 humanos).
  *
  * Gatos: escala clínica habitual — 15 el primer año, 24 el segundo y +4 por
  * cada año adicional.
@@ -82,12 +95,13 @@ export function getLifeStage(species: Species, ageMonths: number, size: Size | n
  * Otras especies: no hay una equivalencia aceptada, se devuelve `null` en vez
  * de inventar un número.
  */
-export function getHumanAgeEquivalent(species: Species, ageYears: number): number | null {
+export function getHumanAgeEquivalent(species: Species, ageYears: number, size: Size | null = null): number | null {
   if (ageYears < 0) return null;
 
   if (species === "dog") {
-    if (ageYears < 1) return Math.round(ageYears * 31);
-    return Math.round(16 * Math.log(ageYears) + 31);
+    if (ageYears < 1) return Math.round(ageYears * 15);
+    if (ageYears < 2) return Math.round(15 + (ageYears - 1) * 9);
+    return Math.round(24 + (ageYears - 2) * DOG_AGING_RATE[size ?? "medium"]);
   }
 
   if (species === "cat") {

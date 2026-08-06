@@ -9,7 +9,7 @@ import { SetupNotice } from "@/components/setup-notice";
 import { ActionLink } from "@/components/ui/action";
 import { EmptyState, PageHeader, Section } from "@/components/ui/section";
 import { isSupabaseConfigured } from "@/lib/env";
-import { getPetDossier, listPendingReminders, listPets } from "@/server/queries";
+import { listMedicationsByPet, listPendingReminders, listPets } from "@/server/queries";
 
 export const metadata = {
   title: "Recordatorios",
@@ -24,17 +24,16 @@ export default async function RemindersPage() {
   const [items, pets] = await Promise.all([listPendingReminders(), listPets()]);
 
   // El formulario ofrece los tratamientos de cada mascota para poder enlazar
-  // el recordatorio con su medicamento.
-  const composerPets: ReminderComposerPet[] = await Promise.all(
-    pets.map(async (pet) => {
-      const dossier = await getPetDossier(pet.id);
-      return {
-        id: pet.id,
-        name: pet.name,
-        medications: dossier?.medications ?? [],
-      };
-    }),
-  );
+  // el recordatorio con su medicamento. Una sola consulta para todas: antes
+  // esto era un `getPetDossier` por mascota dentro del bucle, y cada uno leía
+  // las siete tablas del historial para quedarse sólo con `medications`.
+  const medicationsByPet = await listMedicationsByPet(pets.map((pet) => pet.id));
+
+  const composerPets: ReminderComposerPet[] = pets.map((pet) => ({
+    id: pet.id,
+    name: pet.name,
+    medications: medicationsByPet.get(pet.id) ?? [],
+  }));
 
   return (
     <div className="flex flex-col gap-8">

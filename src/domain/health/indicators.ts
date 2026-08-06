@@ -74,7 +74,7 @@ export function buildHealthIndicators(input: HealthIndicatorsInput): HealthIndic
     const age = getAge(pet.birthDate, now);
     const ageYears = age.totalMonths / 12;
     const stage = getLifeStage(pet.species, age.totalMonths, pet.size);
-    const humanAge = getHumanAgeEquivalent(pet.species, ageYears);
+    const humanAge = getHumanAgeEquivalent(pet.species, ageYears, pet.size);
 
     indicators.push({
       id: "age",
