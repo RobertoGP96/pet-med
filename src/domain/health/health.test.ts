@@ -46,11 +46,19 @@ describe("edad", () => {
     expect(getLifeStage("cat", 140, null)).toBe("senior");
   });
 
-  it("aplica la fórmula epigenética en perros", () => {
-    // 16·ln(1) + 31 = 31
-    expect(getHumanAgeEquivalent("dog", 1)).toBe(31);
-    // 16·ln(5) + 31 ≈ 56,7
-    expect(getHumanAgeEquivalent("dog", 5)).toBe(57);
+  it("aplica la escala veterinaria por tamaño en perros", () => {
+    expect(getHumanAgeEquivalent("dog", 1)).toBe(15);
+    expect(getHumanAgeEquivalent("dog", 2)).toBe(24);
+    // A partir del segundo año cada tamaño envejece a su ritmo.
+    expect(getHumanAgeEquivalent("dog", 5, "small")).toBe(36);
+    expect(getHumanAgeEquivalent("dog", 5, "giant")).toBe(45);
+    // Sin tamaño conocido se asume mediano.
+    expect(getHumanAgeEquivalent("dog", 5)).toBe(39);
+  });
+
+  it("interpola la edad humana en cachorros", () => {
+    expect(getHumanAgeEquivalent("dog", 0.5)).toBe(8);
+    expect(getHumanAgeEquivalent("dog", 1.5)).toBe(20);
   });
 
   it("usa la escala clínica en gatos", () => {
