@@ -25,9 +25,10 @@ import type { Species } from "@/domain/enums";
 import type {
   ClinicalEvent,
   DateTime,
+  Medication,
   MedicationDose,
   MuralPet,
-  PetDossier,
+  Pet,
   PetSummary,
   Photo,
   Reminder,
@@ -522,41 +523,179 @@ export const getPet = cache(async function getPet(petId: string) {
   return data ? toPet(data) : null;
 });
 
-/**
- * Todo el historial de una mascota en una sola tanda de consultas paralelas.
- * Es lo que alimenta la ficha completa y el cálculo de indicadores.
- */
-export const getPetDossier = cache(async function getPetDossier(
+// ---------------------------------------------------------------------------
+// Lecturas por pestaña de la ficha
+// ---------------------------------------------------------------------------
+//
+// Cada pestaña de /mascotas/[petId] pide SÓLO su tabla. Antes todas llamaban a
+// un único `getPetDossier` que leía las siete tablas hijas, así que abrir
+// «Fotos» pagaba también los pesos, los padecimientos, la medicación, la
+// historia clínica y los recordatorios. Con las rutas dinámicas de Next 16 eso
+// se nota en cada clic: no hay caché de cliente que lo tape (ver los
+// `loading.tsx` de cada pestaña).
+//
+// La existencia de la mascota la comprueba `getPet`, que ya resolvió el layout
+// de la ficha. Al ir envuelto en `cache()` de React, volver a llamarlo desde la
+// página no cuesta una consulta más: devuelve el mismo resultado de la petición
+// en curso. Por eso cada pestaña puede seguir haciendo su propio `notFound()`
+// sin pagar nada por ello.
+
+/** Lo que comparten todas las pestañas: la mascota, o null si no es tuya. */
+async function readPetTab<T>(
   petId: string,
-): Promise<PetDossier | null> {
+  read: (db: Db) => Promise<T>,
+): Promise<{ pet: Pet; data: T } | null> {
+  const [pet, db] = await Promise.all([getPet(petId), createClient()]);
+  if (!pet) return null;
+
+  return { pet, data: await read(db) };
+}
+
+/** Pestaña «Peso»: sólo los pesajes, del más antiguo al más reciente. */
+export const getPetWeights = cache(async function getPetWeights(petId: string) {
+  return readPetTab(petId, async (db) =>
+    unwrap(
+      await db
+        .from("weight_entries")
+        .select("*")
+        .eq("pet_id", petId)
+        .order("measured_at", { ascending: true }),
+      "los pesos",
+    ).map(toWeightEntry),
+  );
+});
+
+/** Pestaña «Padecimientos». */
+export const getPetConditions = cache(async function getPetConditions(petId: string) {
+  return readPetTab(petId, async (db) =>
+    unwrap(
+      await db
+        .from("conditions")
+        .select("*")
+        .eq("pet_id", petId)
+        .order("diagnosed_at", { ascending: false }),
+      "los padecimientos",
+    ).map(toCondition),
+  );
+});
+
+/** Pestaña «Historia clínica». */
+export const getPetEvents = cache(async function getPetEvents(petId: string) {
+  return readPetTab(petId, async (db) =>
+    unwrap(
+      await db
+        .from("clinical_events")
+        .select("*")
+        .eq("pet_id", petId)
+        .order("occurred_at", { ascending: false }),
+      "la historia clínica",
+    ).map(toClinicalEvent),
+  );
+});
+
+/** Pestaña «Fotos». */
+export const getPetPhotos = cache(async function getPetPhotos(petId: string) {
+  return readPetTab(petId, async (db) =>
+    unwrap(
+      await db.from("photos").select("*").eq("pet_id", petId).order("created_at", { ascending: false }),
+      "las fotos",
+    ).map(toPhoto),
+  );
+});
+
+/**
+ * Pestaña «Medicamentos»: los tratamientos, sus tomas y los padecimientos.
+ *
+ * Los padecimientos entran porque el formulario deja enlazar un tratamiento
+ * con el padecimiento que lo motiva, y la lista los muestra en cada ficha.
+ */
+export const getPetMedications = cache(async function getPetMedications(petId: string) {
+  return readPetTab(petId, async (db) => {
+    const [medications, doses, conditions] = await Promise.all([
+      db.from("medications").select("*").eq("pet_id", petId).order("start_date", { ascending: false }),
+      db
+        .from("medication_doses")
+        .select("*")
+        .eq("pet_id", petId)
+        .order("scheduled_at", { ascending: true }),
+      db.from("conditions").select("*").eq("pet_id", petId).order("diagnosed_at", { ascending: false }),
+    ]);
+
+    return {
+      medications: unwrap(medications, "los medicamentos").map(toMedication),
+      doses: unwrap(doses, "las tomas").map(toMedicationDose),
+      conditions: unwrap(conditions, "los padecimientos").map(toCondition),
+    };
+  });
+});
+
+/**
+ * Pestaña «Resumen»: lo que necesitan los indicadores de salud.
+ *
+ * `buildHealthIndicators` mira peso, padecimientos, medicación, tomas y
+ * eventos clínicos. Ni fotos ni recordatorios entran en ningún indicador, así
+ * que aquí no se leen.
+ */
+export const getPetOverview = cache(async function getPetOverview(petId: string) {
+  return readPetTab(petId, async (db) => {
+    const [weights, conditions, medications, doses, events] = await Promise.all([
+      db
+        .from("weight_entries")
+        .select("*")
+        .eq("pet_id", petId)
+        .order("measured_at", { ascending: true }),
+      db.from("conditions").select("*").eq("pet_id", petId).order("diagnosed_at", { ascending: false }),
+      db.from("medications").select("*").eq("pet_id", petId).order("start_date", { ascending: false }),
+      db
+        .from("medication_doses")
+        .select("*")
+        .eq("pet_id", petId)
+        .order("scheduled_at", { ascending: true }),
+      db
+        .from("clinical_events")
+        .select("*")
+        .eq("pet_id", petId)
+        .order("occurred_at", { ascending: false }),
+    ]);
+
+    return {
+      weights: unwrap(weights, "los pesos").map(toWeightEntry),
+      conditions: unwrap(conditions, "los padecimientos").map(toCondition),
+      medications: unwrap(medications, "los medicamentos").map(toMedication),
+      doses: unwrap(doses, "las tomas").map(toMedicationDose),
+      events: unwrap(events, "la historia clínica").map(toClinicalEvent),
+    };
+  });
+});
+
+/**
+ * Los tratamientos de todas tus mascotas, agrupados por mascota.
+ *
+ * Es para el desplegable de /recordatorios, que ofrece los tratamientos de
+ * cada mascota para poder enlazar el recordatorio con su medicamento. Antes esa
+ * página llamaba a `getPetDossier` DENTRO de un bucle sobre las mascotas: con
+ * cinco fichas eran cuarenta consultas para llenar un desplegable. Ahora es
+ * una.
+ */
+export const listMedicationsByPet = cache(async function listMedicationsByPet(
+  petIds: string[],
+): Promise<Map<string, Medication[]>> {
+  const byPet = new Map<string, Medication[]>(petIds.map((id) => [id, []]));
+  if (petIds.length === 0) return byPet;
+
   const db = await createClient();
 
-  const petResult = await db.from("pets").select("*").eq("id", petId).maybeSingle();
-  if (petResult.error) {
-    throw new Error(`No se pudo leer la mascota: ${petResult.error.message}`);
-  }
-  if (!petResult.data) return null;
+  const rows = unwrap(
+    await db
+      .from("medications")
+      .select("*")
+      .in("pet_id", petIds)
+      .order("start_date", { ascending: false }),
+    "los medicamentos",
+  );
 
-  const [weights, conditions, medications, doses, events, photos, reminders] = await Promise.all([
-    db.from("weight_entries").select("*").eq("pet_id", petId).order("measured_at", { ascending: true }),
-    db.from("conditions").select("*").eq("pet_id", petId).order("diagnosed_at", { ascending: false }),
-    db.from("medications").select("*").eq("pet_id", petId).order("start_date", { ascending: false }),
-    db.from("medication_doses").select("*").eq("pet_id", petId).order("scheduled_at", { ascending: true }),
-    db.from("clinical_events").select("*").eq("pet_id", petId).order("occurred_at", { ascending: false }),
-    db.from("photos").select("*").eq("pet_id", petId).order("created_at", { ascending: false }),
-    db.from("reminders").select("*").eq("pet_id", petId).order("due_at", { ascending: true }),
-  ]);
-
-  return {
-    pet: toPet(petResult.data),
-    weights: unwrap(weights, "los pesos").map(toWeightEntry),
-    conditions: unwrap(conditions, "los padecimientos").map(toCondition),
-    medications: unwrap(medications, "los medicamentos").map(toMedication),
-    doses: unwrap(doses, "las tomas").map(toMedicationDose),
-    events: unwrap(events, "la historia clínica").map(toClinicalEvent),
-    photos: unwrap(photos, "las fotos").map(toPhoto),
-    reminders: unwrap(reminders, "los recordatorios").map(toReminder),
-  };
+  for (const row of rows) byPet.get(row.pet_id)?.push(toMedication(row));
+  return byPet;
 });
 
 export interface ReminderWithPet {

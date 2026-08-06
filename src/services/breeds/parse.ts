@@ -9,6 +9,11 @@
  * Las dos fuentes son muy distintas: dogapi.dog ya manda números y separa el
  * peso por sexo, mientras que The Cat API manda texto libre (`"3 - 5"`,
  * `"NaN"`) y añade rasgos puntuados del 1 al 5.
+ *
+ * Aquí se traduce también el texto: las dos APIs publican en inglés y no tienen
+ * parámetro de idioma, así que el perfil sale ya en español (ver ./i18n). El
+ * resto de la aplicación no ve una palabra en inglés salvo por `sourceName`,
+ * que se guarda a propósito.
  */
 
 import type { BreedProfile, BreedTraits, BreedWeightBySex } from "@/domain/breed";
@@ -16,6 +21,8 @@ import type { Species } from "@/domain/enums";
 import type { BreedWeightRange } from "@/domain/health/weight";
 
 import type { CatApiBreed, DogApiBreed, DogApiRange } from "./api-types";
+import { findBreedText } from "./i18n/breeds";
+import { translateBreedGroup, translateOrigin, translateTemperament } from "./i18n/vocabulary";
 
 /**
  * Cualquier número del texto, con decimales por punto o por coma.
@@ -199,9 +206,14 @@ export function normalizeDogBreed(
   const female = parseNumericWeightRange(attributes.female_weight);
   const groupId = raw.relationships?.group?.data?.id;
 
+  const sourceName = cleanText(attributes.name) ?? "";
+  const sourceDescription = cleanText(attributes.description);
+  const translation = findBreedText("dog", sourceName);
+
   return {
     id: cleanText(raw.id) ?? "",
-    name: cleanText(attributes.name) ?? "",
+    name: translation?.name ?? sourceName,
+    sourceName,
     species: "dog",
     weightRange: combineWeightRanges(male, female),
     // Sólo se ofrece el desglose si están los dos sexos: con uno suelto, el
@@ -211,8 +223,11 @@ export function normalizeDogBreed(
     // dogapi.dog no publica temperamento ni función de cría.
     temperament: null,
     bredFor: null,
-    breedGroup: groupId ? (groupNames?.get(groupId) ?? null) : null,
-    description: cleanText(attributes.description),
+    breedGroup: groupId ? translateBreedGroup(groupNames?.get(groupId)) : null,
+    description: translation?.description ?? sourceDescription,
+    // Si la raza es nueva y aún no está traducida, se enseña la reseña inglesa
+    // antes que dejar el hueco, pero marcada como tal.
+    descriptionLang: translation || !sourceDescription ? "es" : "en",
     hypoallergenic:
       typeof attributes.hypoallergenic === "boolean" ? attributes.hypoallergenic : null,
     traits: null,
@@ -247,22 +262,28 @@ function extractCatTraits(raw: CatApiBreed): BreedTraits {
 
 /** Gato crudo -> perfil de raza del dominio. */
 export function normalizeCatBreed(raw: CatApiBreed): BreedProfile {
+  const sourceName = cleanText(raw.name) ?? "";
+  const sourceDescription = cleanText(raw.description);
+  const translation = findBreedText("cat", sourceName);
+
   return {
     id: cleanText(raw.id) ?? "",
-    name: cleanText(raw.name) ?? "",
+    name: translation?.name ?? sourceName,
+    sourceName,
     species: "cat",
     weightRange: parseWeightRangeKg(raw.weight?.metric),
     // The Cat API publica un único rango, sin distinguir sexo.
     weightBySex: null,
     lifeSpan: parseLifeSpanYears(raw.life_span),
-    temperament: cleanText(raw.temperament),
+    temperament: translateTemperament(raw.temperament),
     // The Cat API no publica «bred_for»: los gatos no se criaron para una
     // tarea, así que el campo se deja vacío en vez de rellenarlo con otra cosa.
     // Como «breed_group» tampoco existe, se usa el país de origen, que es el
     // dato equivalente que sí publica.
     bredFor: null,
-    breedGroup: cleanText(raw.origin),
-    description: cleanText(raw.description),
+    breedGroup: translateOrigin(raw.origin),
+    description: translation?.description ?? sourceDescription,
+    descriptionLang: translation || !sourceDescription ? "es" : "en",
     // Llega como 0/1, no como booleano.
     hypoallergenic: typeof raw.hypoallergenic === "number" ? raw.hypoallergenic === 1 : null,
     traits: extractCatTraits(raw),

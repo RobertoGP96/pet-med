@@ -8,6 +8,12 @@ const eslintConfig = defineConfig([
 
   globalIgnores([
     ".next/**",
+    // El de arriba sólo cubre el `.next` de la raíz. Los worktrees de agentes
+    // bajo `.claude/` traen el suyo, y sus `types/routes.d.ts` generados
+    // disparaban medio centenar de errores que no son de este código: `npm run
+    // verify` salía en rojo sin que hubiera nada que arreglar en `src/`.
+    "**/.next/**",
+    ".claude/**",
     "out/**",
     "build/**",
     "next-env.d.ts",

@@ -7,6 +7,7 @@ import { SPECIES_LABELS } from "@/domain/enums";
 import { getAge, getNextBirthday } from "@/domain/health/age";
 import type { MuralPet } from "@/domain/types";
 import { cn } from "@/lib/utils";
+import { toDisplayBreedName } from "@/services/breeds/i18n/breeds";
 
 /**
  * Celda del mural.
@@ -36,8 +37,8 @@ export function PetMuralCard({
   priority,
   breedPhotoUrl,
   /**
-   * Celda grande: hay sitio para la descripción y el nombre va a mayor cuerpo.
-   * Lo decide la rejilla, que es quien sabe qué tamaño le ha dado.
+   * Celda grande: el nombre va a mayor cuerpo. Lo decide la rejilla, que es
+   * quien sabe qué tamaño le ha dado.
    */
   prominent = false,
   className,
@@ -137,14 +138,16 @@ export function PetMuralCard({
 
         <p className="text-muted-foreground truncate text-xs">
           {SPECIES_LABELS[pet.species]}
-          {pet.breed ? ` · ${pet.breed}` : ""}
+          {pet.breed ? ` · ${toDisplayBreedName(pet.species, pet.breed)}` : ""}
         </p>
 
         {/* La descripción que escribió su dueño. Es lo único que el mural
             cuenta de cada mascota además de su foto: peso, padecimientos y
-            medicación se quedan en la ficha privada. Sólo cabe en las celdas
-            grandes; en las pequeñas le robaría el sitio a la foto. */}
-        {prominent && pet.bio && (
+            medicación se quedan en la ficha privada. Va en todas las celdas,
+            anchas y estrechas: la foto tiene alto fijo, así que el texto nunca
+            le quita sitio, y recortarlo por posición en la rejilla escondía la
+            descripción de la mitad de las mascotas sin motivo visible. */}
+        {pet.bio && (
           <p className="text-muted-foreground mt-1 line-clamp-2 max-w-[60ch] text-xs text-pretty">
             {pet.bio}
           </p>

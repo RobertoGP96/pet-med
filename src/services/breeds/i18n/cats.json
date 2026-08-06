@@ -1,0 +1,270 @@
+{
+  "abyssinian": {
+    "name": "Abisinio",
+    "description": "El Abisinio es fácil de cuidar y una alegría tenerlo en casa. Son gatos cariñosos que adoran tanto a las personas como a otros animales."
+  },
+  "aegean": {
+    "name": "Egeo",
+    "description": "Originarios de las islas griegas conocidas como las Cícladas, en el mar Egeo, son gatos naturales: se desarrollaron sin que el ser humano interviniera en su cría. Como raza, el gato Egeo es poco común, aunque abunda en sus islas de origen. Suele ser amistoso con la gente y resulta un gato excelente para familias con niños."
+  },
+  "american bobtail": {
+    "name": "Bobtail Americano",
+    "description": "Los Bobtail Americanos son gatos cariñosos e increíblemente inteligentes, con un aspecto salvaje muy característico. Son extremadamente interactivos y se vinculan con su familia humana con enorme devoción."
+  },
+  "american curl": {
+    "name": "American Curl",
+    "description": "Se distinguen por unas orejas realmente únicas, curvadas hacia atrás en un arco elegante, que les dan una expresión despierta, vivaracha y de grata sorpresa; a quien ve su primer Curl se le escapa una gran sonrisa. Los Curl son muy sociables, fieles y cariñosos, auténticas almas gemelas que se adaptan a una velocidad asombrosa a otras mascotas, a los niños y a las situaciones nuevas."
+  },
+  "american shorthair": {
+    "name": "Americano de Pelo Corto",
+    "description": "El Americano de Pelo Corto es conocido por su longevidad, su salud robusta, su buen aspecto, su carácter dulce y su buena convivencia con niños, perros y otras mascotas."
+  },
+  "american wirehair": {
+    "name": "Americano de Pelo Duro",
+    "description": "El Americano de Pelo Duro suele ser un gato tranquilo y tolerante que se toma la vida como viene. Su afición favorita es observar pájaros desde el alféizar de una ventana soleada, y su habilidad cazadora te vendrá de perlas si entran insectos en casa."
+  },
+  "arabian mau": {
+    "name": "Mau Árabe",
+    "description": "Los gatos Mau Árabe son sociables y enérgicos. Por su nivel de energía, están mejor en hogares donde puedan recibir mucho juego, atención e interacción por parte de sus dueños. Son gatos amistosos, inteligentes y adaptables, y se llevan bien incluso con otras mascotas y con los niños."
+  },
+  "australian mist": {
+    "name": "Australian Mist",
+    "description": "El Australian Mist necesita la compañía humana para estar bien. Tolerante incluso con los niños más pequeños, este felino amistoso disfruta de los juegos y de formar parte del ajetreo de una casa concurrida. Son compañeros entretenidos para gente de cualquier edad, y llevan bien tanto quedarse dentro de casa entre el anochecer y el amanecer como vivir siempre en el interior."
+  },
+  "balinese": {
+    "name": "Balinés",
+    "description": "Los Balineses son gatos curiosos, extrovertidos e inteligentes, con una capacidad de comunicación excelente. Tienen fama de charlatanes y siempre están deseando contarte su opinión sobre la vida, el amor y lo que les has puesto de cena."
+  },
+  "bambino": {
+    "name": "Bambino",
+    "description": "El Bambino es una raza de gato creada a partir del cruce entre el Sphynx y el Munchkin. El gato Bambino tiene las patas cortas, las orejas grandes y erguidas, y casi siempre carece de pelo. Le encanta que lo cojan en brazos y acurrucarse en el regazo de los miembros de su familia."
+  },
+  "bengal": {
+    "name": "Bengalí",
+    "description": "Convivir con un Bengalí es muy divertido, pero desde luego no es un gato para todo el mundo, ni para quien tiene gato por primera vez. Extremadamente inteligentes, curiosos y activos, exigen mucha interacción, y pobre del dueño que no se la dé."
+  },
+  "birman": {
+    "name": "Sagrado de Birmania",
+    "description": "El Sagrado de Birmania es un gato dócil y tranquilo que adora a las personas y las sigue de habitación en habitación. Espera que quiera participar en todo lo que estés haciendo. Se comunica con voz suave, sobre todo para recordarte que quizá sea la hora de cenar o de un buen achuchón en el sofá. Le encanta que lo cojan y se relaja en tus brazos como un bebé peludo."
+  },
+  "bombay": {
+    "name": "Bombay",
+    "description": "Los ojos dorados y el brillante pelaje negro del Bombay resultan absolutamente impactantes. Suele encariñarse sobre todo con un miembro de la familia: te seguirá de habitación en habitación y casi siempre tendrá algo que decir sobre lo que estás haciendo, porque adora la atención y que lo lleven en brazos, a menudo sobre el hombro de su cuidador."
+  },
+  "british longhair": {
+    "name": "Británico de Pelo Largo",
+    "description": "El Británico de Pelo Largo es un gato muy tranquilo y relajado, al que suele vérsele como muy independiente, aunque disfruta de la compañía de otro gato igual de sosegado y de carácter parecido. Es una raza cariñosa, pero siempre en sus propios términos: prefiere venir a sentarse junto a sus dueños antes que dejarse coger en brazos."
+  },
+  "british shorthair": {
+    "name": "Británico de Pelo Corto",
+    "description": "El Británico de Pelo Corto es un gato muy agradable como compañero, de trato fácil y carácter apacible. Es un gato tremendamente leal y cariñoso que se encariña con todos y cada uno de los miembros de su familia. Aunque le encanta jugar, no necesita atención a todas horas: si le apetece jugar, buscará a alguien y le llevará un juguete. También juega bien sola, así que es una buena compañía para quien vive solo."
+  },
+  "burmese": {
+    "name": "Burmés",
+    "description": "A los Burmeses les encanta estar con la gente, jugar con ella y mantenerla entretenida. Necesitan el contacto físico cercano y detestan un regazo vacío. Siguen a sus humanos de habitación en habitación y duermen con ellos en la cama, preferiblemente bajo las sábanas y lo más pegados posible. Cuando juegan, se giran para comprobar si su humano los mira y se divierte con sus locuras."
+  },
+  "burmilla": {
+    "name": "Burmilla",
+    "description": "La Burmilla es una gata bastante apacible. Suele ser fácil de llevar y necesita cuidados mínimos. Cariñosa y dulce, es una buena compañera y resulta ideal para amenizar una noche solitaria. Leal, entregada y afectuosa, esta gata se quedará junto a su dueño y le hará compañía en todo momento."
+  },
+  "california spangled": {
+    "name": "California Spangled",
+    "description": "Quizá lo único que el gato California Spangled no tiene de salvaje es su carácter. Conocida por ser cariñosa, dulce y sociable, esta raza disfruta pasando mucho tiempo con sus dueños. Son muy juguetones y a menudo eligen encaramarse a sitios altos para lucir sus dotes acrobáticas."
+  },
+  "chantilly-tiffany": {
+    "name": "Chantilly-Tiffany",
+    "description": "El Chantilly es un compañero entregado que prefiere la compañía a quedarse solo. Aunque no es exigente, «pía» y «habla» como si mantuviera una conversación. Es una raza cariñosa y de temperamento dulce. Puede quedarse quieta durante largos ratos, tan a gusto tumbada en el regazo de su persona favorita. Esa cualidad convierte al Tiffany en un compañero de viaje ideal, y en un compañero de casa perfecto para personas mayores y para personas con discapacidad física."
+  },
+  "chartreux": {
+    "name": "Cartujo",
+    "description": "El Cartujo suele ser silencioso, pero comunicativo. Sesiones cortas de juego, alternadas con siestas y comidas, componen su día perfecto. Aunque agradece toda la atención que le des, no es exigente: se conforma con seguirte a todas partes con devoción, dormir en tu cama y acurrucarse contigo si no te encuentras bien."
+  },
+  "chausie": {
+    "name": "Chausie",
+    "description": "Para quien busca un felino capaz de evocar la naturaleza salvaje, el llamativo y hermoso Chausie conserva algo de salvaje en su aspecto, pero tiene los modales domésticos de nuestros familiares gatos comunes. Muy juguetón, este gato necesita mucho espacio para dar rienda suelta a sus instintos cazadores."
+  },
+  "cheetoh": {
+    "name": "Cheetoh",
+    "description": "El Cheetoh tiene un carácter súper cariñoso y un amor verdadero por sus compañeros humanos; es inteligente y aprende con rapidez. Puedes contar con que será un gato juguetón que disfrutará jugando, corriendo y saltando por todas las habitaciones de la casa."
+  },
+  "colorpoint shorthair": {
+    "name": "Colorpoint de Pelo Corto",
+    "description": "Los Colorpoint de Pelo Corto son una raza cariñosa, entregada y leal a los suyos. Sensibles al estado de ánimo de su dueño, están encantados de sentarse a tu lado o en tu regazo y ronronear palabras de ánimo en un mal día. Buscarán tu regazo siempre que esté libre y, en los ratos en que lo tengas ocupado, se estirarán en algún rincón soleado del suelo."
+  },
+  "cornish rex": {
+    "name": "Cornish Rex",
+    "description": "Es un gato seguro de sí mismo que adora a las personas y las sigue a todas partes, esperando cualquier ocasión para sentarse en un regazo o dar un beso. Disfruta de que lo manipulen, lo que facilita llevarlo al veterinario o entrenarlo para trabajos de terapia. El Cornish Rex conserva su modo gatito casi toda la vida, incluso bien entrada la vejez."
+  },
+  "cymric": {
+    "name": "Cymric",
+    "description": "El Cymric es un gato apacible y dulce. Nada de lo que ocurre a su alrededor lo altera demasiado. Son compañeros cariñosos que adoran a la gente. Son listos y hábiles, capaces de usar las patas para abrir armarios o puertas."
+  },
+  "cyprus": {
+    "name": "Cyprus",
+    "description": "Cariñoso, leal, sociable y curioso, el gato Cyprus establece vínculos fuertes con su familia y nada le gusta más que participar en todo lo que sucede a su alrededor. No es especialmente activo por naturaleza, lo que lo convierte en el compañero perfecto para quien quiera compartir su casa con un felino tranquilo y relajado."
+  },
+  "devon rex": {
+    "name": "Devon Rex",
+    "description": "El sitio favorito del Devon Rex es justo a la altura de la cabeza, sobre el hombro de su persona preferida. Se interesa vivamente por todo lo que ocurre y se niega a quedarse fuera de cualquier actividad. Cuenta con que se quede lo más cerca posible de ti, comunicando de vez en cuando sus opiniones con voz suave. Adora a la gente y recibe encantado las atenciones tanto de amigos como de familiares."
+  },
+  "donskoy": {
+    "name": "Donskoy",
+    "description": "Los Donskoy son cariñosos, inteligentes y de trato fácil. Piden mucha atención e interacción. El Donskoy también se lleva bien con otras mascotas. Hoy se cree que el mismo gen que provoca los distintos grados de ausencia de pelo en el Donskoy altera también su carácter, volviéndolo más tranquilo cuanto menos pelo tiene."
+  },
+  "dragon li": {
+    "name": "Dragon Li",
+    "description": "El Dragon Li es leal, aunque no especialmente cariñoso. Tiene fama de ser muy inteligente y, al tratarse de una raza natural, es muy activo. Es amable con las personas y goza de reputación como cazador experto de ratas y otras alimañas."
+  },
+  "egyptian mau": {
+    "name": "Mau Egipcio",
+    "description": "El Mau Egipcio es dulce y reservado. Adora a los suyos y busca su atención y su cariño, pero desconfía de los extraños. Con este gato sensible y a veces tímido es esencial una socialización temprana y continuada, sobre todo si piensas exponerlo o viajar con él. De lo contrario, puede asustarse con facilidad ante ruidos o sucesos inesperados."
+  },
+  "european burmese": {
+    "name": "Burmés Europeo",
+    "description": "El Burmés Europeo es un gato muy cariñoso, inteligente y leal. Necesita compañía y querrá estar contigo, participando en todo lo que hagas. Aunque puede escoger a un miembro favorito de la familia, lo más probable es que se relacione con todos los de la casa e incluso con las visitas que se acerquen. Es curioso y juguetón, también de adulto."
+  },
+  "exotic shorthair": {
+    "name": "Exótico de Pelo Corto",
+    "description": "El Exótico de Pelo Corto es un gato dulce y sociable, con el mismo carácter que el Persa. Le encanta divertirse, no le molesta la compañía de otros gatos ni de perros y también disfruta acurrucándose para dormir en un sitio seguro. Los exóticos adoran a los suyos, pero con los desconocidos son prudentes al principio. Con tiempo, suelen coger confianza con las visitas."
+  },
+  "havana brown": {
+    "name": "Havana Brown",
+    "description": "El Havana Brown es juguetón, curioso y muy apegado a las personas. Tiene un fuerte deseo de pasar tiempo con los suyos y de meterse en todo lo que hacen. Curioso por naturaleza, el Havana Brown extiende una pata para tocar y palpar cuando investiga las novedades de su entorno. Son de naturaleza realmente sensible y a menudo rozan con suavidad a sus compañeros humanos, como si les tendieran una pata en señal de amistad."
+  },
+  "himalayan": {
+    "name": "Himalayo",
+    "description": "Tranquilos y entregados, los Himalayos son compañeros excelentes, aunque prefieren un hogar sosegado. Son juguetones de un modo pausado y disfrutan teniendo un buen surtido de juguetes. El Himalayo se tumbará a tu lado, dormirá en tu cama e incluso se sentará en tu regazo cuando le apetezca."
+  },
+  "japanese bobtail": {
+    "name": "Bobtail Japonés",
+    "description": "El Bobtail Japonés es una raza activa, dulce, cariñosa y muy inteligente. Le encanta estar con la gente y jugar sin descanso. Aprende su nombre y responde a él. Lleva juguetes a las personas y juega a traerlos con su favorito durante horas. Los bobtails son sociables y están en su mejor momento rodeados de gente. Se adueñan de la casa y no se achantan. Si hay un perro en casa, los bobtails dan por hecho que mandan ellos."
+  },
+  "javanese": {
+    "name": "Javanés",
+    "description": "Los Javaneses son infinitamente curiosos, inteligentes y activos. Les suele gustar saltar a alturas considerables, jugar con cañas de pescar u otros juguetes interactivos y, en general, investigar todo lo que les rodea. Intentará copiar lo que haces, como abrir puertas o cajones."
+  },
+  "khao manee": {
+    "name": "Khao Manee",
+    "description": "El Khao Manee es muy inteligente, de carácter extrovertido y curioso; aun así, también es muy tranquilo y relajado, lo que lo convierte en un gato de regazo ideal."
+  },
+  "korat": {
+    "name": "Korat",
+    "description": "El Korat es una raza natural y una de las razas felinas estables más antiguas. Son gatos muy inteligentes y seguros de sí mismos, capaces de no tenerle miedo a nada, aunque los sobresaltan los ruidos fuertes y los movimientos bruscos. Los Korat crean vínculos fuertes con los suyos y les gusta acurrucarse y quedarse cerca."
+  },
+  "kurilian": {
+    "name": "Kurilian",
+    "description": "El carácter del Kurilian Bobtail es independiente, muy inteligente, listo, curioso, sociable, juguetón, fácil de educar, sin rastro de agresividad y muy dulce. Están entregados a sus humanos y, si se les deja, se pasan el rato en el regazo de sus dueños o durmiendo en su cama."
+  },
+  "laperm": {
+    "name": "LaPerm",
+    "description": "Los LaPerm son dulces y cariñosos, pero también muy activos. A diferencia de muchas razas activas, el LaPerm está encantado además de hacer de gato de regazo. Suele seguirte la corriente: si está jugando y tú decides sentarte a descansar, basta con cogerlo y sentarte con él para que se quede en tu regazo devorando toda la atención que le des."
+  },
+  "maine coon": {
+    "name": "Maine Coon",
+    "description": "Conocidos por su tamaño y su lujoso pelo largo, los Maine Coon están considerados unos gigantes bonachones. De buen carácter y trato afable, el Maine Coon se adapta bien a estilos de vida y personalidades muy distintos. Le gusta estar con la gente y tiene la costumbre de seguirla por la casa, pero sin resultar pegajoso. A la mayoría de los Maine Coon les encanta el agua y pueden ser bastante buenos nadadores."
+  },
+  "malayan": {
+    "name": "Malayo",
+    "description": "A los Malayos les encanta explorar e incluso disfrutan viajando en transportín. Son gatos bastante habladores y más bien ruidosos, con una voluntad claramente firme. Se aseguran de que les des la atención que buscan y siempre parecen querer que los cojan y los abracen. Interactúan sin parar con la gente, incluso con desconocidos. Les encanta jugar y acurrucarse."
+  },
+  "manx": {
+    "name": "Manx",
+    "description": "El Manx es un gato plácido y dulce, tranquilo y juguetón. Nunca parece alterarse demasiado por nada. Es un compañero cariñoso que adora estar con la gente."
+  },
+  "munchkin": {
+    "name": "Munchkin",
+    "description": "El Munchkin es un gato lanzado al que le gusta que lo cojan en brazos. Tiene muchísima energía y es más rápido y ágil de lo que aparenta. Lo corto de sus patas no parece estorbarle a la hora de correr ni de saltar."
+  },
+  "nebelung": {
+    "name": "Nebelung",
+    "description": "El Nebelung puede tener un carácter reservado, pero le encanta jugar (le apasiona especialmente traer las cosas de vuelta) y disfruta saltando o trepando a sitios altos desde donde estudiar con calma a las personas y las situaciones antes de decidir si quiere participar."
+  },
+  "norwegian forest cat": {
+    "name": "Bosque de Noruega",
+    "description": "El Bosque de Noruega es un gato dulce y cariñoso. Agradece los halagos y le encanta relacionarse con quien lo cuida. Es un compañero afectuoso que se vincula con los suyos una vez los acepta como propios. Sigue siendo cazador de corazón: le encanta perseguir juguetes como si fueran presas de verdad. Es territorial y patrulla varias veces al día para asegurarse de que todo está en orden."
+  },
+  "ocicat": {
+    "name": "Ocicat",
+    "description": "Leal y entregado a sus dueños, el Ocicat es inteligente, seguro, extrovertido y parece tener muchos rasgos de perro. Se le puede enseñar a traer juguetes, a pasear con correa, a «hablar», a acudir cuando se le llama y a obedecer otras órdenes."
+  },
+  "oriental": {
+    "name": "Oriental",
+    "description": "Los Orientales viven con pasión su relación con las personas. Se encariñan muchísimo con sus humanos, así que hay que estar preparado para un compromiso de por vida. Cuando no puedas entretenerlo, un Oriental se buscará la vida subiéndose encima de la nevera, abriendo cajones o buscando nuevos escondites."
+  },
+  "persian": {
+    "name": "Persa",
+    "description": "Los Persas son gatos dulces y tranquilos que pueden ser juguetones o más bien callados y relajados. Van estupendamente con familias y niños, y les encanta pasarse el día repantigados por casa. Aunque no les molesta una casa llena ni los niños movidos, suelen esconderse cuando necesitan un rato a solas."
+  },
+  "pixie-bob": {
+    "name": "Pixie-bob",
+    "description": "Sociable y cariñoso, el Pixie-bob quiere ser un miembro más de la familia. Su facilidad para vincularse con sus humanos, unida a su carácter paciente, lo convierte en un compañero excelente para los niños."
+  },
+  "ragamuffin": {
+    "name": "Ragamuffin",
+    "description": "El Ragamuffin es tranquilo, de carácter equilibrado, y se lleva bien con todos los miembros de la familia. Los cambios de rutina no suelen alterarlo. Es el compañero ideal para quien vive en un piso y, por su paciencia, también para los niños."
+  },
+  "ragdoll": {
+    "name": "Ragdoll",
+    "description": "Los Ragdoll adoran a los suyos: los reciben en la puerta, los siguen por toda la casa y se lanzan a un regazo o se acurrucan en la cama en cuanto tienen ocasión. Son la esencia del gato de regazo, disfrutan de que los lleven en brazos y se dejan caer, blandos, en los brazos de quien los sostenga."
+  },
+  "russian blue": {
+    "name": "Azul Ruso",
+    "description": "Los Azules Rusos son muy cariñosos y reservados. No les gustan las casas ruidosas, pero sí jugar, y pueden ser bastante activos al aire libre. Se vinculan muy estrechamente con su dueño y tienen fama de llevarse bien con otros animales."
+  },
+  "savannah": {
+    "name": "Savannah",
+    "description": "El Savannah es la versión felina de un perro. Busca activamente el contacto social y se enfurruña si lo dejan de lado. Conserva el aire de gatito toda la vida. Es profundamente leal a los miembros de su familia más cercana, mientras cuestiona la presencia de los desconocidos. Todo ello lo convierte en un compañero excelente: fiel, inteligente y con ganas de participar en todo."
+  },
+  "scottish fold": {
+    "name": "Scottish Fold",
+    "description": "El Scottish Fold es una raza dulce y encantadora. Es un gato fácil de tener en casa y de cuidar. Es cariñoso y se siente a gusto con todos los miembros de la familia. Su cola debe manejarse con delicadeza. Los fold son famosos por dormir boca arriba y por sentarse con las patas estiradas y las manos sobre la barriga: es lo que se llama «postura de Buda»."
+  },
+  "selkirk rex": {
+    "name": "Selkirk Rex",
+    "description": "El Selkirk Rex es una raza increíblemente paciente, cariñosa y tolerante. El Selkirk tiene además un lado gracioso y a veces se lo describe como payaso. Le encanta hacer de gato de regazo y estará encantado de charlar contigo en voz bajita si le hablas."
+  },
+  "siamese": {
+    "name": "Siamés",
+    "description": "Aunque los gatos Siameses adoran a los suyos, te seguirán a todas partes y supervisarán cada uno de tus movimientos, siempre habladores y con opinión propia. Son gatos exigentes y sociables, a los que no les gusta quedarse solos durante mucho tiempo."
+  },
+  "siberian": {
+    "name": "Siberiano",
+    "description": "El temperamento perruno y el cariño del Siberiano lo convierten en el gato de regazo ideal, y vive muy feliz dentro de casa. Muy ágil y potente, el gato Siberiano salta y alcanza sitios altos sin esfuerzo, incluida la parte de arriba de la nevera e incluso de las puertas."
+  },
+  "singapura": {
+    "name": "Singapura",
+    "description": "El Singapura suele ser prudente al conocer gente nueva, pero le gusta tanto la atención de su familia que a veces se gana fama de pesado. Es un gato muy activo, curioso y cariñoso. Será pequeño, pero sabe que aquí manda él"
+  },
+  "snowshoe": {
+    "name": "Snowshoe",
+    "description": "El Snowshoe es un gato vivaz, enérgico, cariñoso e inteligente. Le encanta estar rodeado de gente, lo que lo hace ideal para las familias, y se entristece si lo dejan solo mucho tiempo. Suele apegarse a una persona en concreto y hace lo que sea con tal de llamar tu atención."
+  },
+  "somali": {
+    "name": "Somalí",
+    "description": "El Somalí vive la vida al máximo. Trepa más alto, salta más lejos y juega con más ganas. Nada escapa a la atención de este gato curiosísimo y muy inteligente. A los somalíes les encanta la compañía de las personas y de otros animales."
+  },
+  "sphynx": {
+    "name": "Sphynx",
+    "description": "El Sphynx es una raza inteligente, curiosa y extremadamente sociable, muy apegada a las personas. Es habitual que reciba a sus dueños en la puerta de casa con una emoción y una alegría evidentes. Tiene un sentido del humor inesperado que suele chocar con su expresión seria."
+  },
+  "tonkinese": {
+    "name": "Tonkinés",
+    "description": "Inteligente y generoso con su cariño, el Tonkinés supervisará con curiosidad todo lo que ocurra a su alrededor. Cariñoso, sociable, activo y juguetón, pero encantado también de hacer de gato faldero."
+  },
+  "toyger": {
+    "name": "Toyger",
+    "description": "El Toyger tiene un carácter dulce y tranquilo, y por lo general es amistoso. Es lo bastante lanzado para pasear con arnés, lo bastante enérgico para jugar a buscar la pelota y a otros juegos interactivos, y lo bastante seguro de sí mismo para llevarse bien con otros gatos y con perros amigables."
+  },
+  "turkish angora": {
+    "name": "Angora Turco",
+    "description": "Es un gato listo y despierto que crea un buen vínculo con las personas. Con su carácter cariñoso y juguetón, el Angora es una de las mejores opciones para una familia. Se lleva de maravilla con las demás mascotas de la casa, aunque dejará claro quién manda y de quién es el hogar."
+  },
+  "turkish van": {
+    "name": "Van Turco",
+    "description": "Aunque al Van Turco le encanta saltar y trepar, jugar con juguetes, traer cosas y perseguir, es grande y algo torpe: este es uno de esos gatos que no siempre caen de pie. No es muy de regazo, pero estará encantado de acurrucarse a tu lado y dormir en tu cama."
+  },
+  "york chocolate": {
+    "name": "York Chocolate",
+    "description": "Los gatos York Chocolate tienen fama de ser auténticos gatos falderos, de temperamento dulce. Les encanta que los cojan en brazos y los acaricien. Su naturaleza curiosa hace que te sigan a todas partes y participen en casi todo lo que haces, incluso si tiene que ver con el agua: a diferencia de muchos otros gatos, a los York Chocolate les encanta."
+  }
+}

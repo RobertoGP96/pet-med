@@ -20,7 +20,7 @@ import type { MuralPet } from "@/domain/types";
  */
 const SPANS = ["lg:col-span-4", "lg:col-span-2", "lg:col-span-2", "lg:col-span-4"];
 
-/** Celdas anchas del patrón: son las que tienen sitio para la descripción. */
+/** Celdas anchas del patrón: las que llevan el nombre a mayor cuerpo. */
 const WIDE_SLOTS = new Set([0, 3]);
 
 /**

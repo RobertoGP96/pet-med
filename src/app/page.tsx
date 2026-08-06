@@ -38,10 +38,8 @@ export default async function MuralPage() {
     <div className="flex flex-col gap-14">
       <MuralHero signedIn={Boolean(user)} />
 
-      {/* Suspense propio: una curiosidad no debe retrasar el mural. */}
-      <Suspense fallback={null}>
-        <DogFact />
-      </Suspense>
+      {/* Sin Suspense: la curiosidad sale de una lista local, no espera a nada. */}
+      <DogFact />
 
       {/* El esqueleto sale por `exit` y la rejilla entra por `enter`, así el
           contenido no aparece de golpe cuando termina la consulta. */}

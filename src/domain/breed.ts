@@ -44,7 +44,16 @@ export interface BreedTraits {
 export interface BreedProfile {
   /** Id en la API de origen. */
   id: string;
+  /** Nombre en español cuando hay traducción; si no, el de la API. */
   name: string;
+  /**
+   * Nombre tal y como lo publica la API, siempre en inglés.
+   *
+   * Se conserva porque hay cosas que sólo entienden el idioma de origen —hoy,
+   * emparejar la raza con una foto de dog.ceo— y porque la búsqueda por nombre
+   * debe encontrar la raza se escriba como se escriba.
+   */
+  sourceName: string;
   species: Species;
   /** Rango de peso del adulto, en kilos, sin distinguir sexo. */
   weightRange: BreedWeightRange | null;
@@ -59,6 +68,12 @@ export interface BreedProfile {
   breedGroup: string | null;
   /** Reseña de la raza. */
   description: string | null;
+  /**
+   * Idioma de `description`. Es `"en"` sólo si la API estrenó una raza que
+   * todavía no está traducida; lo usa el componente para marcar el `lang` y que
+   * el lector de pantalla no lea inglés con fonética española.
+   */
+  descriptionLang: "es" | "en";
   /** `null` cuando la fuente no lo indica. */
   hypoallergenic: boolean | null;
   traits: BreedTraits | null;

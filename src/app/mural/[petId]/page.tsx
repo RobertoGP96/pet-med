@@ -9,6 +9,7 @@ import { SEX_LABELS, SPECIES_LABELS } from "@/domain/enums";
 import { getAge, getNextBirthday } from "@/domain/health/age";
 import { isSupabaseConfigured } from "@/lib/env";
 import { getMuralPet } from "@/server/queries";
+import { toDisplayBreedName } from "@/services/breeds/i18n/breeds";
 
 /**
  * Ficha pública de una mascota del mural.
@@ -101,7 +102,9 @@ export default async function MuralPetPage({ params }: PageProps<"/mural/[petId]
 
           <dl className="bg-border border-border grid grid-cols-2 gap-px overflow-hidden rounded-lg border sm:grid-cols-3">
             <Fact label="Especie" value={SPECIES_LABELS[pet.species]} />
-            {pet.breed && <Fact label="Raza" value={pet.breed} />}
+            {pet.breed && (
+              <Fact label="Raza" value={toDisplayBreedName(pet.species, pet.breed)} />
+            )}
             <Fact label="Sexo" value={SEX_LABELS[pet.sex]} />
             {age && (
               <Fact

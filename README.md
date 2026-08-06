@@ -120,7 +120,7 @@ src/
 │  ├─ queries.ts           Lecturas (Server Components)
 │  ├─ actions.ts           Escrituras ("use server")
 │  └─ mappers.ts           snake_case ⇄ camelCase
-├─ services/breeds/        APIs de raza, curiosidades y fotos
+├─ services/breeds/        APIs de raza y fotos (i18n/ traduce lo que devuelven)
 ├─ lib/                    env, supabase, storage, formato
 └─ components/
    ├─ ui/                  Piezas transversales: Section, Field, Action, feedback
@@ -167,7 +167,6 @@ Todas gratuitas. Sólo The Cat API acepta clave, y es opcional.
 | Fuente | Qué aporta | Clave |
 | --- | --- | --- |
 | `dogapi.dog/api/v2/breeds` | 283 razas: descripción, esperanza de vida, **peso separado por macho y hembra**, hipoalergénico y grupo | No |
-| `dogapi.dog/api/v2/facts` | Curiosidades caninas para el bloque «¿Sabías que…?» del mural | No |
 | `dog.ceo/api` | Fotos por raza, como relleno cuando la mascota aún no tiene la suya | No |
 | `api.thecatapi.com/v1/breeds` | Razas de gato con rasgos puntuados del 1 al 5 (energía, cepillado, muda, problemas de salud, sociabilidad…) | Opcional |
 
@@ -177,8 +176,30 @@ Todas gratuitas. Sólo The Cat API acepta clave, y es opcional.
 > ten en cuenta que exigirá registro.
 
 Ninguna de estas llamadas puede tumbar una página: todas tienen tiempo máximo
-de 8 s, caché (una semana las razas, un día las curiosidades) y devuelven
-`null` o `[]` ante cualquier fallo.
+de 8 s, caché de una semana y devuelven `null` o `[]` ante cualquier fallo.
+
+### Traducciones
+
+Las tres fuentes publican **sólo en inglés** y ninguna acepta un parámetro de
+idioma, así que la traducción es cosa nuestra y vive en
+`src/services/breeds/i18n/`:
+
+| Qué | Dónde | Cómo se mantiene |
+| --- | --- | --- |
+| Grupos de raza, países de origen y temperamentos | `vocabulary.ts` | A mano: son listas cerradas de 9, 20 y 47 valores |
+| Nombre y reseña de las 350 razas | `dogs.json` y `cats.json` | Traducido una vez; la clave es el nombre inglés plegado |
+
+Nada de esto se traduce en tiempo de ejecución: haría falta la clave de un
+servicio de traducción, sumaría latencia a cada render y metería un punto de
+fallo en lo que sólo es un adorno de la ficha.
+
+Cuando una API estrena una raza, la ficha sale con el nombre y la reseña en
+inglés —marcados con `lang="en"` para el lector de pantalla— hasta que se añada
+su entrada al JSON. El perfil conserva el nombre original en `sourceName`, que
+es lo que se le pasa a dog.ceo, que sólo entiende inglés.
+
+Las curiosidades del bloque «¿Sabías que…?» ya no salen de `dogapi.dog/facts`:
+están escritas en español en `src/domain/dog-facts.ts` y rota una al día.
 
 Lo que **no** existe gratis y habría que llevar como datos propios:
 calendarios de vacunación, alimentos tóxicos y dosis de medicamentos.

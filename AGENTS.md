@@ -58,11 +58,20 @@ Reglas que no se saltan:
 
 ## APIs externas
 
-Perros: **dogapi.dog** (razas y curiosidades) y **dog.ceo** (fotos), sin clave.
+Perros: **dogapi.dog** (razas) y **dog.ceo** (fotos), sin clave.
 Gatos: **The Cat API**, clave opcional en `CAT_API_KEY`.
 
 No uses `api.thedogapi.com`: desde 2026 devuelve 403 sin clave. Fue la razón
 del cambio de proveedor.
+
+Las tres publican **sólo en inglés**. La traducción está hecha a mano en
+`src/services/breeds/i18n/` y se aplica en `parse.ts`, así que el resto de la
+aplicación nunca ve inglés. Dos consecuencias que hay que respetar:
+
+- `BreedProfile.name` está en español y `sourceName` guarda el original. Lo que
+  se le pasa a **dog.ceo va en `sourceName`**, o no encontrará la foto.
+- Al añadir una raza o un valor nuevo de las APIs, se traduce en `i18n/`. Si no,
+  se cuela en inglés (la reseña, marcada con `descriptionLang: "en"`).
 
 Regla: **nada en `src/services/` puede lanzar.** Son adornos del perfil; si la
 API falla, la página se pinta igual sin ellos. Tiempo máximo con

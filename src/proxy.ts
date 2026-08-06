@@ -87,7 +87,13 @@ export const config = {
      * optimizadas, el favicon, las fotos subidas con el driver local y
      * cualquier imagen suelta. Que el proxy corra sobre ellos sería una llamada
      * de red a Supabase por cada archivo.
+     *
+     * `manifest.webmanifest` y `opengraph-image` van en la lista por lo mismo,
+     * aunque no acaben en una extensión de imagen: el navegador pide el
+     * manifest en cada carga de página y ninguno de los dos depende de quién
+     * seas. Sin excluirlos, cada uno costaba un `auth.getUser()` —ida y vuelta
+     * de red al servidor de Supabase— para no usar el resultado.
      */
-    "/((?!_next/static|_next/image|favicon.ico|uploads/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|ico)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|opengraph-image|uploads/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|ico)$).*)",
   ],
 };

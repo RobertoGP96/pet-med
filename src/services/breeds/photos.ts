@@ -10,6 +10,7 @@
 import { cache } from "react";
 
 import type { DogCeoImagesResponse, DogCeoListResponse } from "./api-types";
+import { toSourceBreedName } from "./i18n/breeds";
 
 const BREEDS_LIST_URL = "https://dog.ceo/api/breeds/list/all";
 const RANDOM_IMAGES_URL = "https://dog.ceo/api/breeds/image/random";
@@ -112,6 +113,11 @@ function matchBreedPath(entries: DogCeoBreedEntry[], breedName: string): string 
 /**
  * Foto de ejemplo de la raza indicada, o `null` si no hay forma de
  * emparejarla. Sólo para perros: dog.ceo no cubre otras especies.
+ *
+ * El nombre llega en español —es lo que se guarda de la mascota— y dog.ceo sólo
+ * conoce rutas en inglés (`retriever/golden`), así que primero se deshace la
+ * traducción. Un nombre que ya venga en inglés, o uno escrito a mano que no
+ * esté en el catálogo, pasa de largo y se empareja como siempre.
  */
 export const getDogBreedPhoto = cache(async function getDogBreedPhoto(
   breedName: string | null,
@@ -121,7 +127,7 @@ export const getDogBreedPhoto = cache(async function getDogBreedPhoto(
   const entries = await listDogCeoBreeds();
   if (entries.length === 0) return null;
 
-  const path = matchBreedPath(entries, breedName);
+  const path = matchBreedPath(entries, toSourceBreedName("dog", breedName));
   if (!path) return null;
 
   try {

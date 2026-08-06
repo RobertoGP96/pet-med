@@ -30,7 +30,8 @@ const ANATOLIAN: DogApiBreed = {
   },
 };
 
-const GROUP_NAMES = new Map([["56081cf0-fdf2-4114-9bf7-23a3f5b6af91", "Working"]]);
+/** dogapi.dog nombra los grupos como el AKC: «Working Group», no «Working». */
+const GROUP_NAMES = new Map([["56081cf0-fdf2-4114-9bf7-23a3f5b6af91", "Working Group"]]);
 
 /** Gato tal y como lo devuelve The Cat API: texto libre y rasgos del 1 al 5. */
 const ABYSSINIAN: CatApiBreed = {
@@ -214,9 +215,9 @@ describe("buildImageUrl", () => {
 
 describe("normalizeDogBreed", () => {
   it("normaliza una raza real de dogapi.dog", () => {
-    expect(normalizeDogBreed(ANATOLIAN, GROUP_NAMES)).toEqual({
+    expect(normalizeDogBreed(ANATOLIAN, GROUP_NAMES)).toMatchObject({
       id: "c94e50a5-f733-4b15-8b11-54598c949b6f",
-      name: "Anatolian Shepherd Dog",
+      sourceName: "Anatolian Shepherd Dog",
       species: "dog",
       // El rango general abarca a los dos sexos.
       weightRange: { minKg: 50, maxKg: 70 },
@@ -227,12 +228,38 @@ describe("normalizeDogBreed", () => {
       lifeSpan: { minYears: 12, maxYears: 14 },
       temperament: null,
       bredFor: null,
-      breedGroup: "Working",
-      description: "Perro guardián de rebaños originario de Turquía.",
+      breedGroup: "Grupo de trabajo",
       hypoallergenic: false,
       traits: null,
       imageUrl: null,
     });
+  });
+
+  it("traduce el nombre y la reseña de una raza del catálogo", () => {
+    const perfil = normalizeDogBreed(ANATOLIAN, GROUP_NAMES);
+
+    expect(perfil.name).toBe("Pastor de Anatolia");
+    expect(perfil.descriptionLang).toBe("es");
+    // La reseña sale del catálogo traducido, no del `description` que mandó la
+    // API: es más completa y ya está en español.
+    expect(perfil.description).not.toBe(ANATOLIAN.attributes?.description);
+    expect(perfil.description).toMatch(/Turquía/);
+  });
+
+  it("se queda con el texto de la API si la raza aún no está traducida", () => {
+    const inventada: DogApiBreed = {
+      ...ANATOLIAN,
+      attributes: { ...ANATOLIAN.attributes, name: "Pomeranian Wolfhound" },
+    };
+
+    const perfil = normalizeDogBreed(inventada, GROUP_NAMES);
+
+    expect(perfil.name).toBe("Pomeranian Wolfhound");
+    expect(perfil.sourceName).toBe("Pomeranian Wolfhound");
+    expect(perfil.description).toBe(ANATOLIAN.attributes?.description);
+    // Marcado como inglés aunque este fixture esté en español: lo que se
+    // comprueba es que una reseña sin traducir se señale para el `lang`.
+    expect(perfil.descriptionLang).toBe("en");
   });
 
   it("deja el grupo en null si no se pudo resolver su nombre", () => {
@@ -256,6 +283,7 @@ describe("normalizeDogBreed", () => {
     expect(normalizeDogBreed({ id: "x", attributes: {} })).toEqual({
       id: "x",
       name: "",
+      sourceName: "",
       species: "dog",
       weightRange: null,
       weightBySex: null,
@@ -264,6 +292,8 @@ describe("normalizeDogBreed", () => {
       bredFor: null,
       breedGroup: null,
       description: null,
+      // Sin reseña no hay nada que marcar como inglés.
+      descriptionLang: "es",
       hypoallergenic: null,
       traits: null,
       imageUrl: null,
@@ -281,17 +311,20 @@ describe("normalizeCatBreed", () => {
 
     expect(perfil).toMatchObject({
       id: "abys",
-      name: "Abyssinian",
+      name: "Abisinio",
+      sourceName: "Abyssinian",
       species: "cat",
       weightRange: { minKg: 3, maxKg: 5 },
       // The Cat API publica un rango único, sin distinguir sexo.
       weightBySex: null,
       lifeSpan: { minYears: 14, maxYears: 15 },
-      temperament: "Active, Energetic, Independent, Intelligent, Gentle",
+      // Los adjetivos salen del diccionario de temperamentos.
+      temperament: "Activo, Enérgico, Independiente, Inteligente, Apacible",
       // Los gatos no se criaron para una tarea: el campo queda vacío.
       bredFor: null,
-      breedGroup: "Egypt",
-      description: "Gato activo y sociable, fácil de cuidar.",
+      // En gatos, `breedGroup` es el país de origen.
+      breedGroup: "Egipto",
+      descriptionLang: "es",
       hypoallergenic: false,
       imageUrl: "https://cdn2.thecatapi.com/images/0XYvRd7oD.jpg",
     });
