@@ -21,7 +21,13 @@
 
 import { cache } from "react";
 
-import type { Species } from "@/domain/enums";
+import type { Sex, Species } from "@/domain/enums";
+import {
+  buildFamilyTree,
+  type FamilyMember,
+  type FamilyTree,
+  type ParentLinks,
+} from "@/domain/family";
 import type {
   ClinicalEvent,
   DateTime,
@@ -422,6 +428,49 @@ export const listPets = cache(async function listPets(): Promise<PetSummary[]> {
   return decorate(db, rows);
 });
 
+/** Candidato a padre o madre en el formulario de la ficha. */
+export interface ParentCandidate extends PetRef {
+  sex: Sex;
+  isOwn: boolean;
+}
+
+/**
+ * Mascotas que pueden ser padre o madre de otra: las propias y las públicas
+ * del mural.
+ *
+ * Sin filtro de dueño a propósito: las políticas de lectura de `pets` se suman
+ * (OR), así que `pets_owner_select` + `pets_public_select` devuelven exactamente
+ * ese conjunto — el mismo razonamiento que `listMuralPets`. El filtrado por
+ * especie y sexo lo hace el formulario, que conoce la especie elegida.
+ */
+export const listParentCandidates = cache(
+  async function listParentCandidates(): Promise<ParentCandidate[]> {
+    const user = await requireUser();
+    const db = await createClient();
+
+    const rows = unwrap(
+      await db
+        .from("pets")
+        .select("id, name, species, sex, avatar_url, owner_id")
+        .order("name", { ascending: true }),
+      "las mascotas del sistema",
+    );
+
+    return rows
+      .map((row) => ({
+        id: row.id,
+        name: row.name,
+        species: row.species,
+        sex: row.sex,
+        avatarUrl: row.avatar_url,
+        isOwn: row.owner_id === user.id,
+      }))
+      // Las propias primero; el orden alfabético se conserva dentro de cada
+      // grupo porque `sort` es estable.
+      .sort((a, b) => Number(b.isOwn) - Number(a.isOwn));
+  },
+);
+
 /**
  * Mascotas visibles en el mural, de todas las cuentas.
  *
@@ -601,6 +650,108 @@ export const getPetPhotos = cache(async function getPetPhotos(petId: string) {
       "las fotos",
     ).map(toPhoto),
   );
+});
+
+/** Fila mínima para pintar a un familiar y seguir sus vínculos. */
+type FamilyRow = Pick<
+  Tables<"pets">,
+  "id" | "name" | "species" | "sex" | "avatar_url" | "owner_id" | "father_id" | "mother_id"
+>;
+
+const FAMILY_COLUMNS = "id, name, species, sex, avatar_url, owner_id, father_id, mother_id";
+
+function toFamilyMember(row: FamilyRow, userId: string): FamilyMember {
+  return {
+    id: row.id,
+    name: row.name,
+    species: row.species,
+    sex: row.sex,
+    avatarUrl: row.avatar_url,
+    isOwn: row.owner_id === userId,
+  };
+}
+
+/**
+ * Pestaña «Familia»: el árbol genealógico de la mascota.
+ *
+ * Como el resto de consultas, entra con el cliente de sesión: un familiar que
+ * su dueño retiró del mural no aparece en las filas, y `buildFamilyTree` lo
+ * convierte en un nodo «no disponible» sin lógica extra aquí.
+ */
+export const getPetFamily = cache(async function getPetFamily(
+  petId: string,
+): Promise<{ pet: Pet; data: FamilyTree } | null> {
+  const [user, pet, db] = await Promise.all([requireUser(), getPet(petId), createClient()]);
+  if (!pet) return null;
+
+  const parentIds = [pet.fatherId, pet.motherId].filter((id): id is string => Boolean(id));
+  const siblingFilters = [
+    pet.fatherId ? `father_id.eq.${pet.fatherId}` : null,
+    pet.motherId ? `mother_id.eq.${pet.motherId}` : null,
+  ]
+    .filter(Boolean)
+    .join(",");
+
+  const [parentRows, siblingRows, childRows] = await Promise.all([
+    (async (): Promise<FamilyRow[]> => {
+      if (parentIds.length === 0) return [];
+      return unwrap(
+        await db.from("pets").select(FAMILY_COLUMNS).in("id", parentIds),
+        "los progenitores",
+      );
+    })(),
+    (async (): Promise<FamilyRow[]> => {
+      if (!siblingFilters) return [];
+      return unwrap(
+        await db.from("pets").select(FAMILY_COLUMNS).or(siblingFilters).neq("id", petId),
+        "los hermanos",
+      );
+    })(),
+    (async (): Promise<FamilyRow[]> =>
+      unwrap(
+        await db
+          .from("pets")
+          .select(FAMILY_COLUMNS)
+          .or(`father_id.eq.${petId},mother_id.eq.${petId}`),
+        "los hijos",
+      ))(),
+  ]);
+
+  const grandparentIds = parentRows
+    .flatMap((row) => [row.father_id, row.mother_id])
+    .filter((id): id is string => Boolean(id));
+  const grandparentRows: FamilyRow[] =
+    grandparentIds.length === 0
+      ? []
+      : unwrap(
+          await db.from("pets").select(FAMILY_COLUMNS).in("id", grandparentIds),
+          "los abuelos",
+        );
+
+  const membersById = new Map<string, FamilyMember>();
+  const linksById = new Map<string, ParentLinks>();
+  for (const row of [...parentRows, ...grandparentRows]) {
+    membersById.set(row.id, toFamilyMember(row, user.id));
+    linksById.set(row.id, { fatherId: row.father_id, motherId: row.mother_id });
+  }
+
+  const tree = buildFamilyTree({
+    self: {
+      id: pet.id,
+      name: pet.name,
+      species: pet.species,
+      sex: pet.sex,
+      avatarUrl: pet.avatarUrl,
+      isOwn: pet.ownerId === user.id,
+    },
+    links: { fatherId: pet.fatherId, motherId: pet.motherId },
+    membersById,
+    linksById,
+    siblings: siblingRows.map((row) => toFamilyMember(row, user.id)),
+    children: childRows.map((row) => toFamilyMember(row, user.id)),
+  });
+
+  return { pet, data: tree };
 });
 
 /**

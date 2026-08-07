@@ -38,6 +38,9 @@ yarn-error.log*
 /public/uploads/*
 !/public/uploads/.gitkeep
 
+# estado local del CLI de supabase (proyecto vinculado, versión de postgres)
+supabase/.temp/
+
 # vercel
 .vercel
 

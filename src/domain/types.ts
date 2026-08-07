@@ -57,6 +57,9 @@ export interface Pet {
   featuredAt: DateTime | null;
   /** Retirada del mural por moderación, decida lo que decida el dueño. */
   hiddenByAdmin: boolean;
+  /** Padre registrado en el sistema (propio o público del mural), si se conoce. */
+  fatherId: string | null;
+  motherId: string | null;
   createdAt: DateTime;
   updatedAt: DateTime;
 }

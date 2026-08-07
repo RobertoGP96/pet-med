@@ -55,6 +55,8 @@ export interface Database {
           featured: boolean;
           featured_at: string | null;
           hidden_by_admin: boolean;
+          father_id: string | null;
+          mother_id: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -78,6 +80,8 @@ export interface Database {
           featured?: boolean;
           featured_at?: string | null;
           hidden_by_admin?: boolean;
+          father_id?: string | null;
+          mother_id?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -101,6 +105,8 @@ export interface Database {
           featured?: boolean;
           featured_at?: string | null;
           hidden_by_admin?: boolean;
+          father_id?: string | null;
+          mother_id?: string | null;
           created_at?: string;
           updated_at?: string;
         };

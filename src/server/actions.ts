@@ -42,7 +42,8 @@ import {
   weightInputSchema,
 } from "@/domain/schemas";
 import { generateDoseSchedule } from "@/domain/health/medication";
-import { RECURRENCE_DAYS } from "@/domain/enums";
+import { createsCycle, type ParentLinks } from "@/domain/family";
+import { RECURRENCE_DAYS, type Species } from "@/domain/enums";
 import {
   describeDatabaseError,
   errorState,
@@ -106,6 +107,107 @@ async function ownsPet(db: Db, petId: string, ownerId: string): Promise<boolean>
     .eq("owner_id", ownerId)
     .maybeSingle();
   return Boolean(data);
+}
+
+/** Generaciones de ancestros que se cargan al buscar ciclos. De sobra para
+ * cualquier árbol real; el disparador de Postgres cubre lo que quede fuera. */
+const MAX_ANCESTOR_GENERATIONS = 30;
+
+/**
+ * Valida el padre y la madre de una mascota antes de escribirlos: tienen que
+ * ser visibles (propios o públicos del mural), de la misma especie, de sexo
+ * compatible, y no pueden convertir a la mascota en su propio ascendiente.
+ *
+ * Devuelve el `ActionState` de error, o `null` si todo está en orden. Sólo se
+ * comprueban los vínculos que *cambian* respecto a `existing`: si un progenitor
+ * dejó de ser público, conservarlo tal cual no es un error — retirarlo a la
+ * fuerza sí perdería datos.
+ */
+async function validateParentage(
+  db: Db,
+  userId: string,
+  input: { fatherId: string | null; motherId: string | null; species: Species },
+  existing: { petId: string; fatherId: string | null; motherId: string | null } | null,
+): Promise<ActionState | null> {
+  const roles = [
+    { field: "fatherId" as const, label: "padre", id: input.fatherId, forbiddenSex: "female" },
+    { field: "motherId" as const, label: "madre", id: input.motherId, forbiddenSex: "male" },
+  ];
+
+  if (existing && roles.some((role) => role.id === existing.petId)) {
+    return errorState("Una mascota no puede ser su propio padre o madre.");
+  }
+
+  const changed = roles.filter(
+    (role) => role.id != null && role.id !== (existing ? existing[role.field] : null),
+  );
+  if (changed.length === 0) return null;
+
+  // La RLS ya limita la lectura a «mías + públicas no ocultas», pero aquí la
+  // comprobación se repite en código: es la regla de negocio, no un adorno.
+  const { data, error } = await db
+    .from("pets")
+    .select("id, owner_id, species, sex, is_public, hidden_by_admin")
+    .in(
+      "id",
+      changed.map((role) => role.id!),
+    );
+  if (error) return errorState(describeDatabaseError(error));
+  const candidates = new Map((data ?? []).map((row) => [row.id, row]));
+
+  for (const role of changed) {
+    const row = candidates.get(role.id!);
+    if (!row || !(row.owner_id === userId || (row.is_public && !row.hidden_by_admin))) {
+      return errorState("Revisa los campos marcados.", {
+        [role.field]: ["Esa mascota ya no está disponible."],
+      });
+    }
+    if (row.sex === role.forbiddenSex) {
+      const expected = role.field === "fatherId" ? "macho" : "hembra";
+      return errorState("Revisa los campos marcados.", {
+        [role.field]: [`El ${role.label} debe ser ${expected} o de sexo sin definir.`],
+      });
+    }
+    if (row.species !== input.species) {
+      return errorState("Revisa los campos marcados.", {
+        [role.field]: [`El ${role.label} debe ser de la misma especie.`],
+      });
+    }
+  }
+
+  // Ciclos: sólo en edición — una mascota recién creada no puede ser ancestro
+  // de nadie. Se sube por generaciones sobre lo que la RLS deja ver; el
+  // disparador `pets_forbid_ancestor_cycle` es el candado para lo que no.
+  if (existing) {
+    const linksById = new Map<string, ParentLinks>();
+    let frontier = [input.fatherId, input.motherId].filter((id): id is string => Boolean(id));
+
+    for (let depth = 0; depth < MAX_ANCESTOR_GENERATIONS && frontier.length > 0; depth += 1) {
+      const pending = frontier.filter((id) => !linksById.has(id) && id !== existing.petId);
+      if (pending.length === 0) break;
+
+      const { data: rows, error: readError } = await db
+        .from("pets")
+        .select("id, father_id, mother_id")
+        .in("id", pending);
+      if (readError) return errorState(describeDatabaseError(readError));
+
+      frontier = [];
+      for (const row of rows ?? []) {
+        linksById.set(row.id, { fatherId: row.father_id, motherId: row.mother_id });
+        if (row.father_id) frontier.push(row.father_id);
+        if (row.mother_id) frontier.push(row.mother_id);
+      }
+    }
+
+    if (createsCycle(existing.petId, [input.fatherId, input.motherId], linksById)) {
+      return errorState(
+        "Esa mascota es descendiente de esta: el parentesco crearía un ciclo en el árbol.",
+      );
+    }
+  }
+
+  return null;
 }
 
 // ===========================================================================
@@ -374,6 +476,9 @@ export async function createPetAction(
   const input = parsed.data;
   const db = await createClient();
 
+  const invalidParentage = await validateParentage(db, user.id, input, null);
+  if (invalidParentage) return invalidParentage;
+
   const { data, error } = await db
     .from("pets")
     .insert({
@@ -395,6 +500,8 @@ export async function createPetAction(
       bio: input.bio,
       avatar_url: input.avatarUrl,
       is_public: input.isPublic,
+      father_id: input.fatherId,
+      mother_id: input.motherId,
     })
     .select("id")
     .single();
@@ -403,6 +510,9 @@ export async function createPetAction(
 
   revalidatePath("/");
   revalidatePath("/mascotas");
+  // Los progenitores ganan un hijo en su pestaña «Familia».
+  if (input.fatherId) revalidatePet(input.fatherId);
+  if (input.motherId) revalidatePet(input.motherId);
   // `redirect` lanza una excepción de control de flujo: nada se ejecuta
   // después, por eso la revalidación va antes.
   redirect(`/mascotas/${data.id}`);
@@ -412,7 +522,7 @@ export async function updatePetAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  await requireUser();
+  const user = await requireUser();
 
   const petId = String(formData.get("petId") ?? "");
   if (!petId) return errorState("Falta la mascota que hay que actualizar.");
@@ -424,6 +534,25 @@ export async function updatePetAction(
 
   const input = parsed.data;
   const db = await createClient();
+
+  // Los vínculos actuales, para validar sólo los que cambian. El filtro por
+  // `owner_id` no es adorno (ver la nota de `ownsPet`): sin él, cualquier
+  // mascota pública del mural pasaría por editable hasta el UPDATE.
+  const { data: current, error: currentError } = await db
+    .from("pets")
+    .select("id, father_id, mother_id")
+    .eq("id", petId)
+    .eq("owner_id", user.id)
+    .maybeSingle();
+  if (currentError) return errorState(describeDatabaseError(currentError));
+  if (!current) return errorState("No se encontró esa mascota, o no es tuya.");
+
+  const invalidParentage = await validateParentage(db, user.id, input, {
+    petId,
+    fatherId: current.father_id,
+    motherId: current.mother_id,
+  });
+  if (invalidParentage) return invalidParentage;
 
   // `owner_id` no se toca: una mascota no cambia de dueño desde el formulario.
   const result = await db
@@ -443,6 +572,8 @@ export async function updatePetAction(
       bio: input.bio,
       avatar_url: input.avatarUrl,
       is_public: input.isPublic,
+      father_id: input.fatherId,
+      mother_id: input.motherId,
     })
     .eq("id", petId)
     .select("id");
@@ -450,7 +581,15 @@ export async function updatePetAction(
   const denied = denyIfUntouched(result, "esa mascota");
   if (denied) return denied;
 
-  revalidatePet(petId);
+  // Bidireccional: la pestaña «Familia» de los progenitores —los que entran y
+  // los que salen— lista a esta mascota entre sus hijos.
+  const affected = new Set(
+    [petId, current.father_id, current.mother_id, input.fatherId, input.motherId].filter(
+      (id): id is string => Boolean(id),
+    ),
+  );
+  for (const id of affected) revalidatePet(id);
+
   return successState("Ficha actualizada.");
 }
 
