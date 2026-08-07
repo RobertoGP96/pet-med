@@ -3,8 +3,11 @@ import { Suspense } from "react";
 
 import { WeightForm } from "@/components/weights/weight-form";
 import { WeightList } from "@/components/weights/weight-list";
+import { WeightStatusCard } from "@/components/weights/weight-status-card";
 import { WeightChart } from "@/components/health/weight-chart";
 import { Section } from "@/components/ui/section";
+import { getWeightRangeForSex } from "@/domain/breed";
+import { assessWeightStatus } from "@/domain/health/weight";
 import type { Pet, WeightEntry } from "@/domain/types";
 import { getPetWeights } from "@/server/queries";
 import { resolveBreedProfile } from "@/services/breeds";
@@ -44,21 +47,45 @@ export default async function PetWeightPage({ params }: PageProps<"/mascotas/[pe
   );
 }
 
-/** La gráfica con el rango de la raza de fondo, si la API lo da a tiempo. */
+/**
+ * El veredicto de estado y la gráfica, con el rango de la raza si la API lo
+ * da a tiempo. Van juntos en el mismo Suspense porque ambos dependen del
+ * perfil de raza; si la API falla, se pintan igual sólo con BCS y tendencia.
+ */
 async function WeightChartSection({ pet, weights }: { pet: Pet; weights: WeightEntry[] }) {
   const breed = await resolveBreedProfile(pet.species, pet.breedRefId, pet.breed);
+  // El mismo rango (por sexo cuando la fuente lo publica) alimenta el
+  // veredicto y la banda de la gráfica, para que no se contradigan.
+  const breedRange = getWeightRangeForSex(breed, pet.sex);
+  const status = assessWeightStatus(weights, breedRange, new Date());
 
   return (
-    <Section title="Evolución">
-      <WeightChart entries={weights} breedRange={breed?.weightRange ?? null} />
-    </Section>
+    <>
+      {status && (
+        <Section
+          title="Estado"
+          description="Clasificación a partir de la condición corporal, el rango de su raza y la tendencia."
+        >
+          <WeightStatusCard status={status} />
+        </Section>
+      )}
+
+      <Section title="Evolución">
+        <WeightChart entries={weights} breedRange={breedRange} latestLevel={status?.level} />
+      </Section>
+    </>
   );
 }
 
 function ChartSkeleton() {
   return (
-    <Section title="Evolución">
-      <div className="bg-muted h-56 w-full animate-pulse rounded" aria-hidden="true" />
-    </Section>
+    <>
+      <Section title="Estado">
+        <div className="bg-muted h-24 w-full animate-pulse rounded" aria-hidden="true" />
+      </Section>
+      <Section title="Evolución">
+        <div className="bg-muted h-56 w-full animate-pulse rounded" aria-hidden="true" />
+      </Section>
+    </>
   );
 }

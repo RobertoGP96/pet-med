@@ -10,6 +10,7 @@
  * que hace que cada medida se lea como una marca sobre la línea.
  */
 
+import type { HealthLevel } from "@/domain/enums";
 import type { WeightEntry } from "@/domain/types";
 import type { BreedWeightRange } from "@/domain/health/weight";
 import { formatDate, formatWeight } from "@/lib/format";
@@ -18,12 +19,23 @@ const WIDTH = 640;
 const HEIGHT = 220;
 const PADDING = { top: 16, right: 16, bottom: 28, left: 44 };
 
+/** Relleno del último punto según el veredicto; `unknown` no destaca nada. */
+const LATEST_POINT_FILL: Record<HealthLevel, string> = {
+  good: "fill-health-good",
+  watch: "fill-health-watch",
+  alert: "fill-health-alert",
+  unknown: "fill-chart-5",
+};
+
 export function WeightChart({
   entries,
   breedRange,
+  latestLevel,
 }: {
   entries: WeightEntry[];
   breedRange?: BreedWeightRange | null;
+  /** Nivel del veredicto de peso: colorea la última medición de la curva. */
+  latestLevel?: HealthLevel | null;
 }) {
   const points = [...entries].sort((a, b) => a.measuredAt.localeCompare(b.measuredAt));
 
@@ -115,17 +127,22 @@ export function WeightChart({
           strokeLinejoin="round"
         />
 
-        {points.map((point, index) => (
-          <circle
-            key={point.id}
-            cx={x(index)}
-            cy={y(point.weightKg)}
-            r={3}
-            className="fill-chart-5"
-          >
-            <title>{`${formatDate(point.measuredAt)}: ${formatWeight(point.weightKg)}`}</title>
-          </circle>
-        ))}
+        {points.map((point, index) => {
+          const isLatest = index === points.length - 1;
+          return (
+            <circle
+              key={point.id}
+              cx={x(index)}
+              cy={y(point.weightKg)}
+              r={isLatest && latestLevel ? 4 : 3}
+              className={
+                isLatest && latestLevel ? LATEST_POINT_FILL[latestLevel] : "fill-chart-5"
+              }
+            >
+              <title>{`${formatDate(point.measuredAt)}: ${formatWeight(point.weightKg)}`}</title>
+            </circle>
+          );
+        })}
 
         {/* Sólo se etiquetan los extremos del eje X: con muchos registros las
             fechas intermedias se solapan y no aportan. */}
