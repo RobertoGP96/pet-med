@@ -191,3 +191,83 @@ export function compareWithBreedRange(
   }
   return { level: "good", label: "Dentro del rango de su raza", position };
 }
+
+export interface WeightStatus {
+  /** Nivel global: el de la fuente principal, empeorado por la tendencia si toca. */
+  level: HealthLevel;
+  /** Clasificación corta, p. ej. «Ideal» o «Dentro del rango de su raza». */
+  label: string;
+  /** Explicación o recomendación, ya redactada para mostrar. */
+  message: string;
+  /** De dónde sale el veredicto: BCS registrado, rango de raza o nada. */
+  source: "bcs" | "breed-range" | "none";
+  /** Peso ideal estimado en kilos; sólo se conoce con BCS. */
+  idealWeightKg: number | null;
+  latest: WeightEntry;
+  bcs: BcsAssessment | null;
+  breedComparison: BreedWeightComparison | null;
+  trend: WeightTrend | null;
+}
+
+/** Orden de gravedad para quedarse con el peor nivel. `unknown` no compite. */
+const LEVEL_SEVERITY: Record<HealthLevel, number> = { unknown: 0, good: 0, watch: 1, alert: 2 };
+
+/**
+ * Veredicto único sobre el estado de peso de la mascota.
+ *
+ * Prioridad de fuentes: el BCS manda porque es una valoración del animal
+ * concreto; sin él se cae al rango de la raza, que es orientativo. La
+ * tendencia nunca mejora el veredicto, pero sí lo empeora: un peso «ideal»
+ * que está cayendo deprisa sigue siendo motivo de consulta.
+ */
+export function assessWeightStatus(
+  entries: WeightEntry[],
+  breedRange: BreedWeightRange | null,
+  now: Date,
+): WeightStatus | null {
+  const latest = getLatestWeight(entries);
+  if (!latest) return null;
+
+  const trend = getWeightTrend(entries, now);
+  const bcs =
+    latest.bodyConditionScore != null ? assessBodyCondition(latest.bodyConditionScore) : null;
+  const breedComparison = compareWithBreedRange(latest.weightKg, breedRange);
+
+  let level: HealthLevel;
+  let label: string;
+  let message: string;
+  let source: WeightStatus["source"];
+  let idealWeightKg: number | null = null;
+
+  if (bcs) {
+    source = "bcs";
+    level = bcs.level;
+    label = bcs.label;
+    idealWeightKg = estimateIdealWeight(latest.weightKg, bcs.score);
+    message =
+      bcs.level === "good"
+        ? "Su condición corporal está en el rango ideal."
+        : bcs.excessPercent > 0
+          ? `Está en torno a un ${bcs.excessPercent} % por encima de su peso ideal estimado.`
+          : `Está en torno a un ${Math.abs(bcs.excessPercent)} % por debajo de su peso ideal estimado.`;
+  } else if (breedComparison) {
+    source = "breed-range";
+    level = breedComparison.level;
+    label = breedComparison.label;
+    message =
+      "Clasificación orientativa según el rango típico de su raza. Registra la condición corporal (BCS) al anotar el peso para afinarla.";
+  } else {
+    source = "none";
+    level = "unknown";
+    label = "Sin clasificación";
+    message =
+      "Registra la condición corporal (BCS) al anotar el peso para clasificar su estado.";
+  }
+
+  if (source !== "none" && trend && LEVEL_SEVERITY[trend.level] > LEVEL_SEVERITY[level]) {
+    level = trend.level;
+    message = `${message} ${trend.message}`;
+  }
+
+  return { level, label, message, source, idealWeightKg, latest, bcs, breedComparison, trend };
+}

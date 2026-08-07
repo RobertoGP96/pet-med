@@ -4,7 +4,13 @@ import type { ClinicalEvent, Medication, MedicationDose, WeightEntry } from "../
 import { getAge, getHumanAgeEquivalent, getLifeStage, getNextBirthday } from "./age";
 import { generateDoseSchedule, getAdherence, getOverdueDoses } from "./medication";
 import { getPreventionStatus } from "./prevention";
-import { assessBodyCondition, compareWithBreedRange, estimateIdealWeight, getWeightTrend } from "./weight";
+import {
+  assessBodyCondition,
+  assessWeightStatus,
+  compareWithBreedRange,
+  estimateIdealWeight,
+  getWeightTrend,
+} from "./weight";
 
 const NOW = new Date("2026-08-01T12:00:00.000Z");
 
@@ -132,6 +138,50 @@ describe("peso", () => {
 
   it("no compara sin rango de raza conocido", () => {
     expect(compareWithBreedRange(25, null)).toBeNull();
+  });
+
+  it("clasifica con el BCS cuando está registrado", () => {
+    const status = assessWeightStatus([weight("2026-07-01", 24, 7)], { minKg: 20, maxKg: 30 }, NOW);
+    expect(status?.source).toBe("bcs");
+    expect(status?.level).toBe("watch");
+    expect(status?.label).toBe("Sobrepeso");
+    expect(status?.idealWeightKg).toBe(20);
+  });
+
+  it("cae al rango de la raza cuando no hay BCS", () => {
+    const status = assessWeightStatus([weight("2026-07-01", 25)], { minKg: 20, maxKg: 30 }, NOW);
+    expect(status?.source).toBe("breed-range");
+    expect(status?.level).toBe("good");
+    expect(status?.idealWeightKg).toBeNull();
+  });
+
+  it("queda sin clasificar sin BCS ni rango de raza", () => {
+    const status = assessWeightStatus([weight("2026-07-01", 25)], null, NOW);
+    expect(status?.source).toBe("none");
+    expect(status?.level).toBe("unknown");
+  });
+
+  it("la tendencia empeora el veredicto pero nunca lo mejora", () => {
+    // BCS ideal con una pérdida del 15 %: manda la alerta de la tendencia.
+    const falling = assessWeightStatus(
+      [weight("2026-01-01", 20), weight("2026-07-01", 17, 5)],
+      null,
+      NOW,
+    );
+    expect(falling?.source).toBe("bcs");
+    expect(falling?.level).toBe("alert");
+
+    // Sobrepeso con peso estable: se mantiene el aviso del BCS.
+    const stable = assessWeightStatus(
+      [weight("2026-01-01", 24), weight("2026-07-01", 24, 7)],
+      null,
+      NOW,
+    );
+    expect(stable?.level).toBe("watch");
+  });
+
+  it("no clasifica sin pesos registrados", () => {
+    expect(assessWeightStatus([], { minKg: 20, maxKg: 30 }, NOW)).toBeNull();
   });
 });
 

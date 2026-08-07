@@ -12,10 +12,11 @@ import {
   SIZE_LABELS,
   SPECIES,
   SPECIES_LABELS,
+  type Sex,
   type Species,
 } from "@/domain/enums";
 import type { Pet } from "@/domain/types";
-import { idleState } from "@/lib/action-result";
+import { idleState, type ActionState } from "@/lib/action-result";
 import { createPetAction, updatePetAction } from "@/server/actions";
 
 export interface BreedOption {
@@ -24,19 +25,44 @@ export interface BreedOption {
   species: Species;
 }
 
+/** Candidato a padre o madre: una mascota propia o pública del mural. */
+export interface ParentOption {
+  id: string;
+  name: string;
+  species: Species;
+  sex: Sex;
+  isOwn: boolean;
+}
+
 /**
  * Alta y edición de mascota.
  *
  * Un único componente para los dos casos: si llega `pet`, cambia la acción y
  * precarga los valores. Así no hay dos formularios que se desincronicen.
  */
-export function PetForm({ pet, breeds }: { pet?: Pet; breeds: BreedOption[] }) {
+export function PetForm({
+  pet,
+  breeds,
+  parentCandidates,
+}: {
+  pet?: Pet;
+  breeds: BreedOption[];
+  parentCandidates: ParentOption[];
+}) {
   const [state, formAction] = useActionState(pet ? updatePetAction : createPetAction, idleState);
 
   // La especie se controla en cliente sólo para filtrar el catálogo de razas
-  // que se ofrece como sugerencia.
+  // que se ofrece como sugerencia y los candidatos a padre y madre.
   const [species, setSpecies] = useState<Species>(pet?.species ?? "dog");
   const breedSuggestions = breeds.filter((breed) => breed.species === species);
+
+  // Una hembra no puede ser el padre ni un macho la madre; con el sexo sin
+  // definir se admite cualquiera de los dos papeles.
+  const candidates = parentCandidates.filter(
+    (candidate) => candidate.species === species && candidate.id !== pet?.id,
+  );
+  const fatherOptions = candidates.filter((candidate) => candidate.sex !== "female");
+  const motherOptions = candidates.filter((candidate) => candidate.sex !== "male");
 
   return (
     <form action={formAction} className="flex flex-col gap-6">
@@ -119,6 +145,28 @@ export function PetForm({ pet, breeds }: { pet?: Pet; breeds: BreedOption[] }) {
         </div>
       </Section>
 
+      <Section
+        title="Familia"
+        description="El padre y la madre, si están registrados. De ahí salen los hermanos y el árbol genealógico."
+      >
+        <div className="grid gap-5 sm:grid-cols-2">
+          <ParentField
+            name="fatherId"
+            label="Padre"
+            currentId={pet?.fatherId ?? null}
+            options={fatherOptions}
+            state={state}
+          />
+          <ParentField
+            name="motherId"
+            label="Madre"
+            currentId={pet?.motherId ?? null}
+            options={motherOptions}
+            state={state}
+          />
+        </div>
+      </Section>
+
       <Section title="Fechas y datos oficiales">
         <div className="grid gap-5 sm:grid-cols-2">
           <Field
@@ -184,5 +232,60 @@ export function PetForm({ pet, breeds }: { pet?: Pet; breeds: BreedOption[] }) {
         </SubmitButton>
       </div>
     </form>
+  );
+}
+
+/** Selector de progenitor, con las mascotas propias separadas de las del mural. */
+function ParentField({
+  name,
+  label,
+  currentId,
+  options,
+  state,
+}: {
+  name: "fatherId" | "motherId";
+  label: string;
+  currentId: string | null;
+  options: ParentOption[];
+  state: ActionState;
+}) {
+  const own = options.filter((option) => option.isOwn);
+  const mural = options.filter((option) => !option.isOwn);
+
+  // Si el vínculo actual ya no está entre los candidatos —su dueño lo retiró
+  // del mural, por ejemplo—, se conserva como opción para que guardar la ficha
+  // sin tocar la familia no lo pierda en silencio.
+  const keepCurrent = currentId != null && !options.some((option) => option.id === currentId);
+
+  return (
+    <Field
+      name={name}
+      label={label}
+      errors={state.fieldErrors}
+      hint="Sólo mascotas registradas: tuyas o públicas del mural."
+    >
+      <Select defaultValue={currentId ?? ""}>
+        <option value="">Sin registrar</option>
+        {keepCurrent && <option value={currentId}>(actual, no disponible)</option>}
+        {own.length > 0 && (
+          <optgroup label="Mis mascotas">
+            {own.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.name}
+              </option>
+            ))}
+          </optgroup>
+        )}
+        {mural.length > 0 && (
+          <optgroup label="Del mural">
+            {mural.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.name}
+              </option>
+            ))}
+          </optgroup>
+        )}
+      </Select>
+    </Field>
   );
 }

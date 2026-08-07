@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Camera, HeartPulse, LayoutDashboard, Pill, Scale, Stethoscope } from "lucide-react";
+import { Camera, HeartPulse, LayoutDashboard, Network, Pill, Scale, Stethoscope } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -21,6 +21,7 @@ const TABS = [
   { segment: "padecimientos", label: "Padecimientos", icon: HeartPulse },
   { segment: "medicamentos", label: "Medicamentos", icon: Pill },
   { segment: "historia", label: "Historia clínica", icon: Stethoscope },
+  { segment: "familia", label: "Familia", icon: Network },
   { segment: "fotos", label: "Fotos", icon: Camera },
 ];
 

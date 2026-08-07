@@ -78,6 +78,13 @@ const checkbox = z
 
 const uuid = z.uuid("Identificador no válido");
 
+/** FK opcional que llega de un `<select>`: "" o ausente -> null. */
+const optionalUuid = z
+  .union([uuid, z.literal("")])
+  .nullable()
+  .optional()
+  .transform((value) => (value == null || value === "" ? null : value));
+
 // --- Cuenta ----------------------------------------------------------------
 
 /**
@@ -128,26 +135,33 @@ export type SignUpInput = z.infer<typeof signUpSchema>;
 
 // --- Mascota ---------------------------------------------------------------
 
-export const petInputSchema = z.object({
-  name: requiredText(60, "Ponle un nombre a tu mascota"),
-  species: z.enum(SPECIES),
-  breed: optionalText(80),
-  breedRefId: optionalText(40),
-  size: z
-    .union([z.enum(SIZES), z.literal("")])
-    .nullable()
-    .optional()
-    .transform((value) => (value == null || value === "" ? null : value)),
-  sex: z.enum(SEXES).default("unknown"),
-  birthDate: optionalDate,
-  adoptionDate: optionalDate,
-  color: optionalText(60),
-  microchip: optionalText(40),
-  sterilized: checkbox,
-  bio: optionalText(600),
-  avatarUrl: optionalText(500),
-  isPublic: checkbox,
-});
+export const petInputSchema = z
+  .object({
+    name: requiredText(60, "Ponle un nombre a tu mascota"),
+    species: z.enum(SPECIES),
+    breed: optionalText(80),
+    breedRefId: optionalText(40),
+    size: z
+      .union([z.enum(SIZES), z.literal("")])
+      .nullable()
+      .optional()
+      .transform((value) => (value == null || value === "" ? null : value)),
+    sex: z.enum(SEXES).default("unknown"),
+    birthDate: optionalDate,
+    adoptionDate: optionalDate,
+    color: optionalText(60),
+    microchip: optionalText(40),
+    sterilized: checkbox,
+    bio: optionalText(600),
+    avatarUrl: optionalText(500),
+    isPublic: checkbox,
+    fatherId: optionalUuid,
+    motherId: optionalUuid,
+  })
+  .refine((data) => !data.fatherId || data.fatherId !== data.motherId, {
+    message: "El padre y la madre no pueden ser la misma mascota",
+    path: ["motherId"],
+  });
 
 export type PetInput = z.infer<typeof petInputSchema>;
 
@@ -188,11 +202,7 @@ export type ConditionInput = z.infer<typeof conditionInputSchema>;
 export const medicationInputSchema = z
   .object({
     petId: uuid,
-    conditionId: z
-      .union([uuid, z.literal("")])
-      .nullable()
-      .optional()
-      .transform((value) => (value == null || value === "" ? null : value)),
+    conditionId: optionalUuid,
     name: requiredText(120, "Indica el nombre del medicamento"),
     dose: numberInRange(0.001, 10000, "Introduce una dosis válida"),
     doseUnit: requiredText(20, "Indica la unidad (mg, ml, comprimido…)"),

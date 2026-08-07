@@ -51,6 +51,8 @@ export function toPet(row: Tables<"pets">): Pet {
     featured: row.featured,
     featuredAt: row.featured_at,
     hiddenByAdmin: row.hidden_by_admin,
+    fatherId: row.father_id,
+    motherId: row.mother_id,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
